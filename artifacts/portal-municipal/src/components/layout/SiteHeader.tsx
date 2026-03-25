@@ -1,139 +1,315 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "wouter";
-import { Search, Menu, X, ChevronDown, Building2, UserCircle } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Search, Menu, X, UserCircle, Phone, Mail, ChevronDown,
+  MessageSquare, Headphones, Globe, Smartphone
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useGetTenantConfig } from "@workspace/api-client-react";
+import { MegaMenu } from "./MegaMenu";
+import { SearchModal } from "./SearchModal";
 
 export function SiteHeader() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const [location] = useLocation();
-  const { data: tenant } = useGetTenantConfig();
+  const { data: tenant } = useGetTenantConfig({ tenant: "parauapebas" });
 
-  const navItems = [
+  // Sticky behavior: hide identity bar on scroll
+  useEffect(() => {
+    const handler = () => setIsScrolled(window.scrollY > 80);
+    window.addEventListener("scroll", handler, { passive: true });
+    return () => window.removeEventListener("scroll", handler);
+  }, []);
+
+  // Close mobile menu on route change
+  useEffect(() => { setIsMobileMenuOpen(false); }, [location]);
+
+  // "/" shortcut to open search
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "/" && !["INPUT","TEXTAREA","SELECT"].includes((e.target as HTMLElement).tagName)) {
+        e.preventDefault();
+        setIsSearchOpen(true);
+      }
+    };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, []);
+
+  const mobileNavItems = [
     { label: "Início", href: "/" },
-    { label: "O Município", href: "/municipio" },
+    { label: "O Município", href: "/o-municipio" },
     { label: "Governo", href: "/governo" },
-    { label: "Serviços", href: "/servicos" },
-    { label: "Transparência", href: "/transparencia" },
     { label: "Notícias", href: "/noticias" },
+    { label: "Transparência", href: "/transparencia" },
+    { label: "Serviços", href: "/servicos" },
+    { label: "Legislação", href: "/legislacao" },
+    { label: "Galeria", href: "/galeria" },
+    { label: "Agenda", href: "/agenda" },
+    { label: "Licitações", href: "/licitacoes" },
+    { label: "Concursos", href: "/concursos" },
+    { label: "Contato", href: "/contato" },
+    { label: "Ouvidoria", href: "/ouvidoria" },
   ];
 
   return (
-    <header className="bg-background border-b border-border sticky top-0 z-40 shadow-sm transition-colors duration-200">
-      {/* Top Header Area */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center py-4 md:py-6">
-          
-          {/* Logo & Identity */}
-          <Link href="/" className="flex items-center gap-4 group focus:outline-none focus:ring-4 focus:ring-primary/20 rounded-xl p-1 -ml-1">
-            <div className="w-12 h-12 md:w-16 md:h-16 flex-shrink-0 bg-primary/5 rounded-full flex items-center justify-center overflow-hidden">
-              {tenant?.brasao ? (
-                <img src={tenant.brasao} alt={`Brasão de ${tenant?.nome || 'Município'}`} className="w-full h-full object-contain p-1" />
-              ) : (
-                <img src={`${import.meta.env.BASE_URL}images/brasao.png`} alt="Brasão do Município" className="w-full h-full object-contain p-1" />
-              )}
-            </div>
-            <div className="flex flex-col">
-              <span className="text-sm md:text-base font-semibold text-muted-foreground uppercase tracking-wider">
-                Prefeitura Municipal de
-              </span>
-              <span className="text-xl md:text-3xl font-bold text-foreground leading-none group-hover:text-primary transition-colors">
-                {tenant?.nome || "São Exemplo"}
-              </span>
-            </div>
-          </Link>
+    <>
+      <header className={cn("sticky top-9 z-40 w-full bg-background transition-shadow duration-300", isScrolled ? "shadow-lg" : "shadow-sm border-b border-border")}>
 
-          {/* Desktop Search & Actions */}
-          <div className="hidden lg:flex items-center gap-6">
-            <form id="site-search" className="relative group" onSubmit={(e) => e.preventDefault()}>
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Search className="h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
-              </div>
-              <input
-                type="text"
-                className="block w-64 xl:w-80 pl-10 pr-3 py-2.5 border-2 border-border rounded-xl leading-5 bg-background placeholder-muted-foreground focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all sm:text-sm"
-                placeholder="Buscar no portal..."
-                aria-label="Buscar no portal"
-              />
-            </form>
-            
-            <a href="#" className="flex items-center gap-2 text-sm font-semibold text-primary hover:text-primary/80 bg-primary/5 hover:bg-primary/10 px-4 py-2.5 rounded-xl transition-colors">
-              <UserCircle className="w-5 h-5" />
-              <span>Área do Cidadão</span>
-            </a>
-          </div>
-
-          {/* Mobile Menu Button */}
-          <div className="flex items-center gap-4 lg:hidden">
-            <button className="p-2 text-foreground hover:bg-muted rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
-              <Search className="w-6 h-6" />
-            </button>
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-2 text-foreground hover:bg-muted rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-              aria-expanded={isMobileMenuOpen}
-              aria-label="Menu principal"
+        {/* ─── CAMADA 2: Barra de Identidade ─── */}
+        <AnimatePresence initial={false}>
+          {!isScrolled && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.25, ease: "easeInOut" }}
+              className="overflow-hidden border-b border-border"
             >
-              {isMobileMenuOpen ? <X className="w-7 h-7" /> : <Menu className="w-7 h-7" />}
-            </button>
+              <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="flex items-center justify-between py-3 gap-4">
+
+                  {/* Logo + Nome */}
+                  <Link
+                    href="/"
+                    className="flex items-center gap-3 group focus:outline-none focus:ring-4 focus:ring-primary/20 rounded-xl p-1 -ml-1 flex-shrink-0"
+                    aria-label={`Ir para a página inicial — ${tenant?.nome ?? "Prefeitura Municipal"}`}
+                  >
+                    <div className="w-14 h-14 flex-shrink-0 rounded-full bg-primary/5 border border-primary/10 flex items-center justify-center overflow-hidden">
+                      <img
+                        src={tenant?.brasao ?? `${import.meta.env.BASE_URL}images/brasao.png`}
+                        alt={`Brasão de ${tenant?.nome ?? "Município"}`}
+                        className="w-full h-full object-contain p-1"
+                        width={56}
+                        height={56}
+                      />
+                    </div>
+                    <div className="flex flex-col leading-tight">
+                      <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest">
+                        Prefeitura Municipal de
+                      </span>
+                      <span className="text-xl sm:text-2xl font-black text-foreground group-hover:text-primary transition-colors">
+                        {tenant?.nome ?? "Parauapebas"}
+                      </span>
+                      <span className="text-[11px] text-muted-foreground font-medium">
+                        {tenant?.estado ?? "Pará"} · Gestão 2025–2028
+                      </span>
+                    </div>
+                  </Link>
+
+                  {/* Centro: Links rápidos */}
+                  <div className="hidden xl:flex items-center gap-6 text-xs font-medium text-muted-foreground">
+                    <a
+                      href="/ouvidoria"
+                      className="flex items-center gap-1.5 hover:text-primary transition-colors focus:outline-none focus:underline"
+                    >
+                      <MessageSquare className="w-3.5 h-3.5" aria-hidden="true" />
+                      Ouvidoria
+                    </a>
+                    <a
+                      href="/transparencia/sic"
+                      className="flex items-center gap-1.5 hover:text-primary transition-colors focus:outline-none focus:underline"
+                    >
+                      <Headphones className="w-3.5 h-3.5" aria-hidden="true" />
+                      SIC / e-SIC
+                    </a>
+                    <a
+                      href="/servicos"
+                      className="flex items-center gap-1.5 hover:text-primary transition-colors focus:outline-none focus:underline"
+                    >
+                      <Globe className="w-3.5 h-3.5" aria-hidden="true" />
+                      Serviços Online
+                    </a>
+                    <a
+                      href="https://wa.me/5594999999999"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1.5 hover:text-green-600 transition-colors focus:outline-none focus:underline"
+                    >
+                      <Smartphone className="w-3.5 h-3.5" aria-hidden="true" />
+                      WhatsApp
+                    </a>
+                  </div>
+
+                  {/* Direita: busca + área cidadão */}
+                  <div className="hidden lg:flex items-center gap-3 flex-shrink-0">
+                    <button
+                      id="site-search"
+                      onClick={() => setIsSearchOpen(true)}
+                      className="flex items-center gap-2 w-56 xl:w-72 px-4 py-2.5 border-2 border-border rounded-xl bg-muted/40 text-muted-foreground text-sm hover:border-primary/40 hover:bg-muted transition-all focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10"
+                      aria-label="Abrir busca no portal (tecla /)"
+                      aria-haspopup="dialog"
+                    >
+                      <Search className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
+                      <span className="flex-1 text-left">Buscar no portal...</span>
+                      <kbd className="hidden xl:inline font-mono text-[11px] border border-border rounded px-1.5 py-0.5 bg-background ml-1">/</kbd>
+                    </button>
+
+                    <a
+                      href="/cidadao"
+                      className="flex items-center gap-2 px-4 py-2.5 bg-primary text-primary-foreground rounded-xl text-sm font-bold hover:bg-primary/90 transition-colors focus:outline-none focus:ring-4 focus:ring-primary/30 whitespace-nowrap"
+                    >
+                      <UserCircle className="w-4 h-4" aria-hidden="true" />
+                      Área do Cidadão
+                    </a>
+                  </div>
+
+                  {/* Mobile: search + hambúrguer */}
+                  <div className="flex items-center gap-2 lg:hidden">
+                    <button
+                      onClick={() => setIsSearchOpen(true)}
+                      className="p-2.5 rounded-xl hover:bg-muted transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
+                      aria-label="Abrir busca"
+                    >
+                      <Search className="w-6 h-6" aria-hidden="true" />
+                    </button>
+                    <button
+                      onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                      aria-expanded={isMobileMenuOpen}
+                      aria-controls="mobile-nav"
+                      aria-label={isMobileMenuOpen ? "Fechar menu" : "Abrir menu principal"}
+                      className="p-2.5 rounded-xl hover:bg-muted transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
+                    >
+                      <AnimatePresence initial={false} mode="wait">
+                        {isMobileMenuOpen
+                          ? <motion.div key="close" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.15 }}><X className="w-7 h-7" aria-hidden="true" /></motion.div>
+                          : <motion.div key="open" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.15 }}><Menu className="w-7 h-7" aria-hidden="true" /></motion.div>
+                        }
+                      </AnimatePresence>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* ─── CAMADA 3: Barra de Navegação Principal ─── */}
+        <div className="hidden lg:block bg-primary text-primary-foreground">
+          <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+            <MegaMenu onSearchOpen={() => setIsSearchOpen(true)} />
+
+            {/* Compact logo when scrolled */}
+            <AnimatePresence initial={false}>
+              {isScrolled && (
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  transition={{ duration: 0.2 }}
+                  className="flex items-center gap-2 py-2 ml-4"
+                >
+                  <img
+                    src={tenant?.brasao ?? `${import.meta.env.BASE_URL}images/brasao.png`}
+                    alt=""
+                    className="w-8 h-8 rounded-full bg-white/20 object-contain p-0.5"
+                    aria-hidden="true"
+                  />
+                  <span className="text-sm font-bold text-white hidden xl:inline truncate max-w-[200px]">
+                    {tenant?.nome ?? "Parauapebas"}
+                  </span>
+                  <button
+                    onClick={() => setIsSearchOpen(true)}
+                    className="ml-2 p-2 rounded-lg hover:bg-white/10 transition-colors focus:outline-none focus:ring-2 focus:ring-white/40"
+                    aria-label="Buscar"
+                  >
+                    <Search className="w-4 h-4" aria-hidden="true" />
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
-      </div>
+      </header>
 
-      {/* Main Navigation (Desktop) */}
-      <nav id="main-nav" className="hidden lg:block bg-primary text-primary-foreground">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <ul className="flex items-center -mb-px">
-            {navItems.map((item) => {
-              const isActive = location === item.href || (item.href !== "/" && location.startsWith(item.href));
-              return (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className={cn(
-                      "inline-flex items-center px-6 py-4 text-sm font-semibold border-b-4 transition-colors hover:bg-primary-foreground/10 focus:outline-none focus:bg-primary-foreground/10",
-                      isActive 
-                        ? "border-accent text-white" 
-                        : "border-transparent text-primary-foreground/90 hover:text-white"
-                    )}
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-      </nav>
+      {/* ─── Menu Mobile (Sheet lateral) ─── */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <>
+            <motion.div
+              key="mobile-backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+              onClick={() => setIsMobileMenuOpen(false)}
+              aria-hidden="true"
+            />
+            <motion.nav
+              key="mobile-nav"
+              id="mobile-nav"
+              aria-label="Menu móvel"
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 30, stiffness: 300 }}
+              className="fixed top-0 right-0 h-full w-[min(320px,90vw)] bg-background shadow-2xl z-50 lg:hidden flex flex-col"
+            >
+              {/* Sheet header */}
+              <div className="flex items-center justify-between px-5 py-4 border-b border-border bg-primary text-white">
+                <span className="font-bold text-base">Menu</span>
+                <button
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="p-2 rounded-lg hover:bg-white/20 transition-colors focus:outline-none focus:ring-2 focus:ring-white/40"
+                  aria-label="Fechar menu"
+                >
+                  <X className="w-5 h-5" aria-hidden="true" />
+                </button>
+              </div>
 
-      {/* Mobile Navigation Menu */}
-      {isMobileMenuOpen && (
-        <div className="lg:hidden bg-background border-t border-border absolute w-full shadow-xl">
-          <nav className="px-2 pt-2 pb-4 space-y-1">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className={cn(
-                  "block px-4 py-3 rounded-lg text-base font-medium transition-colors",
-                  location === item.href || (item.href !== "/" && location.startsWith(item.href))
-                    ? "bg-primary/10 text-primary"
-                    : "text-foreground hover:bg-muted"
-                )}
-              >
-                {item.label}
-              </Link>
-            ))}
-            <div className="pt-4 mt-4 border-t border-border px-4">
-              <a href="#" className="flex items-center justify-center gap-2 w-full text-base font-semibold text-primary bg-primary/10 hover:bg-primary/20 px-4 py-3 rounded-xl transition-colors">
-                <UserCircle className="w-6 h-6" />
-                <span>Entrar na Área do Cidadão</span>
-              </a>
-            </div>
-          </nav>
-        </div>
-      )}
-    </header>
+              {/* Nav Links */}
+              <div className="flex-1 overflow-y-auto py-3">
+                <ul role="list" className="space-y-0.5 px-3">
+                  {mobileNavItems.map((item) => {
+                    const active = item.href === "/" ? location === "/" : location.startsWith(item.href);
+                    return (
+                      <li key={item.href}>
+                        <Link
+                          href={item.href}
+                          className={cn(
+                            "block px-4 py-3 rounded-xl text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary",
+                            active
+                              ? "bg-primary/10 text-primary font-semibold"
+                              : "text-foreground hover:bg-muted"
+                          )}
+                          aria-current={active ? "page" : undefined}
+                        >
+                          {item.label}
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+
+              {/* Sheet footer */}
+              <div className="border-t border-border p-4 space-y-3">
+                <a
+                  href="/cidadao"
+                  className="flex items-center justify-center gap-2 w-full bg-primary text-white py-3 rounded-xl font-bold text-sm hover:bg-primary/90 transition-colors focus:outline-none focus:ring-4 focus:ring-primary/30"
+                >
+                  <UserCircle className="w-5 h-5" aria-hidden="true" />
+                  Área do Cidadão
+                </a>
+                <a
+                  href="/ouvidoria"
+                  className="flex items-center justify-center gap-2 w-full border-2 border-primary text-primary py-3 rounded-xl font-bold text-sm hover:bg-primary/5 transition-colors focus:outline-none focus:ring-4 focus:ring-primary/30"
+                >
+                  <MessageSquare className="w-5 h-5" aria-hidden="true" />
+                  Ouvidoria Municipal
+                </a>
+              </div>
+            </motion.nav>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Search Modal */}
+      <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
+    </>
   );
 }

@@ -1,0 +1,104 @@
+Continuando o Portal Municipal SaaS. Implemente os componentes estruturais de layout.
+
+## TAREFA DESTA ETAPA
+
+### 1. Header Institucional (src/components/site/Header.tsx)
+Estrutura em 3 camadas:
+
+CAMADA 1 — Barra de Acessibilidade (já descrita em FE-SITE-01):
+  - Fundo cinza escuro (#333) — contraste AAA
+  - Altura fixa 36px
+  - Sticky no topo
+
+CAMADA 2 — Barra de Identidade:
+  - Logo da prefeitura (dinâmico por tenant — TenantProvider)
+  - Nome do município e estado
+  - Slogan/Gestão (ex: "Gestão 2025-2028")
+  - Data e hora
+  - Busca rápida global (ícone abre SearchModal)
+  - Links rápidos: Ouvidoria | SIC | Serviços Online | WhatsApp
+  - CNPJ e endereço da prefeitura
+  - Responsivo: empilhamento em mobile, logo centralizado
+
+CAMADA 3 — Menu de Navegação Principal:
+  - Mega Menu com dropdowns em desktop
+  - Menu hambúrguer em mobile (Sheet lateral full-height)
+  - Itens: Início | O Município | O Governo | Notícias | Transparência | Serviços | Legislação | Galeria | Agenda | Contato
+  - Submenu de cada item (configurável pelo admin no CMS)
+  - Indicador visual da página ativa
+  - Dropdown de Transparência com todos os links obrigatórios da LAI
+  - Sticky após scroll (desaparece a Barra de Identidade, fica apenas o nav)
+  - Breadcrumb automático abaixo do header em todas as páginas internas
+
+### 2. Footer Institucional (src/components/site/Footer.tsx)
+4 colunas em desktop, 1 coluna em mobile:
+
+COLUNA 1 — Identidade:
+  - Logo branca (versão clara por tenant)
+  - Nome completo da prefeitura
+  - Endereço do paço municipal
+  - CNPJ
+  - Telefones e email institucional
+  - Horário de atendimento
+
+COLUNA 2 — Links Rápidos:
+  - Notícias | Agenda | Serviços Online | Concursos Públicos | Licitações | Legislação | Galeria | Contato
+
+COLUNA 3 — Transparência (LAI obrigatório):
+  - Acesso à Informação | Portal da Transparência | SIC | Ouvidoria | LGPD | Dados Abertos | Licitações | Contratos
+
+COLUNA 4 — Canais de Atendimento:
+  - Ícones + links: WhatsApp, Instagram, Facebook, YouTube, Twitter/X
+  - Horário do chatbot
+  - QR code de acesso rápido ao WhatsApp
+  - App Store / Google Play (se tenant tiver app)
+
+RODAPÉ INFERIOR:
+  - Copyright com ano dinâmico
+  - "Desenvolvido por [Nome da Plataforma]"
+  - Links: Mapa do Site | Acessibilidade | Privacidade | Cookies
+  - Selos: W3C Valid | e-MAG | WCAG 2.1 AA
+  - Contador de acessos (opcional por tenant)
+
+### 3. SearchModal (src/components/site/SearchModal.tsx)
+  - Modal fullscreen em mobile, popover em desktop
+  - Busca em tempo real (debounce 300ms)
+  - Pesquisa em: notícias, serviços, secretarias, legislação, transparência
+  - Resultados agrupados por categoria
+  - Histórico de buscas recentes (localStorage)
+  - Tecla "/" abre o modal de qualquer página
+  - Esc fecha
+  - Resultados com highlight do termo buscado
+  - "Ver todos os resultados" → /busca?q=termo
+
+### 4. CookieBanner (src/components/site/CookieBanner.tsx)
+  - Banner LGPD na primeira visita (bottom-fixed)
+  - Opções: Aceitar Todos | Configurar | Rejeitar Opcionais
+  - Modal de configuração granular: essenciais | analytics | marketing
+  - Armazenar preferência em cookie (1 ano de validade)
+  - Link para Política de Privacidade
+  - Acessível: foco gerenciado, aria-live, roles corretos
+
+### 5. Mega Menu — Estrutura
+<MegaMenu /> com animação Framer Motion (height animation, não visibility):
+  Transparência (mega dropdown):
+    Coluna 1: Financeiro
+      - Orçamento (LOA, LDO, PPA)
+      - Receitas Arrecadadas
+      - Despesas (Empenhos, Liquidações, Pagamentos)
+      - Balancete Financeiro
+      - Balanço Anual
+      - RREO | RGF
+    Coluna 2: Pessoal e Contratos
+      - Servidores / Folha de Pagamento
+      - Diárias e Passagens
+      - Licitações e Contratos
+      - Convênios
+      - Emendas Parlamentares
+    Coluna 3: Institucional
+      - Estrutura Organizacional
+      - Atos Normativos
+      - Legislação Municipal
+      - Controle Interno
+      - Dados Abertos
+      - SIC / LAI / Ouvidoria
