@@ -1,4 +1,4 @@
-import { Switch, Route, Router as WouterRouter } from "wouter";
+import { Switch, Route, Router as WouterRouter, Redirect } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -6,7 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 // Contexts
 import { AccessibilityProvider } from "@/contexts/AccessibilityContext";
 
-// Pages
+// Public pages
 import Home from "@/pages/Home";
 import TransparenciaHub from "@/pages/TransparenciaHub";
 import Noticias from "@/pages/Noticias";
@@ -24,6 +24,24 @@ import Legislacao from "@/pages/transparencia/Legislacao";
 import Sic from "@/pages/transparencia/Sic";
 import DadosAbertos from "@/pages/transparencia/DadosAbertos";
 
+// CMS pages
+import CmsDashboard from "@/pages/cms/CmsDashboard";
+import CmsNoticias from "@/pages/cms/CmsNoticias";
+import CmsNoticiaEditor from "@/pages/cms/CmsNoticiaEditor";
+import CmsPaginas from "@/pages/cms/CmsPaginas";
+import CmsBanners from "@/pages/cms/CmsBanners";
+import CmsAgenda from "@/pages/cms/CmsAgenda";
+import CmsGaleria from "@/pages/cms/CmsGaleria";
+import CmsTransparenciaCms from "@/pages/cms/CmsTransparenciaCms";
+import CmsLegislacaoCms from "@/pages/cms/CmsLegislacaoCms";
+import CmsLicitacoesCms from "@/pages/cms/CmsLicitacoesCms";
+import CmsServicos from "@/pages/cms/CmsServicos";
+import CmsSecretarias from "@/pages/cms/CmsSecretarias";
+import CmsMenus from "@/pages/cms/CmsMenus";
+import CmsAparencia from "@/pages/cms/CmsAparencia";
+import CmsUsuarios from "@/pages/cms/CmsUsuarios";
+import CmsConfiguracoes from "@/pages/cms/CmsConfiguracoes";
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -37,7 +55,9 @@ const queryClient = new QueryClient({
 function Router() {
   return (
     <Switch>
-      {/* Home */}
+      {/* ─────────────────────────────────────────
+          Portal Público
+      ───────────────────────────────────────── */}
       <Route path="/" component={Home} />
 
       {/* Transparência hub + sub-pages */}
@@ -51,19 +71,77 @@ function Router() {
       <Route path="/transparencia/sic" component={Sic} />
       <Route path="/transparencia/dados-abertos" component={DadosAbertos} />
 
-      {/* Licitações standalone (mapped from navbar) */}
+      {/* Standalone aliases */}
       <Route path="/licitacoes" component={Licitacoes} />
-
-      {/* Legislação standalone */}
       <Route path="/legislacao" component={Legislacao} />
 
-      {/* Other pages */}
+      {/* Other public pages */}
       <Route path="/noticias" component={Noticias} />
       <Route path="/servicos" component={Servicos} />
       <Route path="/municipio" component={Municipio} />
       <Route path="/governo" component={Municipio} />
       <Route path="/governo/secretarias" component={Municipio} />
 
+      {/* ─────────────────────────────────────────
+          CMS — Painel Administrativo
+          Acesso via /site-admin/*
+      ───────────────────────────────────────── */}
+
+      {/* Redirect /site-admin → /site-admin/dashboard */}
+      <Route path="/site-admin">
+        {() => <Redirect to="/site-admin/dashboard" />}
+      </Route>
+
+      {/* Dashboard */}
+      <Route path="/site-admin/dashboard" component={CmsDashboard} />
+
+      {/* Notícias */}
+      <Route path="/site-admin/noticias" component={CmsNoticias} />
+      <Route path="/site-admin/noticias/nova" component={CmsNoticiaEditor} />
+      <Route path="/site-admin/noticias/:id/editar" component={CmsNoticiaEditor} />
+
+      {/* Páginas estáticas */}
+      <Route path="/site-admin/paginas" component={CmsPaginas} />
+      <Route path="/site-admin/paginas/nova" component={CmsPaginas} />
+      <Route path="/site-admin/paginas/:id/editar" component={CmsPaginas} />
+
+      {/* Banners / Carrossel */}
+      <Route path="/site-admin/banners" component={CmsBanners} />
+
+      {/* Agenda */}
+      <Route path="/site-admin/agenda" component={CmsAgenda} />
+
+      {/* Galeria */}
+      <Route path="/site-admin/galeria" component={CmsGaleria} />
+
+      {/* Transparência CMS (LAI compliance) */}
+      <Route path="/site-admin/transparencia" component={CmsTransparenciaCms} />
+
+      {/* Legislação CMS */}
+      <Route path="/site-admin/legislacao" component={CmsLegislacaoCms} />
+
+      {/* Licitações CMS */}
+      <Route path="/site-admin/licitacoes" component={CmsLicitacoesCms} />
+
+      {/* Serviços CMS */}
+      <Route path="/site-admin/servicos" component={CmsServicos} />
+
+      {/* Secretarias CMS */}
+      <Route path="/site-admin/secretarias" component={CmsSecretarias} />
+
+      {/* Menus */}
+      <Route path="/site-admin/menus" component={CmsMenus} />
+
+      {/* Aparência */}
+      <Route path="/site-admin/aparencia" component={CmsAparencia} />
+
+      {/* Usuários */}
+      <Route path="/site-admin/usuarios" component={CmsUsuarios} />
+
+      {/* Configurações */}
+      <Route path="/site-admin/configuracoes" component={CmsConfiguracoes} />
+
+      {/* 404 */}
       <Route component={NotFound} />
     </Switch>
   );

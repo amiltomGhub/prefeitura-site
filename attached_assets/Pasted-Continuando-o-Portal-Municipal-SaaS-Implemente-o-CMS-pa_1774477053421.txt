@@ -1,0 +1,84 @@
+Continuando o Portal Municipal SaaS. Implemente o CMS para gestão do site institucional.
+
+## CONTEXTO
+O CMS é o painel privado onde servidores municipais gerenciam todo o conteúdo do site.
+É acessado via /site-admin/* com autenticação RBAC (mesma do Módulo 1).
+Perfis do CMS: Admin Municipal | Editor | Redator | Transparência | Somente leitura
+
+## TAREFA DESTA ETAPA
+
+### 1. Layout CMS (src/app/(site-admin)/layout.tsx)
+  - Sidebar com os mesmos componentes do Módulo 1 (shared)
+  - Diferenciador visual: badge "Site" no header para distinguir do módulo Ouvidoria
+  - Menu de contexto: alternar entre "Ouvidoria" e "Site Institucional"
+  - Itens do menu CMS:
+    Dashboard | Notícias | Páginas | Banners | Agenda | Galeria |
+    Transparência | Legislação | Licitações | Serviços | Secretarias |
+    Menus | Aparência | Usuários | Configurações
+
+### 2. Dashboard CMS (src/app/(site-admin)/dashboard/page.tsx)
+  KPIs:
+  - Total de notícias publicadas | Agendadas | Rascunhos
+  - Visitas do portal hoje / semana / mês (integração Google Analytics ou Plausible)
+  - Páginas mais acessadas (top 10)
+  - Documentos da transparência: % conformes | % desatualizados
+  - Último backup do conteúdo
+  - Alertas de LAI (documentos vencidos/faltantes — vermelho)
+
+### 3. Gestão de Notícias (src/app/(site-admin)/noticias/page.tsx)
+  - DataTable: título, status, categoria, autor, data publicação, views
+  - Status: Rascunho | Agendado | Publicado | Arquivado
+  - Filtros: status, categoria, autor, período, secretaria origem
+
+  Editor de Notícia (/noticias/nova e /noticias/[id]/editar):
+  - Editor WYSIWYG: TipTap com toolbar completa
+    (negrito, itálico, títulos H2/H3/H4, listas, citação, tabela, link, imagem inline)
+  - Upload de imagem de capa (crop obrigatório — aspect ratio 16:9)
+  - Campo alt text da capa (obrigatório — acessibilidade)
+  - Categoria (select — categorias configuráveis)
+  - Secretaria de origem (relacionamento)
+  - Tags (autocomplete + criação inline)
+  - Slug personalizado (gerado automaticamente a partir do título, editável)
+  - Data de publicação (agendamento — DateTimePicker)
+  - SEO: meta title, meta description, og:image preview
+  - Destaque na homepage (toggle)
+  - Barra lateral: status, publicar, preview, histórico de versões
+
+### 4. Gestão de Páginas Estáticas (src/app/(site-admin)/paginas/page.tsx)
+  - Cada página configurável: título, conteúdo (TipTap), slug, SEO, status
+  - Páginas obrigatórias (não deletáveis): Acessibilidade, Mapa do Site, Privacidade
+  - Páginas customizadas: admin pode criar novas páginas livres
+  - Suporte a seções/blocos dentro da página (Page Builder simples):
+    Blocos disponíveis: Texto | Imagem | Galeria | Tabela | Iframe | Destaque | Accordion | Contato
+
+### 5. Gestão de Banners/Carrossel
+  - Lista de banners com preview, ordem, status, período de exibição
+  - Drag-and-drop para reordenar (dnd-kit)
+  - Cada banner: upload imagem desktop (1920x600) + mobile (768x400), título, subtítulo, CTA, link, período ativo
+
+### 6. Gestão da Transparência (CMS)
+  - Hub especial para uploads de documentos obrigatórios (LAI)
+  - Cada categoria de transparência tem:
+    * Último documento publicado + data
+    * Status de conformidade (verde/amarelo/vermelho)
+    * Botão "Publicar novo documento"
+    * Histórico de versões
+  - Upload com validação: PDF obrigatório, máx 50MB
+  - Campo: exercício/ano, período de referência, descrição
+  - Alertas automáticos: 5 dias antes de vencer o prazo de publicação obrigatória
+  - Relatório de conformidade exportável (PDF) para prestação de contas
+
+### 7. Configuração de Menus (src/app/(site-admin)/menus/page.tsx)
+  - Editor visual de menus (drag-and-drop com nesting — máx 2 níveis)
+  - Tipos de item: Página | URL Externa | Seção do Portal | Dropdown
+  - Menu Header Principal, Menu Footer Coluna 1/2/3, Menu Mobile
+  - Preview do menu em tempo real
+
+### 8. Aparência do Site (src/app/(site-admin)/aparencia/page.tsx)
+  Estende o White-Label do Módulo 1 com opções específicas do site:
+  - Escolha de layout do Hero: Carrossel | Vídeo de fundo | Imagem estática | Gradiente
+  - Seções da homepage: drag-and-drop para reordenar, toggle para ativar/desativar
+  - Escolha de fonte para conteúdo editorial (diferente da fonte da UI)
+  - Configuração de rodapé: quais colunas exibir, textos, redes sociais
+  - Widget flutuante: ativar/desativar, posição (direita/esquerda), cor
+  - Preview ao vivo em iframe (desktop + mobile) antes de salvar

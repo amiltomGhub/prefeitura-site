@@ -13,6 +13,27 @@ Portal público principal do município, integrado ao Módulo 1 (Ouvidoria) via 
 ### ✅ Parte II — Layout aprimorado (COMPLETO)
 - SiteHeader 3 camadas, MegaMenu, SearchModal, CookieBanner LGPD, SiteFooter LAI, Breadcrumb automático
 
+### ✅ Parte V — CMS Institucional (COMPLETO)
+- **CMS Layout** (`CmsLayout.tsx`) — sidebar colapsável com 15 itens, badge "Site", alternador de módulo, perfil do usuário, "Ver Portal", separadores de seção, suporte mobile com overlay
+- **Dashboard** (`/site-admin/dashboard`) — alertas LAI (vermelho/amarelo), 4 KPIs animados, gráfico de barras de visitas 7 dias, top 10 páginas, ações rápidas, status do sistema (SSL/DB/API/Backup), atividade recente
+- **Notícias** (`/site-admin/noticias`) — DataTable com bulk-select, filtros (status/categoria), paginação, ações contextuais (editar/ver/ações)
+- **Editor de Notícia** (`/site-admin/noticias/nova`, `/:id/editar`) — 3 abas: Editor (TipTap completo) / SEO (pré-visualização Google) / Histórico de versões; sidebar: status, agendamento, destaque, categoria, secretaria, publicar/salvar/excluir
+- **TipTap Editor** (`TiptapEditor.tsx`) — toolbar completa: bold/italic/underline/strike, H2/H3/H4, listas, citação, código, separador, link, imagem, desfazer/refazer; contador de palavras
+- **Banners** (`/site-admin/banners`) — pré-visualização ao vivo do carrossel, dnd-kit drag-and-drop para reordenar, formulário modal completo (imagem desktop 1920×600 + mobile 768×400, período de exibição), toggle de status
+- **Páginas Estáticas** (`/site-admin/paginas`) — tabela com pages protegidas (ícone de cadeado, não deletáveis: Acessibilidade, Mapa do Site, Privacidade), tipo de blocos disponíveis (Texto, Imagem, Galeria, Tabela, Iframe, Destaque, Accordion, Contato)
+- **Transparência CMS** (`/site-admin/transparencia`) — tracker de conformidade LAI com 8 categorias, indicadores conforme/atenção/pendente, modal de upload PDF (validação max 50MB), histórico de versões expansível, exportar relatório
+- **Menus** (`/site-admin/menus`) — editor visual dnd-kit multi-slot (Header, Rodapé col.1-3, Mobile), suporte a 2 níveis de profundidade, tipos pagina/url/secao/dropdown, pré-visualização em tempo real
+- **Aparência** (`/site-admin/aparencia`) — 4 abas: Seções da Homepage (reorder + toggle visibilidade com dnd-kit, escolha de layout do Hero em 4 tipos) / Rodapé (texto, selos LAI/e-MAG, redes sociais) / Widget Flutuante (posição, cor, preview) / Fontes
+- **Agenda** — lista de eventos com calendário, categoria, local, hora, status badge
+- **Galeria** — grid de álbuns com thumbnail, drag-and-drop, preview hover com ações
+- **Legislação CMS** — tabela com número/tipo/ementa/data, filtro por tipo de ato, download PDF
+- **Licitações CMS** — tabela com KPIs, número/objeto/modalidade/valor/status
+- **Serviços** — tabela com destaque, status, canal de atendimento
+- **Secretarias** — cards com sigla, titular, contato, status
+- **Usuários** — 5 perfis RBAC (Admin/Editor/Redator/Transparência/Somente Leitura), tabela com último acesso, modal de novo usuário
+- **Configurações** — dados do município, integrações (Google Analytics), SIC (prazo/email), modo manutenção
+- **Rotas** — 20+ rotas `/site-admin/*` registradas no `App.tsx` com Wouter + redirect `/site-admin` → `/site-admin/dashboard`
+
 ### ✅ Parte IV — Portal da Transparência (COMPLETO)
 - **Hub** (`/transparencia`) — índice LAI com 8 seções, gráficos Recharts receita/despesa, pie categorias
 - **Orçamento** (`/transparencia/orcamento`) — LOA/LDO/PPA, progresso barras execução, download docs, seletor de exercício
