@@ -1,15 +1,37 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
-  version: 0.1.0
-  description: API specification
+  version: 0.2.0
+  description: Portal Municipal Inteligente - API specification
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: tenant
+    description: Tenant configuration
+  - name: noticias
+    description: Notícias e comunicados
+  - name: servicos
+    description: Serviços ao cidadão
+  - name: transparencia
+    description: Portal da Transparência
+  - name: licitacoes
+    description: Licitações e contratos
+  - name: legislacao
+    description: Legislação municipal
+  - name: agenda
+    description: Agenda da prefeitura
+  - name: galeria
+    description: Galeria de fotos e vídeos
+  - name: secretarias
+    description: Secretarias municipais
+  - name: busca
+    description: Busca global
+  - name: concursos
+    description: Concursos e processos seletivos
+
 paths:
   /healthz:
     get:
@@ -24,6 +46,605 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /tenant/config:
+    get:
+      operationId: getTenantConfig
+      tags: [tenant]
+      summary: Get tenant configuration
+      parameters:
+        - name: tenant
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Tenant configuration
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TenantConfig"
+
+  /noticias:
+    get:
+      operationId: listNoticias
+      tags: [noticias]
+      summary: Listar notícias
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+        - name: categoria
+          in: query
+          schema:
+            type: string
+        - name: destaque
+          in: query
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: Lista de notícias
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NoticiaListResponse"
+    post:
+      operationId: createNoticia
+      tags: [noticias]
+      summary: Criar notícia
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateNoticia"
+      responses:
+        "201":
+          description: Notícia criada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Noticia"
+
+  /noticias/{slug}:
+    get:
+      operationId: getNoticiaBySlug
+      tags: [noticias]
+      summary: Obter notícia por slug
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Notícia encontrada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Noticia"
+        "404":
+          description: Notícia não encontrada
+    put:
+      operationId: updateNoticia
+      tags: [noticias]
+      summary: Atualizar notícia
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateNoticia"
+      responses:
+        "200":
+          description: Notícia atualizada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Noticia"
+    delete:
+      operationId: deleteNoticia
+      tags: [noticias]
+      summary: Remover notícia
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Notícia removida
+
+  /servicos:
+    get:
+      operationId: listServicos
+      tags: [servicos]
+      summary: Listar serviços ao cidadão
+      parameters:
+        - name: categoria
+          in: query
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        "200":
+          description: Lista de serviços
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServicoListResponse"
+
+  /servicos/{slug}:
+    get:
+      operationId: getServico
+      tags: [servicos]
+      summary: Obter serviço por slug
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Serviço encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Servico"
+        "404":
+          description: Serviço não encontrado
+
+  /secretarias:
+    get:
+      operationId: listSecretarias
+      tags: [secretarias]
+      summary: Listar secretarias municipais
+      responses:
+        "200":
+          description: Lista de secretarias
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SecretariaListResponse"
+
+  /secretarias/{slug}:
+    get:
+      operationId: getSecretaria
+      tags: [secretarias]
+      summary: Obter secretaria por slug
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Secretaria encontrada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Secretaria"
+
+  /transparencia/orcamento:
+    get:
+      operationId: getOrcamento
+      tags: [transparencia]
+      summary: Dados do orçamento municipal
+      parameters:
+        - name: ano
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Dados do orçamento
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrcamentoResponse"
+
+  /transparencia/despesas:
+    get:
+      operationId: listDespesas
+      tags: [transparencia]
+      summary: Listar despesas
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+        - name: ano
+          in: query
+          schema:
+            type: integer
+        - name: mes
+          in: query
+          schema:
+            type: integer
+        - name: secretaria
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Lista de despesas
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DespesaListResponse"
+
+  /transparencia/receitas:
+    get:
+      operationId: listReceitas
+      tags: [transparencia]
+      summary: Listar receitas
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+        - name: ano
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Lista de receitas
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReceitaListResponse"
+
+  /transparencia/servidores:
+    get:
+      operationId: listServidores
+      tags: [transparencia]
+      summary: Listar servidores públicos
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+        - name: secretaria
+          in: query
+          schema:
+            type: string
+        - name: nome
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Lista de servidores
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServidorListResponse"
+
+  /licitacoes:
+    get:
+      operationId: listLicitacoes
+      tags: [licitacoes]
+      summary: Listar licitações
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+        - name: modalidade
+          in: query
+          schema:
+            type: string
+        - name: situacao
+          in: query
+          schema:
+            type: string
+        - name: ano
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Lista de licitações
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LicitacaoListResponse"
+
+  /licitacoes/{id}:
+    get:
+      operationId: getLicitacao
+      tags: [licitacoes]
+      summary: Obter licitação por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Licitação encontrada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Licitacao"
+
+  /legislacao:
+    get:
+      operationId: listLegislacao
+      tags: [legislacao]
+      summary: Listar legislação municipal
+      parameters:
+        - name: tipo
+          in: query
+          schema:
+            type: string
+            enum: [lei, decreto, portaria, resolucao, instrucao-normativa]
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+        - name: ano
+          in: query
+          schema:
+            type: integer
+        - name: q
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Lista de legislação
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LegislacaoListResponse"
+
+  /legislacao/{tipo}/{slug}:
+    get:
+      operationId: getLegislacao
+      tags: [legislacao]
+      summary: Obter legislação por tipo e slug
+      parameters:
+        - name: tipo
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Legislação encontrada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Legislacao"
+
+  /agenda:
+    get:
+      operationId: listAgenda
+      tags: [agenda]
+      summary: Listar eventos da agenda
+      parameters:
+        - name: mes
+          in: query
+          schema:
+            type: integer
+        - name: ano
+          in: query
+          schema:
+            type: integer
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        "200":
+          description: Lista de eventos
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgendaListResponse"
+
+  /galeria:
+    get:
+      operationId: listGaleria
+      tags: [galeria]
+      summary: Listar álbuns da galeria
+      parameters:
+        - name: tipo
+          in: query
+          schema:
+            type: string
+            enum: [foto, video]
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        "200":
+          description: Lista de álbuns
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GaleriaListResponse"
+
+  /concursos:
+    get:
+      operationId: listConcursos
+      tags: [concursos]
+      summary: Listar concursos e processos seletivos
+      parameters:
+        - name: situacao
+          in: query
+          schema:
+            type: string
+            enum: [aberto, encerrado, em-andamento, previsto]
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        "200":
+          description: Lista de concursos
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConcursoListResponse"
+
+  /busca:
+    get:
+      operationId: globalSearch
+      tags: [busca]
+      summary: Busca global no portal
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: tipo
+          in: query
+          schema:
+            type: string
+            enum: [noticia, servico, licitacao, legislacao, secretaria]
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        "200":
+          description: Resultados da busca
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BuscaResponse"
+
+  /municipio/info:
+    get:
+      operationId: getMunicipioInfo
+      tags: [tenant]
+      summary: Informações do município
+      responses:
+        "200":
+          description: Informações do município
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MunicipioInfo"
+
+  /governo/prefeito:
+    get:
+      operationId: getPrefeito
+      tags: [tenant]
+      summary: Dados do prefeito
+      responses:
+        "200":
+          description: Dados do prefeito
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Gestor"
+
+  /governo/vice-prefeito:
+    get:
+      operationId: getVicePrefeito
+      tags: [tenant]
+      summary: Dados do vice-prefeito
+      responses:
+        "200":
+          description: Dados do vice-prefeito
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Gestor"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +655,941 @@ components:
       required:
         - status
 
+    TenantConfig:
+      type: object
+      properties:
+        id:
+          type: string
+        nome:
+          type: string
+        slug:
+          type: string
+        brasao:
+          type: string
+          nullable: true
+        corPrimaria:
+          type: string
+        corSecundaria:
+          type: string
+        corTerciaria:
+          type: string
+        estado:
+          type: string
+        populacao:
+          type: integer
+        area:
+          type: number
+        fundacao:
+          type: string
+        lema:
+          type: string
+          nullable: true
+        siteUrl:
+          type: string
+        modulosAtivos:
+          type: array
+          items:
+            type: string
+      required:
+        - id
+        - nome
+        - slug
+        - corPrimaria
+        - corSecundaria
+        - corTerciaria
+        - estado
+        - populacao
+        - area
+        - fundacao
+        - siteUrl
+        - modulosAtivos
+
+    MunicipioInfo:
+      type: object
+      properties:
+        nome:
+          type: string
+        estado:
+          type: string
+        regiao:
+          type: string
+        populacao:
+          type: integer
+        area:
+          type: number
+        altitude:
+          type: number
+          nullable: true
+        idh:
+          type: number
+          nullable: true
+        pib:
+          type: number
+          nullable: true
+        historia:
+          type: string
+          nullable: true
+        simbolos:
+          type: object
+          nullable: true
+          properties:
+            bandeira:
+              type: string
+              nullable: true
+            brasao:
+              type: string
+              nullable: true
+            hino:
+              type: string
+              nullable: true
+        localizacao:
+          type: object
+          nullable: true
+          properties:
+            latitude:
+              type: number
+            longitude:
+              type: number
+            mapa:
+              type: string
+              nullable: true
+      required:
+        - nome
+        - estado
+        - regiao
+        - populacao
+        - area
+
+    Gestor:
+      type: object
+      properties:
+        id:
+          type: string
+        nome:
+          type: string
+        cargo:
+          type: string
+        partido:
+          type: string
+          nullable: true
+        mandato:
+          type: string
+          nullable: true
+        foto:
+          type: string
+          nullable: true
+        bio:
+          type: string
+          nullable: true
+        email:
+          type: string
+          nullable: true
+        redesSociais:
+          type: object
+          nullable: true
+          properties:
+            facebook:
+              type: string
+              nullable: true
+            instagram:
+              type: string
+              nullable: true
+            twitter:
+              type: string
+              nullable: true
+      required:
+        - id
+        - nome
+        - cargo
+
+    Noticia:
+      type: object
+      properties:
+        id:
+          type: string
+        titulo:
+          type: string
+        slug:
+          type: string
+        resumo:
+          type: string
+        conteudo:
+          type: string
+        imagemCapa:
+          type: string
+          nullable: true
+        categoria:
+          type: string
+        autor:
+          type: string
+          nullable: true
+        dataPublicacao:
+          type: string
+          format: date-time
+        destaque:
+          type: boolean
+        tags:
+          type: array
+          items:
+            type: string
+      required:
+        - id
+        - titulo
+        - slug
+        - resumo
+        - conteudo
+        - categoria
+        - dataPublicacao
+        - destaque
+        - tags
+
+    CreateNoticia:
+      type: object
+      properties:
+        titulo:
+          type: string
+        slug:
+          type: string
+        resumo:
+          type: string
+        conteudo:
+          type: string
+        imagemCapa:
+          type: string
+          nullable: true
+        categoria:
+          type: string
+        autor:
+          type: string
+          nullable: true
+        dataPublicacao:
+          type: string
+          format: date-time
+        destaque:
+          type: boolean
+          default: false
+        tags:
+          type: array
+          items:
+            type: string
+      required:
+        - titulo
+        - slug
+        - resumo
+        - conteudo
+        - categoria
+        - dataPublicacao
+
+    NoticiaListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Noticia"
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+        totalPages:
+          type: integer
+      required:
+        - data
+        - total
+        - page
+        - limit
+        - totalPages
+
+    Servico:
+      type: object
+      properties:
+        id:
+          type: string
+        titulo:
+          type: string
+        slug:
+          type: string
+        descricao:
+          type: string
+        categoria:
+          type: string
+        orgao:
+          type: string
+          nullable: true
+        linkExterno:
+          type: string
+          nullable: true
+        requisitos:
+          type: array
+          items:
+            type: string
+        documentos:
+          type: array
+          items:
+            type: string
+        prazoAtendimento:
+          type: string
+          nullable: true
+        gratuito:
+          type: boolean
+        online:
+          type: boolean
+        icone:
+          type: string
+          nullable: true
+      required:
+        - id
+        - titulo
+        - slug
+        - descricao
+        - categoria
+        - requisitos
+        - documentos
+        - gratuito
+        - online
+
+    ServicoListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Servico"
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+        totalPages:
+          type: integer
+      required:
+        - data
+        - total
+        - page
+        - limit
+        - totalPages
+
+    Secretaria:
+      type: object
+      properties:
+        id:
+          type: string
+        nome:
+          type: string
+        slug:
+          type: string
+        sigla:
+          type: string
+        descricao:
+          type: string
+        secretario:
+          type: string
+          nullable: true
+        fotoSecretario:
+          type: string
+          nullable: true
+        telefone:
+          type: string
+          nullable: true
+        email:
+          type: string
+          nullable: true
+        endereco:
+          type: string
+          nullable: true
+        horario:
+          type: string
+          nullable: true
+        competencias:
+          type: array
+          items:
+            type: string
+      required:
+        - id
+        - nome
+        - slug
+        - sigla
+        - descricao
+        - competencias
+
+    SecretariaListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Secretaria"
+        total:
+          type: integer
+      required:
+        - data
+        - total
+
+    OrcamentoResponse:
+      type: object
+      properties:
+        ano:
+          type: integer
+        receitaPrevista:
+          type: number
+        receitaRealizada:
+          type: number
+        despesaPrevista:
+          type: number
+        despesaRealizada:
+          type: number
+        saldoAtual:
+          type: number
+        categorias:
+          type: array
+          items:
+            type: object
+            properties:
+              nome:
+                type: string
+              valor:
+                type: number
+              percentual:
+                type: number
+            required:
+              - nome
+              - valor
+              - percentual
+      required:
+        - ano
+        - receitaPrevista
+        - receitaRealizada
+        - despesaPrevista
+        - despesaRealizada
+        - saldoAtual
+        - categorias
+
+    Despesa:
+      type: object
+      properties:
+        id:
+          type: string
+        data:
+          type: string
+          format: date
+        descricao:
+          type: string
+        secretaria:
+          type: string
+        categoria:
+          type: string
+        valor:
+          type: number
+        beneficiario:
+          type: string
+          nullable: true
+        empenho:
+          type: string
+          nullable: true
+        modalidade:
+          type: string
+          nullable: true
+      required:
+        - id
+        - data
+        - descricao
+        - secretaria
+        - categoria
+        - valor
+
+    DespesaListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Despesa"
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+        totalPages:
+          type: integer
+      required:
+        - data
+        - total
+        - page
+        - limit
+        - totalPages
+
+    Receita:
+      type: object
+      properties:
+        id:
+          type: string
+        data:
+          type: string
+          format: date
+        descricao:
+          type: string
+        fonte:
+          type: string
+        categoria:
+          type: string
+        valor:
+          type: number
+      required:
+        - id
+        - data
+        - descricao
+        - fonte
+        - categoria
+        - valor
+
+    ReceitaListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Receita"
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+        totalPages:
+          type: integer
+      required:
+        - data
+        - total
+        - page
+        - limit
+        - totalPages
+
+    Servidor:
+      type: object
+      properties:
+        id:
+          type: string
+        nome:
+          type: string
+        cargo:
+          type: string
+        secretaria:
+          type: string
+        vinculo:
+          type: string
+        remuneracao:
+          type: number
+          nullable: true
+        admissao:
+          type: string
+          format: date
+          nullable: true
+      required:
+        - id
+        - nome
+        - cargo
+        - secretaria
+        - vinculo
+
+    ServidorListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Servidor"
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+        totalPages:
+          type: integer
+      required:
+        - data
+        - total
+        - page
+        - limit
+        - totalPages
+
+    Licitacao:
+      type: object
+      properties:
+        id:
+          type: string
+        numero:
+          type: string
+        objeto:
+          type: string
+        modalidade:
+          type: string
+        situacao:
+          type: string
+        dataAbertura:
+          type: string
+          format: date-time
+          nullable: true
+        dataEncerrramento:
+          type: string
+          format: date-time
+          nullable: true
+        valorEstimado:
+          type: number
+          nullable: true
+        valorHomologado:
+          type: number
+          nullable: true
+        secretaria:
+          type: string
+          nullable: true
+        edital:
+          type: string
+          nullable: true
+        ata:
+          type: string
+          nullable: true
+        descricao:
+          type: string
+          nullable: true
+      required:
+        - id
+        - numero
+        - objeto
+        - modalidade
+        - situacao
+
+    LicitacaoListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Licitacao"
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+        totalPages:
+          type: integer
+      required:
+        - data
+        - total
+        - page
+        - limit
+        - totalPages
+
+    Legislacao:
+      type: object
+      properties:
+        id:
+          type: string
+        numero:
+          type: string
+        tipo:
+          type: string
+        ementa:
+          type: string
+        slug:
+          type: string
+        dataPublicacao:
+          type: string
+          format: date
+        ano:
+          type: integer
+        conteudo:
+          type: string
+          nullable: true
+        arquivoPdf:
+          type: string
+          nullable: true
+        tags:
+          type: array
+          items:
+            type: string
+      required:
+        - id
+        - numero
+        - tipo
+        - ementa
+        - slug
+        - dataPublicacao
+        - ano
+        - tags
+
+    LegislacaoListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Legislacao"
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+        totalPages:
+          type: integer
+      required:
+        - data
+        - total
+        - page
+        - limit
+        - totalPages
+
+    Evento:
+      type: object
+      properties:
+        id:
+          type: string
+        titulo:
+          type: string
+        descricao:
+          type: string
+          nullable: true
+        dataInicio:
+          type: string
+          format: date-time
+        dataFim:
+          type: string
+          format: date-time
+          nullable: true
+        local:
+          type: string
+          nullable: true
+        categoria:
+          type: string
+          nullable: true
+        publicoAlvo:
+          type: string
+          nullable: true
+        gratuito:
+          type: boolean
+          default: true
+        linkInscricao:
+          type: string
+          nullable: true
+      required:
+        - id
+        - titulo
+        - dataInicio
+        - gratuito
+
+    AgendaListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Evento"
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+        totalPages:
+          type: integer
+      required:
+        - data
+        - total
+        - page
+        - limit
+        - totalPages
+
+    AlbumFoto:
+      type: object
+      properties:
+        id:
+          type: string
+        titulo:
+          type: string
+        descricao:
+          type: string
+          nullable: true
+        tipo:
+          type: string
+          enum: [foto, video]
+        thumbnail:
+          type: string
+          nullable: true
+        urlVideo:
+          type: string
+          nullable: true
+        fotos:
+          type: array
+          items:
+            type: object
+            properties:
+              url:
+                type: string
+              legenda:
+                type: string
+                nullable: true
+            required:
+              - url
+        dataPublicacao:
+          type: string
+          format: date-time
+        categoria:
+          type: string
+          nullable: true
+      required:
+        - id
+        - titulo
+        - tipo
+        - fotos
+        - dataPublicacao
+
+    GaleriaListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/AlbumFoto"
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+        totalPages:
+          type: integer
+      required:
+        - data
+        - total
+        - page
+        - limit
+        - totalPages
+
+    Concurso:
+      type: object
+      properties:
+        id:
+          type: string
+        titulo:
+          type: string
+        descricao:
+          type: string
+          nullable: true
+        tipo:
+          type: string
+          enum: [concurso-publico, processo-seletivo, chamamento-publico]
+        situacao:
+          type: string
+          enum: [aberto, encerrado, em-andamento, previsto]
+        numeroVagas:
+          type: integer
+          nullable: true
+        dataPublicacao:
+          type: string
+          format: date
+        dataInscricaoInicio:
+          type: string
+          format: date
+          nullable: true
+        dataInscricaoFim:
+          type: string
+          format: date
+          nullable: true
+        linkEdital:
+          type: string
+          nullable: true
+        linkInscricao:
+          type: string
+          nullable: true
+        organizadora:
+          type: string
+          nullable: true
+        remuneracao:
+          type: number
+          nullable: true
+      required:
+        - id
+        - titulo
+        - tipo
+        - situacao
+        - dataPublicacao
+
+    ConcursoListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Concurso"
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+        totalPages:
+          type: integer
+      required:
+        - data
+        - total
+        - page
+        - limit
+        - totalPages
+
+    BuscaResultItem:
+      type: object
+      properties:
+        id:
+          type: string
+        tipo:
+          type: string
+        titulo:
+          type: string
+        resumo:
+          type: string
+          nullable: true
+        url:
+          type: string
+        data:
+          type: string
+          format: date-time
+          nullable: true
+        relevancia:
+          type: number
+      required:
+        - id
+        - tipo
+        - titulo
+        - url
+        - relevancia
+
+    BuscaResponse:
+      type: object
+      properties:
+        query:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/BuscaResultItem"
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+        totalPages:
+          type: integer
+      required:
+        - query
+        - data
+        - total
+        - page
+        - limit
+        - totalPages

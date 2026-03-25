@@ -1,0 +1,133 @@
+## CONTEXTO DO PROJETO
+Módulo 2 do SaaS "Portal Municipal Inteligente".
+Este módulo é o Site Institucional da Prefeitura — portal público principal do município.
+Integrado ao Módulo 1 (Ouvidoria) via API compartilhada e mesmo tenant system.
+Cada prefeitura acessa via subdomínio: parauapebas.portalmunicipal.com.br
+Ou domínio próprio: www.parauapebas.pa.gov.br
+
+## NORMAS E PADRÕES OBRIGATÓRIOS
+- e-MAG 3.1 (Modelo de Acessibilidade em Governo Eletrônico — padrão federal BR)
+- WCAG 2.1 nível AA (W3C — obrigatório por Decreto 5.296/2004)
+- LAI — Lei 12.527/2011 (seções obrigatórias de transparência)
+- LGPD — Lei 13.709/2018 (consentimento, privacidade, cookies)
+- Decreto 5.296/2004 (acessibilidade obrigatória em portais públicos)
+
+## STACK OBRIGATÓRIA (idêntica ao Módulo 1)
+- Next.js 14+ App Router + TypeScript strict
+- TailwindCSS + shadcn/ui + Radix UI
+- CSS Custom Properties (Design Token System por tenant — já implementado no Módulo 1)
+- Framer Motion (animações acessíveis — respeita prefers-reduced-motion)
+- React Query v5 (dados dinâmicos)
+- next-intl (internacionalização PT-BR como padrão, EN e ES opcional por tenant)
+- next-sitemap (SEO — sitemap.xml e robots.txt automáticos)
+- Schema.org JSON-LD (dados estruturados para Google)
+
+## TAREFA DESTA ETAPA
+
+### 1. Estrutura de Pastas do Módulo (dentro do monorepo existente)
+src/
+├── app/
+│   ├── (site)/                    # Portal institucional público
+│   │   ├── layout.tsx             # Layout raiz do portal (header + footer)
+│   │   ├── page.tsx               # Homepage
+│   │   ├── noticias/              # Notícias e comunicados
+│   │   │   ├── page.tsx           # Listagem
+│   │   │   └── [slug]/page.tsx    # Detalhe da notícia
+│   │   ├── o-municipio/           # Seção institucional
+│   │   │   ├── historia/page.tsx
+│   │   │   ├── simbolos/page.tsx
+│   │   │   ├── localizacao/page.tsx
+│   │   │   └── dados-municipio/page.tsx
+│   │   ├── governo/               # Estrutura do executivo
+│   │   │   ├── prefeito/page.tsx
+│   │   │   ├── vice-prefeito/page.tsx
+│   │   │   ├── secretarias/
+│   │   │   │   ├── page.tsx
+│   │   │   │   └── [slug]/page.tsx
+│   │   │   └── estrutura-organizacional/page.tsx
+│   │   ├── transparencia/         # Portal da Transparência (LAI)
+│   │   │   ├── page.tsx           # Hub de transparência
+│   │   │   ├── orcamento/page.tsx
+│   │   │   ├── licitacoes/page.tsx
+│   │   │   ├── contratos/page.tsx
+│   │   │   ├── servidores/page.tsx
+│   │   │   ├── despesas/page.tsx
+│   │   │   ├── receitas/page.tsx
+│   │   │   ├── sic/page.tsx       # Serviço de Informação ao Cidadão
+│   │   │   └── lai/page.tsx       # Lei de Acesso à Informação
+│   │   ├── servicos/              # Serviços ao cidadão
+│   │   │   ├── page.tsx
+│   │   │   └── [slug]/page.tsx
+│   │   ├── legislacao/            # Leis, decretos, portarias
+│   │   │   ├── page.tsx
+│   │   │   └── [tipo]/[slug]/page.tsx
+│   │   ├── agenda/                # Agenda da prefeitura
+│   │   │   └── page.tsx
+│   │   ├── licitacoes/            # Licitações e contratos
+│   │   │   ├── page.tsx
+│   │   │   └── [id]/page.tsx
+│   │   ├── concursos/             # Concursos e processos seletivos
+│   │   │   └── page.tsx
+│   │   ├── galeria/               # Galeria de fotos e vídeos
+│   │   │   └── page.tsx
+│   │   ├── contato/page.tsx
+│   │   ├── acessibilidade/page.tsx
+│   │   ├── mapa-do-site/page.tsx
+│   │   ├── privacidade/page.tsx
+│   │   └── busca/page.tsx         # Busca global do portal
+│   │
+│   └── (site-admin)/             # Painel CMS da prefeitura
+│       ├── layout.tsx
+│       ├── dashboard/page.tsx
+│       ├── noticias/
+│       ├── paginas/
+│       ├── transparencia/
+│       ├── servicos/
+│       ├── galeria/
+│       ├── agenda/
+│       ├── licitacoes/
+│       ├── legislacao/
+│       ├── aparencia/
+│       ├── menus/
+│       ├── usuarios/
+│       └── configuracoes/
+
+### 2. Design Token System Governamental
+Extender o sistema de tokens já existente (Módulo 1) com tokens específicos do site:
+--site-header-height: 80px;
+--site-nav-height: 48px;
+--site-accessibility-bar-height: 36px; /* Barra de acessibilidade obrigatória */
+--site-sidebar-width: 280px;
+--site-content-max-width: 1200px;
+--site-font-size-base: 16px; /* Mínimo WCAG */
+--site-font-size-large: 20px; /* Modo alto contraste */
+--site-line-height: 1.6; /* Legibilidade governamental */
+--site-focus-ring: 3px solid var(--accent); /* Foco visível obrigatório e-MAG */
+
+### 3. Barra de Acessibilidade (OBRIGATÓRIA — e-MAG)
+Componente <AccessibilityBar /> fixo no topo ACIMA do header principal.
+Funcionalidades obrigatórias:
+  - Aumentar fonte (A+ / A / A-)  — 3 níveis: 16px | 20px | 24px
+  - Alto contraste (toggle) — fundo preto, texto amarelo/branco
+  - Mapa do site (link)
+  - Acessibilidade (link para página explicativa)
+  - Atalhos de teclado:
+    * Alt+1 → Ir ao conteúdo principal
+    * Alt+2 → Ir ao menu principal
+    * Alt+3 → Ir à busca
+    * Alt+4 → Ir ao rodapé
+    * Alt+5 → Página de acessibilidade
+  - Links de pular navegação (visíveis apenas no foco — skip links)
+  - Ícone VLibras (integração com widget de Libras — obrigatório WCAG)
+  - Data e hora atual (atualização em tempo real)
+
+### 4. Middleware Estendido
+Adicionar ao middleware.ts existente:
+  - Persistência de preferências de acessibilidade via cookie (fonte, contraste)
+  - Injeção de preferências no Server Component antes do render (sem flash)
+  - Cache de páginas estáticas por tenant com revalidação (ISR — 60 segundos)
+  - Headers de segurança: Content-Security-Policy, X-Frame-Options SAMEORIGIN
+
+Use Server Components com ISR (revalidate: 60) para todas as páginas públicas.
+Cada página deve ter metadata completo: title, description, og:image, og:title,
+canonical URL, JSON-LD Schema.org (GovernmentOrganization, NewsArticle, etc.)

@@ -1,0 +1,23 @@
+packages:
+  "framer-motion": "For smooth page transitions and interactive element animations"
+  "recharts": "For rendering budget and transparency data charts"
+  "lucide-react": "Standard icon set for the UI"
+  "date-fns": "For formatting dates in news and events"
+  "clsx": "Utility for constructing className strings conditionally"
+  "tailwind-merge": "Utility for merging tailwind classes without style conflicts"
+
+images:
+  - path: "artifacts/portal-municipal/public/images/hero-cidade.png"
+    description: "A wide, beautiful, high-quality aerial photography of a prosperous generic Brazilian city during daytime. Clear blue sky, featuring a mix of modern and historical architecture, lots of green trees, a central square or park. Institutional, professional, clean, bright lighting."
+    aspect_ratio: "16:9"
+  - path: "artifacts/portal-municipal/public/images/brasao.png"
+    description: "A professional, minimalist, clean municipal coat of arms (brasão). Shield shape, predominantly deep blue and forest green colors, subtle golden accents. Vector style, flat design, no background (transparent)."
+    aspect_ratio: "1:1"
+  - path: "artifacts/portal-municipal/public/images/prefeito.png"
+    description: "A professional corporate headshot of a mature, confident Brazilian man in a dark suit and light blue tie, smiling warmly at the camera. Light grey studio background. High quality photography."
+    aspect_ratio: "1:1"
+
+notes:
+  - Using generated react-query hooks from @workspace/api-client-react
+  - Implementing full e-MAG 3.1 accessibility standards (High Contrast, Font Scaling)
+  - Applying Government visual patterns (Blue #1351B4, Green #168821)
