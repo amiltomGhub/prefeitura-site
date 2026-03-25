@@ -1,0 +1,81 @@
+Continuando o Portal Municipal SaaS. Implemente a Homepage completa.
+
+## TAREFA DESTA ETAPA
+Homepage (src/app/(site)/page.tsx) — Server Component com ISR (revalidate: 60)
+
+### SEÇÃO 1 — Hero Banner (Carrossel Principal)
+  - Carrossel fullwidth com autoplay (5s) — pausar ao hover/foco (acessibilidade)
+  - Até 5 banners configuráveis pelo admin (CMS)
+  - Cada banner: imagem de fundo, título, subtítulo, botão CTA, cor overlay
+  - Indicadores de paginação acessíveis (aria-label em cada ponto)
+  - Botão pause/play do carrossel visível (obrigatório WCAG 2.2.2)
+  - Lazy loading nas imagens (exceto o primeiro banner)
+  - Mobile: altura reduzida (300px), texto menor
+  - Dados da API: GET /api/site/banners?tenant=slug
+
+### SEÇÃO 2 — Serviços Rápidos (acesso em destaque)
+  - Grid: 2 colunas mobile → 4 desktop → até 8 ícones
+  - Ícones configuráveis pelo admin (Lucide + upload de SVG customizado)
+  - Links para: Ouvidoria | SIC | IPTU Online | Nota Fiscal | Contracheque | Licitações | Concursos | Serviços Online
+  - Cada card: ícone grande + label + badge de novidade (opcional)
+  - Cores dos cards seguem o Design Token do tenant
+  - Animação de entrada ao scroll (Framer Motion — respeita reduced-motion)
+
+### SEÇÃO 3 — Notícias em Destaque
+  - Layout: 1 notícia principal grande (esquerda) + 3 secundárias (direita)
+  - Mobile: lista vertical de 4 cards
+  - Cada card: imagem, categoria badge, título, data, resumo (2 linhas)
+  - Botão "Ver todas as notícias"
+  - Carregamento: SSG com ISR (revalidate: 60)
+  - Dados: GET /api/site/news?tenant=slug&featured=true&limit=4
+
+### SEÇÃO 4 — Agenda da Prefeitura
+  - Próximos eventos em cards horizontais
+  - Cada evento: data destacada, título, local, hora
+  - Filtro por tipo: Reunião | Evento | Audiência Pública | Licitação
+  - Calendário mini ao lado (desktop) — mês atual com dias marcados
+  - Botão "Ver agenda completa"
+  - Dados: GET /api/site/agenda?tenant=slug&upcoming=true&limit=5
+
+### SEÇÃO 5 — Números do Município (Dados Públicos)
+  - Grid 4 cards animados (contagem numérica ao entrar na viewport)
+  - Dados configuráveis pelo admin: população, área, IDH, PIB, etc.
+  - Também pode exibir dados de transparência: investimentos, servidores, obras ativas
+  - Fonte citada abaixo de cada número (ex: "Fonte: IBGE 2022")
+
+### SEÇÃO 6 — Portal da Transparência (destaque visual obrigatório)
+  - Seção com fundo diferenciado (primário ou secundário do tenant)
+  - Atalhos visuais (ícones + títulos) para os 8 itens mais acessados:
+    Licitações | Contratos | Despesas | Receitas | Servidores | Concursos | Legislação | SIC
+  - Link "Acesse o Portal completo da Transparência"
+  - Esta seção É OBRIGATÓRIA e não pode ser desativada pelo admin (LAI)
+
+### SEÇÃO 7 — Galeria de Fotos Recentes
+  - Grid masonry de 6 fotos mais recentes
+  - Lightbox ao clicar (acessível com foco gerenciado)
+  - Cada foto: alt text obrigatório (campo no CMS)
+  - Botão "Ver galeria completa"
+
+### SEÇÃO 8 — Secretarias em Destaque
+  - Cards das secretarias com: ícone, nome, telefone, email, link "saiba mais"
+  - Grid 2→3→4 colunas responsivo
+  - Busca/filtro de secretaria inline
+
+### SEÇÃO 9 — Canais de Comunicação (CTA Final)
+  - Fundo colorido (accent do tenant)
+  - WhatsApp: botão verde com número
+  - Ouvidoria: link para Módulo 1
+  - SIC: link para formulário LAI
+  - Instagram e redes sociais configuradas
+  - Feed do Instagram (últimos 4 posts — via Meta Graph API, opcional por tenant)
+
+### SEÇÃO 10 — Rodapé Emergencial (Ouvidoria inline)
+  - Widget fixo no canto inferior direito (não intrusivo)
+  - Botão flutuante: ícone de megafone + "Fale Conosco"
+  - Mini-menu ao clicar: Ouvidoria | WhatsApp | SIC | Telefone
+  - Configurável para ocultar via CMS
+
+Cada seção deve ser um componente independente carregado com Suspense:
+<Suspense fallback={<SectionSkeleton />}>
+  <NewsSection tenantSlug={slug} />
+</Suspense>

@@ -5,6 +5,26 @@
 SaaS multi-tenant "Portal Municipal Inteligente" — Módulo 2: Site Institucional da Prefeitura.
 Portal público principal do município, integrado ao Módulo 1 (Ouvidoria) via API compartilhada e mesmo tenant system.
 
+## Implementação — Status Atual
+
+### ✅ Parte I — Backend + Geração de API (COMPLETO)
+- 25+ endpoints Express 5, 10 tabelas Drizzle, seed Parauapebas
+
+### ✅ Parte II — Layout aprimorado (COMPLETO)
+- SiteHeader 3 camadas, MegaMenu, SearchModal, CookieBanner LGPD, SiteFooter LAI, Breadcrumb automático
+
+### ✅ Parte III — Homepage com 10 seções (COMPLETO)
+- `HeroCarousel` — 4 slides, autoplay com pausa (WCAG 2.2.2), dots, busca inline
+- `QuickServicesSection` — 8 serviços populares com ícones animados ao scroll
+- `NewsSection` — 1 notícia principal + 3 secundárias, carregamento de API real
+- `AgendaSection` — Lista de eventos + MiniCalendar interativo
+- `MunicipioNumbers` — Contadores animados (habitantes, área, orçamento, servidores)
+- `TransparenciaHighlight` — Seção LAI obrigatória, widget orçamento, 8 atalhos da LAI
+- `GaleriaSection` — Grid masonry + lightbox acessível com teclado
+- `SecretariasSection` — Grid com busca inline, dados reais da API
+- `CanaisSection` — CTA WhatsApp, Ouvidoria, SIC, Tel. 156, redes sociais
+- `FloatingContact` — FAB flutuante "Fale Conosco" com menu expansível
+
 ## Compliance & Normas
 
 - **e-MAG 3.1** — Modelo de Acessibilidade em Governo Eletrônico
