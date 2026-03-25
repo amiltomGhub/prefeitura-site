@@ -1,0 +1,84 @@
+Continuando o Portal Municipal SaaS. Implemente o Portal da Transparência — seção mais
+crítica do ponto de vista legal.
+
+## CONTEXTO LEGAL OBRIGATÓRIO
+Art. 8° da LAI (Lei 12.527/2011) define informações de publicação obrigatória.
+Decreto 5.296/2004 exige acessibilidade.
+Não cumprir gera sanções ao município. O sistema deve garantir 100% de conformidade.
+
+## TAREFA DESTA ETAPA
+
+### 1. Hub da Transparência (src/app/(site)/transparencia/page.tsx)
+  - Página index com todas as seções organizadas em cards visuais
+  - Buscador de documentos (busca fulltext em todos os documentos publicados)
+  - Filtros por categoria e período
+  - Última atualização visível em cada seção (obrigatório LAI)
+  - Selo de conformidade LAI visível
+  - Links para: e-SIC | Ouvidoria | Dados Abertos
+
+### 2. Seções Obrigatórias por Lei — cada uma é uma página separada:
+
+a) Orçamento (LOA/LDO/PPA):
+   - Cards por exercício (ano)
+   - Download de PDF para cada documento
+   - Descrição resumida do documento
+   - Data de publicação e vigência
+
+b) Receitas e Despesas:
+   - Tabela com filtros de período (mês/ano/trimestre)
+   - Gráficos de barras (Recharts — receita vs despesa por mês)
+   - Exportação: CSV e PDF
+   - Dados via API integrada ao sistema financeiro do município
+   - Paginação e busca por unidade gestora
+
+c) Licitações e Contratos (src/app/(site)/transparencia/licitacoes/page.tsx):
+   - Filtros: modalidade, situação, período, secretaria
+   - Colunas: número, objeto, modalidade, valor, situação, data, vencedor
+   - Download do edital (PDF) e resultado
+   - Status badge: Aberta | Em andamento | Encerrada | Homologada | Anulada
+   - Detalhe da licitação com timeline de eventos
+   - Integração futura com ComprasNet/PNCP via API
+
+d) Servidores e Folha de Pagamento:
+   - Listagem com: nome, cargo, vínculo, lotação, remuneração
+   - Filtros: secretaria, cargo, tipo de vínculo
+   - Busca por nome
+   - Exportação CSV
+   - Aviso LGPD: dados publicados por obrigação legal (art. 7°, § 3° LAI)
+
+e) Convênios e Transferências:
+   - Origem, destino, objeto, valor, situação, prestação de contas
+
+f) Atos Normativos:
+   - Filtros: tipo (Decreto | Portaria | Lei | Resolução | Instrução Normativa)
+   - Busca por número, data, ementa
+   - Download individual e listagem por tipo
+   - Dados: integrado ao módulo de Legislação
+
+g) SIC — Serviço de Informações ao Cidadão:
+   - Formulário de pedido de informação (integrado ao Módulo 1 — LAI)
+   - Acompanhamento de pedido por protocolo
+   - Relatório estatístico de pedidos (exigência LAI — e-SIC)
+   - Prazo de resposta: 20 dias corridos (exigência LAI — countdown visível)
+
+h) Dados Abertos:
+   - Catálogo de datasets disponíveis para download
+   - Formatos: CSV, JSON, XML
+   - Documentação de cada dataset (metadados)
+   - Integração futura com CKAN
+
+### 3. Componentes da Transparência
+  <TransparencyCard /> — card padrão de cada seção com: ícone, título, descrição, 
+    última atualização, link, badge de conformidade (verde = ok, vermelho = desatualizado)
+  <DocumentDownloadList /> — lista de documentos com download, preview e metadados
+  <TransparencyDataTable /> — DataTable especializada com filtros, export CSV/PDF
+  <SicRequestForm /> — formulário SIC integrado ao backend de manifestações (Módulo 1)
+  <ComplianceBadge /> — exibe status de conformidade LAI da seção
+  <LastUpdatedTag /> — exibe "Atualizado em: DD/MM/AAAA às HH:MM" em cada seção
+
+### 4. Regras de Negócio da Transparência
+  - Se um documento tiver mais de 30 dias sem atualização, o admin recebe alerta
+  - Documentos obrigatórios não publicados geram alerta vermelho no CMS
+  - Toda publicação gera log de auditoria com autor, data e IP
+  - Downloads são contabilizados para relatório de acesso
+  - Versões anteriores dos documentos são mantidas (histórico de publicações)

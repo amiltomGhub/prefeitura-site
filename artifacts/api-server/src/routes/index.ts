@@ -11,6 +11,7 @@ import agendaRouter from "./agenda";
 import galeriaRouter from "./galeria";
 import concursosRouter from "./concursos";
 import buscaRouter from "./busca";
+import sicRouter from "./sic";
 
 const router: IRouter = Router();
 
@@ -26,5 +27,6 @@ router.use(agendaRouter);
 router.use(galeriaRouter);
 router.use(concursosRouter);
 router.use(buscaRouter);
+router.use(sicRouter);
 
 export default router;

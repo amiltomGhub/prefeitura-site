@@ -13,6 +13,19 @@ Portal público principal do município, integrado ao Módulo 1 (Ouvidoria) via 
 ### ✅ Parte II — Layout aprimorado (COMPLETO)
 - SiteHeader 3 camadas, MegaMenu, SearchModal, CookieBanner LGPD, SiteFooter LAI, Breadcrumb automático
 
+### ✅ Parte IV — Portal da Transparência (COMPLETO)
+- **Hub** (`/transparencia`) — índice LAI com 8 seções, gráficos Recharts receita/despesa, pie categorias
+- **Orçamento** (`/transparencia/orcamento`) — LOA/LDO/PPA, progresso barras execução, download docs, seletor de exercício
+- **Despesas** (`/transparencia/despesas`) — tabela paginada server-side, filtros ano/mês/secretaria/busca, export CSV
+- **Receitas** (`/transparencia/receitas`) — arrecadação vs meta LOA, gráfico mensal, export CSV
+- **Licitações** (`/transparencia/licitacoes`) — modal de detalhes com AnimatePresence, status badges, filtros modalidade/situação, export CSV
+- **Servidores** (`/transparencia/servidores`) — aviso LGPD completo, filtros por vínculo, folha de pagamento, export CSV
+- **Legislação** (`/transparencia/legislacao`) — type tabs (lei/decreto/portaria/resolução/IN), busca full-text, download PDF, tags
+- **SIC** (`/transparencia/sic`) — 3 abas: formulário e-SIC (react-hook-form + LGPD consent), consulta por protocolo, estatísticas
+- **Dados Abertos** (`/transparencia/dados-abertos`) — catálogo 8 datasets CC BY 4.0, filtros, formatos CSV/JSON/XML, API reference
+- **Endpoint SIC** (`POST /api/sic`) — validação manual, gera protocolo + prazo 20 dias, LGPD consent obrigatório
+- **6 Componentes compartilhados** — ComplianceBadge, LastUpdatedTag, TransparenciaPageHeader, TransparencyCard, DocumentDownloadList, SicRequestForm
+
 ### ✅ Parte III — Homepage com 10 seções (COMPLETO)
 - `HeroCarousel` — 4 slides, autoplay com pausa (WCAG 2.2.2), dots, busca inline
 - `QuickServicesSection` — 8 serviços populares com ícones animados ao scroll
