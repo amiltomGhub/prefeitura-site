@@ -6,14 +6,14 @@ import {
 } from "@workspace/db/schema";
 import { eq, and, desc } from "drizzle-orm";
 import { randomUUID } from "crypto";
-import { requireAuth, type AuthRequest } from "../../middlewares/requireAuth";
+import { requireAuth, requireServidor, type AuthRequest } from "../../middlewares/requireAuth";
 
 const router: IRouter = Router();
 
 // GET /api/servidor/ferias/saldo
-router.get("/servidor/ferias/saldo", requireAuth, async (req: AuthRequest, res) => {
+router.get("/servidor/ferias/saldo", requireAuth, requireServidor, async (req: AuthRequest, res) => {
   try {
-    const servidorId = req.user!.id;
+    const servidorId = req.user!.servidorId!;
 
     const periodos = await db
       .select()
@@ -57,9 +57,9 @@ router.get("/servidor/ferias/saldo", requireAuth, async (req: AuthRequest, res) 
 });
 
 // GET /api/servidor/ferias/historico
-router.get("/servidor/ferias/historico", requireAuth, async (req: AuthRequest, res) => {
+router.get("/servidor/ferias/historico", requireAuth, requireServidor, async (req: AuthRequest, res) => {
   try {
-    const servidorId = req.user!.id;
+    const servidorId = req.user!.servidorId!;
 
     const solicitacoes = await db
       .select()
@@ -75,9 +75,9 @@ router.get("/servidor/ferias/historico", requireAuth, async (req: AuthRequest, r
 });
 
 // POST /api/servidor/ferias/solicitar
-router.post("/servidor/ferias/solicitar", requireAuth, async (req: AuthRequest, res) => {
+router.post("/servidor/ferias/solicitar", requireAuth, requireServidor, async (req: AuthRequest, res) => {
   try {
-    const servidorId = req.user!.id;
+    const servidorId = req.user!.servidorId!;
     const tenantId = req.user!.tenantId;
     const b = req.body;
 
@@ -147,9 +147,9 @@ router.post("/servidor/ferias/solicitar", requireAuth, async (req: AuthRequest, 
 });
 
 // GET /api/servidor/ferias/:id
-router.get("/servidor/ferias/:id", requireAuth, async (req: AuthRequest, res) => {
+router.get("/servidor/ferias/:id", requireAuth, requireServidor, async (req: AuthRequest, res) => {
   try {
-    const servidorId = req.user!.id;
+    const servidorId = req.user!.servidorId!;
 
     const [sol] = await db
       .select()

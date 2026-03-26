@@ -325,12 +325,30 @@ router.patch("/rh/requerimentos/:id/deferir", requireAuth, requireRH, async (req
       responsavel: req.user!.nome,
     });
 
+    // Gerar despacho formal estruturado
+    const agora = new Date();
+    const despacho = [
+      `DESPACHO — ${agora.toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" })}`,
+      ``,
+      `Requerimento: ${req_.protocolo}`,
+      `Tipo: ${req_.tipo}`,
+      `Servidor: (ver cadastro ID ${req_.servidorId})`,
+      ``,
+      `DECISÃO: ${decisao ?? "DEFERIDO"}`,
+      ``,
+      parecer ? `PARECER TÉCNICO:\n${parecer}` : "Analisado e julgado procedente.",
+      ``,
+      `Decisor: ${req.user!.nome}`,
+      `Data: ${agora.toISOString()}`,
+    ].join("\n");
+
     await db
       .update(requerimentosTable)
       .set({
         status: "deferido",
         parecerTecnico: parecer,
         decisao: decisao ?? "Deferido",
+        despacho,
         decisorNome: req.user!.nome,
         decidoEm: new Date(),
         timeline: novaTimeline,
@@ -338,7 +356,7 @@ router.patch("/rh/requerimentos/:id/deferir", requireAuth, requireRH, async (req
       })
       .where(eq(requerimentosTable.id, req_.id));
 
-    res.json({ message: "Requerimento deferido", id: req_.id });
+    res.json({ message: "Requerimento deferido", id: req_.id, despacho });
   } catch (err) {
     req.log.error(err);
     res.status(500).json({ error: "Erro interno" });
@@ -376,6 +394,27 @@ router.patch("/rh/requerimentos/:id/indeferir", requireAuth, requireRH, async (r
       responsavel: req.user!.nome,
     });
 
+    // Gerar despacho formal estruturado de indeferimento
+    const agora = new Date();
+    const despacho = [
+      `DESPACHO DE INDEFERIMENTO — ${agora.toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" })}`,
+      ``,
+      `Requerimento: ${req_.protocolo}`,
+      `Tipo: ${req_.tipo}`,
+      `Servidor: (ver cadastro ID ${req_.servidorId})`,
+      ``,
+      `DECISÃO: INDEFERIDO`,
+      ``,
+      `MOTIVO:\n${motivo}`,
+      ``,
+      parecer ? `PARECER TÉCNICO:\n${parecer}` : "",
+      ``,
+      `Prazo para recurso: ${prazoRecurso.toISOString().split("T")[0]}`,
+      ``,
+      `Decisor: ${req.user!.nome}`,
+      `Data: ${agora.toISOString()}`,
+    ].filter((l, i, arr) => !(l === "" && arr[i - 1] === "")).join("\n");
+
     await db
       .update(requerimentosTable)
       .set({
@@ -383,6 +422,7 @@ router.patch("/rh/requerimentos/:id/indeferir", requireAuth, requireRH, async (r
         parecerTecnico: parecer,
         decisao: "Indeferido",
         motivoDecisao: motivo,
+        despacho,
         decisorNome: req.user!.nome,
         decidoEm: new Date(),
         prazoRecurso: prazoRecurso.toISOString().split("T")[0]!,
@@ -395,6 +435,7 @@ router.patch("/rh/requerimentos/:id/indeferir", requireAuth, requireRH, async (r
       message: "Requerimento indeferido",
       id: req_.id,
       prazoRecurso: prazoRecurso.toISOString().split("T")[0],
+      despacho,
     });
   } catch (err) {
     req.log.error(err);

@@ -12,6 +12,8 @@ export interface AuthUser {
   nome: string;
   isAdmin: boolean;
   modulosPermitidos: string[];
+  /** ID do cadastro em servidores_cadastro — presente apenas para usuários do Portal do Servidor */
+  servidorId?: string | null;
 }
 
 export interface AuthRequest extends Request {
@@ -43,6 +45,20 @@ export async function requireModule(modulo: string) {
     }
     return next();
   };
+}
+
+/**
+ * Guarda para rotas do Portal do Servidor.
+ * Requer que o JWT contenha servidorId (usuário vinculado a um cadastro de servidor).
+ */
+export function requireServidor(req: AuthRequest, res: Response, next: NextFunction) {
+  if (!req.user) {
+    return res.status(401).json({ error: "Não autenticado." });
+  }
+  if (!req.user.servidorId) {
+    return res.status(403).json({ error: "Acesso restrito ao Portal do Servidor. Usuário não vinculado a nenhum cadastro funcional." });
+  }
+  return next();
 }
 
 /**

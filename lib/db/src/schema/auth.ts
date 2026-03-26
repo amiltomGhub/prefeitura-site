@@ -14,6 +14,8 @@ export const usuariosTable = pgTable("usuarios", {
   isAdmin: boolean("is_admin").notNull().default(false),
   isAtivo: boolean("is_ativo").notNull().default(true),
   ultimoAcesso: timestamp("ultimo_acesso"),
+  // Vínculo opcional ao cadastro do servidor (Portal do Servidor)
+  servidorId: text("servidor_id"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });

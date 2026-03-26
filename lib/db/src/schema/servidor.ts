@@ -211,6 +211,9 @@ export const requerimentosTable = pgTable("requerimentos", {
   prazoRecurso: date("prazo_recurso"),
   recursoPresentado: boolean("recurso_apresentado").notNull().default(false),
 
+  // Despacho formal gerado pelo decisor (texto estruturado)
+  despacho: text("despacho"),
+
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });

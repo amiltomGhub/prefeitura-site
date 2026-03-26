@@ -5,14 +5,14 @@ import {
   historicoFuncionalTable,
 } from "@workspace/db/schema";
 import { eq, asc } from "drizzle-orm";
-import { requireAuth, type AuthRequest } from "../../middlewares/requireAuth";
+import { requireAuth, requireServidor, type AuthRequest } from "../../middlewares/requireAuth";
 
 const router: IRouter = Router();
 
 // GET /api/servidor/perfil
-router.get("/servidor/perfil", requireAuth, async (req: AuthRequest, res) => {
+router.get("/servidor/perfil", requireAuth, requireServidor, async (req: AuthRequest, res) => {
   try {
-    const servidorId = req.user!.id;
+    const servidorId = req.user!.servidorId!;
 
     const [servidor] = await db
       .select()
@@ -22,7 +22,6 @@ router.get("/servidor/perfil", requireAuth, async (req: AuthRequest, res) => {
 
     if (!servidor) return res.status(404).json({ error: "Servidor não encontrado" });
 
-    // Mascarar dados sensíveis
     const perfil = {
       ...servidor,
       cpf: servidor.cpf.replace(/(\d{3})\d{3}(\d{3})(\d{2})/, "$1.***.$2-$3"),
@@ -39,9 +38,9 @@ router.get("/servidor/perfil", requireAuth, async (req: AuthRequest, res) => {
 });
 
 // PUT /api/servidor/perfil — apenas campos pessoais editáveis
-router.put("/servidor/perfil", requireAuth, async (req: AuthRequest, res) => {
+router.put("/servidor/perfil", requireAuth, requireServidor, async (req: AuthRequest, res) => {
   try {
-    const servidorId = req.user!.id;
+    const servidorId = req.user!.servidorId!;
     const b = req.body;
 
     const camposPermitidos: Partial<typeof servidoresCadastroTable.$inferInsert> = {};
@@ -80,9 +79,9 @@ router.put("/servidor/perfil", requireAuth, async (req: AuthRequest, res) => {
 });
 
 // GET /api/servidor/historico-funcional
-router.get("/servidor/historico-funcional", requireAuth, async (req: AuthRequest, res) => {
+router.get("/servidor/historico-funcional", requireAuth, requireServidor, async (req: AuthRequest, res) => {
   try {
-    const servidorId = req.user!.id;
+    const servidorId = req.user!.servidorId!;
 
     const historico = await db
       .select()
@@ -98,9 +97,9 @@ router.get("/servidor/historico-funcional", requireAuth, async (req: AuthRequest
 });
 
 // GET /api/servidor/tempo-servico
-router.get("/servidor/tempo-servico", requireAuth, async (req: AuthRequest, res) => {
+router.get("/servidor/tempo-servico", requireAuth, requireServidor, async (req: AuthRequest, res) => {
   try {
-    const servidorId = req.user!.id;
+    const servidorId = req.user!.servidorId!;
 
     const [servidor] = await db
       .select()
@@ -118,7 +117,6 @@ router.get("/servidor/tempo-servico", requireAuth, async (req: AuthRequest, res)
     const meses = Math.floor((totalDias % 365) / 30);
     const dias = totalDias % 30;
 
-    // Projeção de aposentadoria estimativa (regra geral: 35 anos homem / 30 anos mulher)
     const ANOS_PARA_APOSENTADORIA = 35;
     const anosRestantes = Math.max(0, ANOS_PARA_APOSENTADORIA - anos);
     const dataProjecao = new Date(ingresso);

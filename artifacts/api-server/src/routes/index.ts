@@ -1,5 +1,6 @@
 import { Router, type IRouter } from "express";
 import healthRouter from "./health";
+import authRouter from "./auth";
 import tenantRouter from "./tenant";
 import noticiasRouter from "./noticias";
 import servicosRouter from "./servicos";
@@ -56,6 +57,9 @@ const router: IRouter = Router();
 
 // ─── Health ───────────────────────────────────────────────────────────────────
 router.use(healthRouter);
+
+// ─── Auth ─────────────────────────────────────────────────────────────────────
+router.use(authRouter);
 
 // ─── Public API (legacy) ──────────────────────────────────────────────────────
 router.use(tenantRouter);

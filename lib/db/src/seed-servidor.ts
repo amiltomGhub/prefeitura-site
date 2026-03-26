@@ -13,9 +13,17 @@ import {
   requerimentosTable,
   historicoFuncionalTable,
   tenantsTable,
+  usuariosTable,
 } from "./schema";
 import { eq } from "drizzle-orm";
 import { randomUUID } from "crypto";
+import { createHash, randomBytes } from "crypto";
+
+function hashPassword(password: string): string {
+  const salt = randomBytes(16).toString("hex");
+  const hash = createHash("sha256").update(password + salt).digest("hex");
+  return `${salt}:${hash}`;
+}
 
 const DEFAULT_TENANT_SLUG = "parauapebas";
 
@@ -492,7 +500,58 @@ async function main() {
   }
   console.log("  ✅ Histórico funcional criado");
 
+  // ── Usuários do Portal do Servidor (vinculados aos servidores) ────────────
+  // Cada servidor recebe uma conta de usuário com servidorId preenchido,
+  // permitindo que o JWT inclua servidorId para acesso às rotas /api/servidor/*
+  const usuariosServidor = [
+    {
+      id: "usr-srv-001",
+      tenantId,
+      nome: "Ana Paula Ferreira Costa",
+      email: "ana.costa@parauapebas.pa.gov.br",
+      senhaHash: hashPassword("servidor123"),
+      cargo: "Analista de Sistemas",
+      modulosPermitidos: ["servidor"] as string[],
+      isAdmin: false,
+      isAtivo: true,
+      servidorId: "srv-001",
+    },
+    {
+      id: "usr-srv-002",
+      tenantId,
+      nome: "Carlos Eduardo Santos Lima",
+      email: "carlos.lima@parauapebas.pa.gov.br",
+      senhaHash: hashPassword("servidor123"),
+      cargo: "Assistente Administrativo",
+      modulosPermitidos: ["servidor"] as string[],
+      isAdmin: false,
+      isAtivo: true,
+      servidorId: "srv-002",
+    },
+    {
+      id: "usr-srv-003",
+      tenantId,
+      nome: "Maria Lucia Rodrigues Sousa",
+      email: "maria.sousa@parauapebas.pa.gov.br",
+      senhaHash: hashPassword("servidor123"),
+      cargo: "Professora Municipal",
+      modulosPermitidos: ["servidor"] as string[],
+      isAdmin: false,
+      isAtivo: true,
+      servidorId: "srv-003",
+    },
+  ];
+
+  for (const u of usuariosServidor) {
+    await db.insert(usuariosTable).values(u).onConflictDoNothing();
+  }
+  console.log("  ✅ Usuários do Portal do Servidor criados (senha: servidor123)");
+
   console.log("\n🎉 Seed do Portal do Servidor concluído com sucesso!");
+  console.log("   Credenciais de exemplo:");
+  console.log("   - ana.costa@parauapebas.pa.gov.br / servidor123  (srv-001)");
+  console.log("   - carlos.lima@parauapebas.pa.gov.br / servidor123  (srv-002)");
+  console.log("   - maria.sousa@parauapebas.pa.gov.br / servidor123  (srv-003)");
 }
 
 main().catch(console.error).finally(() => process.exit(0));

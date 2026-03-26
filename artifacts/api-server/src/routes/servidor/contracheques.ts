@@ -6,14 +6,14 @@ import {
   servidoresCadastroTable,
 } from "@workspace/db/schema";
 import { eq, and, desc, count } from "drizzle-orm";
-import { requireAuth, type AuthRequest } from "../../middlewares/requireAuth";
+import { requireAuth, requireServidor, type AuthRequest } from "../../middlewares/requireAuth";
 
 const router: IRouter = Router();
 
 // GET /api/servidor/contracheques?ano=2025&page=1&limit=12
-router.get("/servidor/contracheques", requireAuth, async (req: AuthRequest, res) => {
+router.get("/servidor/contracheques", requireAuth, requireServidor, async (req: AuthRequest, res) => {
   try {
-    const servidorId = req.user!.id;
+    const servidorId = req.user!.servidorId!;
     const ano = req.query["ano"] ? parseInt(req.query["ano"] as string) : undefined;
     const page = Math.max(1, parseInt((req.query["page"] as string) ?? "1"));
     const limit = Math.min(48, Math.max(1, parseInt((req.query["limit"] as string) ?? "24")));
@@ -49,9 +49,9 @@ router.get("/servidor/contracheques", requireAuth, async (req: AuthRequest, res)
 });
 
 // GET /api/servidor/contracheques/:mes/:ano
-router.get("/servidor/contracheques/:mes/:ano", requireAuth, async (req: AuthRequest, res) => {
+router.get("/servidor/contracheques/:mes/:ano", requireAuth, requireServidor, async (req: AuthRequest, res) => {
   try {
-    const servidorId = req.user!.id;
+    const servidorId = req.user!.servidorId!;
     const mes = parseInt(req.params["mes"]!);
     const ano = parseInt(req.params["ano"]!);
 
@@ -115,9 +115,9 @@ router.get("/servidor/contracheques/:mes/:ano", requireAuth, async (req: AuthReq
 });
 
 // GET /api/servidor/contracheques/:mes/:ano/pdf — Mocked PDF download
-router.get("/servidor/contracheques/:mes/:ano/pdf", requireAuth, async (req: AuthRequest, res) => {
+router.get("/servidor/contracheques/:mes/:ano/pdf", requireAuth, requireServidor, async (req: AuthRequest, res) => {
   try {
-    const servidorId = req.user!.id;
+    const servidorId = req.user!.servidorId!;
     const mes = parseInt(req.params["mes"]!);
     const ano = parseInt(req.params["ano"]!);
 
@@ -173,9 +173,9 @@ Status: ${contracheque.status === "pago" ? "PAGO" : "PENDENTE"}
 });
 
 // GET /api/servidor/rendimentos/:ano  — Declaração IRRF anual
-router.get("/servidor/rendimentos/:ano", requireAuth, async (req: AuthRequest, res) => {
+router.get("/servidor/rendimentos/:ano", requireAuth, requireServidor, async (req: AuthRequest, res) => {
   try {
-    const servidorId = req.user!.id;
+    const servidorId = req.user!.servidorId!;
     const ano = parseInt(req.params["ano"]!);
     if (isNaN(ano)) return res.status(400).json({ error: "Ano inválido" });
 

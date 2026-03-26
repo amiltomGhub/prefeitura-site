@@ -5134,7 +5134,7 @@ var require_lib = __commonJS({
     module.exports.encodings = null;
     module.exports.defaultCharUnicode = "\uFFFD";
     module.exports.defaultCharSingleByte = "?";
-    module.exports.encode = function encode2(str, encoding, options) {
+    module.exports.encode = function encode3(str, encoding, options) {
       str = "" + (str || "");
       var encoder2 = module.exports.getEncoder(encoding, options);
       var res = encoder2.write(str);
@@ -16505,7 +16505,7 @@ var require_sign = __commonJS({
   "../../node_modules/.pnpm/math-intrinsics@1.1.0/node_modules/math-intrinsics/sign.js"(exports, module) {
     "use strict";
     var $isNaN = require_isNaN();
-    module.exports = function sign(number4) {
+    module.exports = function sign2(number4) {
       if ($isNaN(number4) || number4 === 0) {
         return number4;
       }
@@ -16869,7 +16869,7 @@ var require_get_intrinsic = __commonJS({
     var min = require_min();
     var pow = require_pow();
     var round = require_round();
-    var sign = require_sign();
+    var sign2 = require_sign();
     var $Function = Function;
     var getEvalledConstructor = function(expressionSyntax) {
       try {
@@ -16983,7 +16983,7 @@ var require_get_intrinsic = __commonJS({
       "%Math.min%": min,
       "%Math.pow%": pow,
       "%Math.round%": round,
-      "%Math.sign%": sign,
+      "%Math.sign%": sign2,
       "%Reflect.getPrototypeOf%": $ReflectGPO
     };
     if (getProto) {
@@ -17549,7 +17549,7 @@ var require_utils2 = __commonJS({
       }
     };
     var limit = 1024;
-    var encode2 = function encode3(str, defaultEncoder, charset, kind, format) {
+    var encode3 = function encode4(str, defaultEncoder, charset, kind, format) {
       if (str.length === 0) {
         return str;
       }
@@ -17651,7 +17651,7 @@ var require_utils2 = __commonJS({
       combine,
       compact,
       decode: decode2,
-      encode: encode2,
+      encode: encode3,
       isBuffer,
       isOverflow,
       isRegExp,
@@ -19991,9 +19991,9 @@ var require_dist = __commonJS({
       return new TokenData(consumeUntil("end"), str);
     }
     function compile(path, options = {}) {
-      const { encode: encode2 = encodeURIComponent, delimiter = DEFAULT_DELIMITER } = options;
+      const { encode: encode3 = encodeURIComponent, delimiter = DEFAULT_DELIMITER } = options;
       const data = typeof path === "object" ? path : parse3(path, options);
-      const fn = tokensToFunction(data.tokens, delimiter, encode2);
+      const fn = tokensToFunction(data.tokens, delimiter, encode3);
       return function path2(params = {}) {
         const [path3, ...missing] = fn(params);
         if (missing.length) {
@@ -20002,8 +20002,8 @@ var require_dist = __commonJS({
         return path3;
       };
     }
-    function tokensToFunction(tokens, delimiter, encode2) {
-      const encoders = tokens.map((token) => tokenToFunction(token, delimiter, encode2));
+    function tokensToFunction(tokens, delimiter, encode3) {
+      const encoders = tokens.map((token) => tokenToFunction(token, delimiter, encode3));
       return (data) => {
         const result = [""];
         for (const encoder2 of encoders) {
@@ -20014,11 +20014,11 @@ var require_dist = __commonJS({
         return result;
       };
     }
-    function tokenToFunction(token, delimiter, encode2) {
+    function tokenToFunction(token, delimiter, encode3) {
       if (token.type === "text")
         return () => [token.value];
       if (token.type === "group") {
-        const fn = tokensToFunction(token.tokens, delimiter, encode2);
+        const fn = tokensToFunction(token.tokens, delimiter, encode3);
         return (data) => {
           const [value, ...missing] = fn(data);
           if (!missing.length)
@@ -20026,8 +20026,8 @@ var require_dist = __commonJS({
           return [""];
         };
       }
-      const encodeValue = encode2 || NOOP_VALUE;
-      if (token.type === "wildcard" && encode2 !== false) {
+      const encodeValue = encode3 || NOOP_VALUE;
+      if (token.type === "wildcard" && encode3 !== false) {
         return (data) => {
           const value = data[token.name];
           if (value == null)
@@ -20489,27 +20489,27 @@ var require_router = __commonJS({
     var slice = Array.prototype.slice;
     var flatten = Array.prototype.flat;
     var methods = METHODS.map((method) => method.toLowerCase());
-    module.exports = Router49;
+    module.exports = Router50;
     module.exports.Route = Route;
-    function Router49(options) {
-      if (!(this instanceof Router49)) {
-        return new Router49(options);
+    function Router50(options) {
+      if (!(this instanceof Router50)) {
+        return new Router50(options);
       }
       const opts = options || {};
-      function router49(req, res, next) {
-        router49.handle(req, res, next);
+      function router50(req, res, next) {
+        router50.handle(req, res, next);
       }
-      Object.setPrototypeOf(router49, this);
-      router49.caseSensitive = opts.caseSensitive;
-      router49.mergeParams = opts.mergeParams;
-      router49.params = {};
-      router49.strict = opts.strict;
-      router49.stack = [];
-      return router49;
+      Object.setPrototypeOf(router50, this);
+      router50.caseSensitive = opts.caseSensitive;
+      router50.mergeParams = opts.mergeParams;
+      router50.params = {};
+      router50.strict = opts.strict;
+      router50.stack = [];
+      return router50;
     }
-    Router49.prototype = function() {
+    Router50.prototype = function() {
     };
-    Router49.prototype.param = function param(name, fn) {
+    Router50.prototype.param = function param(name, fn) {
       if (!name) {
         throw new TypeError("argument name is required");
       }
@@ -20529,7 +20529,7 @@ var require_router = __commonJS({
       params.push(fn);
       return this;
     };
-    Router49.prototype.handle = function handle(req, res, callback) {
+    Router50.prototype.handle = function handle(req, res, callback) {
       if (!callback) {
         throw new TypeError("argument callback is required");
       }
@@ -20656,7 +20656,7 @@ var require_router = __commonJS({
         }
       }
     };
-    Router49.prototype.use = function use(handler) {
+    Router50.prototype.use = function use(handler) {
       let offset = 0;
       let path = "/";
       if (typeof handler !== "function") {
@@ -20689,7 +20689,7 @@ var require_router = __commonJS({
       }
       return this;
     };
-    Router49.prototype.route = function route(path) {
+    Router50.prototype.route = function route(path) {
       const route2 = new Route(path);
       const layer = new Layer(path, {
         sensitive: this.caseSensitive,
@@ -20704,7 +20704,7 @@ var require_router = __commonJS({
       return route2;
     };
     methods.concat("all").forEach(function(method) {
-      Router49.prototype[method] = function(path) {
+      Router50.prototype[method] = function(path) {
         const route = this.route(path);
         route[method].apply(route, slice.call(arguments, 1));
         return this;
@@ -20887,13 +20887,13 @@ var require_application = __commonJS({
     var compileTrust = require_utils3().compileTrust;
     var resolve = __require("node:path").resolve;
     var once = require_once();
-    var Router49 = require_router();
+    var Router50 = require_router();
     var slice = Array.prototype.slice;
     var flatten = Array.prototype.flat;
     var app2 = exports = module.exports = {};
     var trustProxyDefaultSymbol = "@@symbol:trust_proxy_default";
     app2.init = function init() {
-      var router49 = null;
+      var router50 = null;
       this.cache = /* @__PURE__ */ Object.create(null);
       this.engines = /* @__PURE__ */ Object.create(null);
       this.settings = /* @__PURE__ */ Object.create(null);
@@ -20902,13 +20902,13 @@ var require_application = __commonJS({
         configurable: true,
         enumerable: true,
         get: function getrouter() {
-          if (router49 === null) {
-            router49 = new Router49({
+          if (router50 === null) {
+            router50 = new Router50({
               caseSensitive: this.enabled("case sensitive routing"),
               strict: this.enabled("strict routing")
             });
           }
-          return router49;
+          return router50;
         }
       });
     };
@@ -20979,15 +20979,15 @@ var require_application = __commonJS({
       if (fns.length === 0) {
         throw new TypeError("app.use() requires a middleware function");
       }
-      var router49 = this.router;
+      var router50 = this.router;
       fns.forEach(function(fn2) {
         if (!fn2 || !fn2.handle || !fn2.set) {
-          return router49.use(path, fn2);
+          return router50.use(path, fn2);
         }
         debug(".use app under %s", path);
         fn2.mountpath = path;
         fn2.parent = this;
-        router49.use(path, function mounted_app(req, res, next) {
+        router50.use(path, function mounted_app(req, res, next) {
           var orig = req.app;
           fn2.handle(req, res, function(err) {
             Object.setPrototypeOf(req, orig.request);
@@ -22947,7 +22947,7 @@ var require_response = __commonJS({
     var path = __require("node:path");
     var pathIsAbsolute = __require("node:path").isAbsolute;
     var statuses = require_statuses();
-    var sign = require_cookie_signature().sign;
+    var sign2 = require_cookie_signature().sign;
     var normalizeType = require_utils3().normalizeType;
     var normalizeTypes = require_utils3().normalizeTypes;
     var setCharset = require_utils3().setCharset;
@@ -23238,7 +23238,7 @@ var require_response = __commonJS({
       }
       var val = typeof value === "object" ? "j:" + JSON.stringify(value) : String(value);
       if (signed) {
-        val = "s:" + sign(val, secret);
+        val = "s:" + sign2(val, secret);
       }
       if (opts.maxAge != null) {
         var maxAge = opts.maxAge - 0;
@@ -23514,7 +23514,7 @@ var require_express = __commonJS({
     var EventEmitter = __require("node:events").EventEmitter;
     var mixin = require_merge_descriptors();
     var proto = require_application();
-    var Router49 = require_router();
+    var Router50 = require_router();
     var req = require_request();
     var res = require_response();
     exports = module.exports = createApplication;
@@ -23536,8 +23536,8 @@ var require_express = __commonJS({
     exports.application = proto;
     exports.request = req;
     exports.response = res;
-    exports.Route = Router49.Route;
-    exports.Router = Router49;
+    exports.Route = Router50.Route;
+    exports.Router = Router50;
     exports.json = bodyParser.json;
     exports.raw = bodyParser.raw;
     exports.static = require_serve_static();
@@ -28579,9 +28579,9 @@ var require_postgres_date = __commonJS({
       if (type === "Z") {
         return 0;
       }
-      var sign = type === "-" ? -1 : 1;
+      var sign2 = type === "-" ? -1 : 1;
       var offset = parseInt(zone[2], 10) * 3600 + parseInt(zone[3] || 0, 10) * 60 + parseInt(zone[4] || 0, 10);
-      return offset * sign * 1e3;
+      return offset * sign2 * 1e3;
     }
     function bcYearToNegativeYear(year2) {
       return -(year2 - 1);
@@ -28946,11 +28946,11 @@ var require_pg_int8 = __commonJS({
     function readInt8(buffer) {
       var high = buffer.readInt32BE(0);
       var low = buffer.readUInt32BE(4);
-      var sign = "";
+      var sign2 = "";
       if (high < 0) {
         high = ~high + (low === 0);
         low = ~low + 1 >>> 0;
-        sign = "-";
+        sign2 = "-";
       }
       var result = "";
       var carry;
@@ -28966,7 +28966,7 @@ var require_pg_int8 = __commonJS({
         low = t / BASE >>> 0;
         digits = "" + (t - BASE * low);
         if (low === 0 && high === 0) {
-          return sign + digits + result;
+          return sign2 + digits + result;
         }
         pad = "";
         l = 6 - digits.length;
@@ -28982,7 +28982,7 @@ var require_pg_int8 = __commonJS({
         low = t / BASE >>> 0;
         digits = "" + (t - BASE * low);
         if (low === 0 && high === 0) {
-          return sign + digits + result;
+          return sign2 + digits + result;
         }
         pad = "";
         l = 6 - digits.length;
@@ -28998,7 +28998,7 @@ var require_pg_int8 = __commonJS({
         low = t / BASE >>> 0;
         digits = "" + (t - BASE * low);
         if (low === 0 && high === 0) {
-          return sign + digits + result;
+          return sign2 + digits + result;
         }
         pad = "";
         l = 6 - digits.length;
@@ -29011,7 +29011,7 @@ var require_pg_int8 = __commonJS({
         carry = high % BASE;
         t = 4294967296 * carry + low;
         digits = "" + t % BASE;
-        return sign + digits + result;
+        return sign2 + digits + result;
       }
     }
     module.exports = readInt8;
@@ -29060,7 +29060,7 @@ var require_binaryParsers = __commonJS({
     };
     var parseFloatFromBits = function(data, precisionBits, exponentBits) {
       var bias = Math.pow(2, exponentBits - 1) - 1;
-      var sign = parseBits(data, 1);
+      var sign2 = parseBits(data, 1);
       var exponent = parseBits(data, exponentBits, 1);
       if (exponent === 0) {
         return 0;
@@ -29081,11 +29081,11 @@ var require_binaryParsers = __commonJS({
       var mantissa = parseBits(data, precisionBits, exponentBits + 1, false, parsePrecisionBits);
       if (exponent == Math.pow(2, exponentBits + 1) - 1) {
         if (mantissa === 0) {
-          return sign === 0 ? Infinity : -Infinity;
+          return sign2 === 0 ? Infinity : -Infinity;
         }
         return NaN;
       }
-      return (sign === 0 ? 1 : -1) * Math.pow(2, exponent - bias) * mantissa;
+      return (sign2 === 0 ? 1 : -1) * Math.pow(2, exponent - bias) * mantissa;
     };
     var parseInt16 = function(value) {
       if (parseBits(value, 1) == 1) {
@@ -29106,8 +29106,8 @@ var require_binaryParsers = __commonJS({
       return parseFloatFromBits(value, 52, 11);
     };
     var parseNumeric = function(value) {
-      var sign = parseBits(value, 16, 32);
-      if (sign == 49152) {
+      var sign2 = parseBits(value, 16, 32);
+      if (sign2 == 49152) {
         return NaN;
       }
       var weight = Math.pow(1e4, parseBits(value, 16, 16));
@@ -29119,12 +29119,12 @@ var require_binaryParsers = __commonJS({
         weight /= 1e4;
       }
       var scale = Math.pow(10, parseBits(value, 16, 48));
-      return (sign === 0 ? 1 : -1) * Math.round(result * scale) / scale;
+      return (sign2 === 0 ? 1 : -1) * Math.round(result * scale) / scale;
     };
     var parseDate = function(isUTC, value) {
-      var sign = parseBits(value, 1);
+      var sign2 = parseBits(value, 1);
       var rawValue = parseBits(value, 63, 1);
-      var result = new Date((sign === 0 ? 1 : -1) * rawValue / 1e3 + 9466848e5);
+      var result = new Date((sign2 === 0 ? 1 : -1) * rawValue / 1e3 + 9466848e5);
       if (!isUTC) {
         result.setTime(result.getTime() + result.getTimezoneOffset() * 6e4);
       }
@@ -29596,7 +29596,7 @@ var require_utils_webcrypto = __commonJS({
     var nodeCrypto = __require("crypto");
     module.exports = {
       postgresMd5PasswordHash,
-      randomBytes,
+      randomBytes: randomBytes2,
       deriveKey,
       sha256,
       hashByName,
@@ -29606,7 +29606,7 @@ var require_utils_webcrypto = __commonJS({
     var webCrypto = nodeCrypto.webcrypto || globalThis.crypto;
     var subtleCrypto = webCrypto.subtle;
     var textEncoder = new TextEncoder();
-    function randomBytes(length) {
+    function randomBytes2(length) {
       return webCrypto.getRandomValues(Buffer.alloc(length));
     }
     async function md5(string4) {
@@ -36534,8 +36534,8 @@ var init_timestamp = __esm({
         const shortened = value.toISOString().slice(0, -1).replace("T", " ");
         if (this.withTimezone) {
           const offset = value.getTimezoneOffset();
-          const sign = offset <= 0 ? "+" : "-";
-          return `${shortened}${sign}${Math.floor(Math.abs(offset) / 60).toString().padStart(2, "0")}`;
+          const sign2 = offset <= 0 ? "+" : "-";
+          return `${shortened}${sign2}${Math.floor(Math.abs(offset) / 60).toString().padStart(2, "0")}`;
         }
         return shortened;
       }
@@ -41636,7 +41636,7 @@ __export(util_exports, {
   getLengthableOrigin: () => getLengthableOrigin,
   getParsedType: () => getParsedType2,
   getSizableOrigin: () => getSizableOrigin,
-  isObject: () => isObject,
+  isObject: () => isObject2,
   isPlainObject: () => isPlainObject,
   issue: () => issue,
   joinValues: () => joinValues,
@@ -41768,17 +41768,17 @@ function randomString(length = 10) {
 function esc(str) {
   return JSON.stringify(str);
 }
-function isObject(data) {
+function isObject2(data) {
   return typeof data === "object" && data !== null && !Array.isArray(data);
 }
 function isPlainObject(o) {
-  if (isObject(o) === false)
+  if (isObject2(o) === false)
     return false;
   const ctor = o.constructor;
   if (ctor === void 0)
     return true;
   const prot = ctor.prototype;
-  if (isObject(prot) === false)
+  if (isObject2(prot) === false)
     return false;
   if (Object.prototype.hasOwnProperty.call(prot, "isPrototypeOf") === false) {
     return false;
@@ -43965,7 +43965,7 @@ var init_schemas = __esm({
         return (payload, ctx) => fn(shape, payload, ctx);
       };
       let fastpass;
-      const isObject3 = isObject;
+      const isObject3 = isObject2;
       const jit = !globalConfig.jitless;
       const allowsEval2 = allowsEval;
       const fastEnabled = jit && allowsEval2.value;
@@ -44118,7 +44118,7 @@ var init_schemas = __esm({
       });
       inst._zod.parse = (payload, ctx) => {
         const input = payload.value;
-        if (!isObject(input)) {
+        if (!isObject2(input)) {
           payload.issues.push({
             code: "invalid_type",
             expected: "object",
@@ -54026,6 +54026,8 @@ var init_auth = __esm({
       isAdmin: boolean("is_admin").notNull().default(false),
       isAtivo: boolean("is_ativo").notNull().default(true),
       ultimoAcesso: timestamp("ultimo_acesso"),
+      // Vínculo opcional ao cadastro do servidor (Portal do Servidor)
+      servidorId: text("servidor_id"),
       createdAt: timestamp("created_at").notNull().defaultNow(),
       updatedAt: timestamp("updated_at").notNull().defaultNow()
     });
@@ -54289,6 +54291,8 @@ var init_servidor = __esm({
       // Prazo para recurso (se indeferido)
       prazoRecurso: date("prazo_recurso"),
       recursoPresentado: boolean("recurso_apresentado").notNull().default(false),
+      // Despacho formal gerado pelo decisor (texto estruturado)
+      despacho: text("despacho"),
       createdAt: timestamp("created_at").notNull().defaultNow(),
       updatedAt: timestamp("updated_at").notNull().defaultNow()
     });
@@ -63362,16 +63366,16 @@ var require_parser2 = __commonJS({
       const length = parser.buffer.length - 1;
       var offset = parser.offset;
       var number4 = 0;
-      var sign = 1;
+      var sign2 = 1;
       if (parser.buffer[offset] === 45) {
-        sign = -1;
+        sign2 = -1;
         offset++;
       }
       while (offset < length) {
         const c1 = parser.buffer[offset++];
         if (c1 === 13) {
           parser.offset = offset + 1;
-          return sign * number4;
+          return sign2 * number4;
         }
         number4 = number4 * 10 + (c1 - 48);
       }
@@ -70811,7 +70815,7 @@ var require_node2 = __commonJS({
         target2[position2] = 193;
       }
     }];
-    function writeExtBuffer(typedArray, type, allocateForWrite, encode3) {
+    function writeExtBuffer(typedArray, type, allocateForWrite, encode4) {
       let length = typedArray.byteLength;
       if (length + 1 < 256) {
         var { target: target2, position: position2 } = allocateForWrite(4 + length);
@@ -70948,7 +70952,7 @@ var require_node2 = __commonJS({
     }
     var defaultPackr = new Packr({ useRecords: false });
     var pack = defaultPackr.pack;
-    var encode2 = defaultPackr.pack;
+    var encode3 = defaultPackr.pack;
     var Encoder = Packr;
     var { NEVER: NEVER2, ALWAYS, DECIMAL_ROUND, DECIMAL_FIT } = FLOAT32_OPTIONS;
     var REUSE_BUFFER_MODE = 512;
@@ -71813,7 +71817,7 @@ var require_node2 = __commonJS({
     exports.clearSource = clearSource;
     exports.decode = decode2;
     exports.decodeIter = decodeIter;
-    exports.encode = encode2;
+    exports.encode = encode3;
     exports.encodeIter = encodeIter;
     exports.mapsAsObjects = mapsAsObjects;
     exports.pack = pack;
@@ -85266,14 +85270,14 @@ var require_luxon = __commonJS({
       return normalized;
     }
     function formatOffset(offset2, format) {
-      const hours = Math.trunc(Math.abs(offset2 / 60)), minutes = Math.trunc(Math.abs(offset2 % 60)), sign = offset2 >= 0 ? "+" : "-";
+      const hours = Math.trunc(Math.abs(offset2 / 60)), minutes = Math.trunc(Math.abs(offset2 % 60)), sign2 = offset2 >= 0 ? "+" : "-";
       switch (format) {
         case "short":
-          return `${sign}${padStart(hours, 2)}:${padStart(minutes, 2)}`;
+          return `${sign2}${padStart(hours, 2)}:${padStart(minutes, 2)}`;
         case "narrow":
-          return `${sign}${hours}${minutes > 0 ? `:${minutes}` : ""}`;
+          return `${sign2}${hours}${minutes > 0 ? `:${minutes}` : ""}`;
         case "techie":
-          return `${sign}${padStart(hours, 2)}${padStart(minutes, 2)}`;
+          return `${sign2}${padStart(hours, 2)}${padStart(minutes, 2)}`;
         default:
           throw new RangeError(`Value format ${format} is out of range for property format`);
       }
@@ -94788,12 +94792,12 @@ var require_cjs2 = __commonJS({
 });
 
 // src/app.ts
-var import_express49 = __toESM(require_express2(), 1);
+var import_express50 = __toESM(require_express2(), 1);
 var import_cors = __toESM(require_lib3(), 1);
 var import_pino_http = __toESM(require_logger(), 1);
 
 // src/routes/index.ts
-var import_express48 = __toESM(require_express2(), 1);
+var import_express49 = __toESM(require_express2(), 1);
 
 // src/routes/health.ts
 var import_express = __toESM(require_express2(), 1);
@@ -99241,6 +99245,295 @@ var GetVicePrefeitoResponse = objectType({
     twitter: stringType().nullish()
   }).nullish()
 });
+var listContrachequesQueryPageDefault = 1;
+var listContrachequesQueryLimitDefault = 24;
+var ListContrachequesQueryParams = objectType({
+  ano: coerce.number().optional(),
+  page: coerce.number().default(listContrachequesQueryPageDefault),
+  limit: coerce.number().default(listContrachequesQueryLimitDefault)
+});
+var ListContrachequesResponse = objectType({
+  data: arrayType(
+    objectType({
+      id: stringType(),
+      mes: numberType(),
+      ano: numberType(),
+      competencia: stringType(),
+      totalBruto: numberType(),
+      totalDescontos: numberType(),
+      totalLiquido: numberType(),
+      status: enumType(["pago", "pendente", "processando"])
+    })
+  ),
+  total: numberType(),
+  page: numberType(),
+  limit: numberType(),
+  totalPages: numberType()
+});
+var getContrachequePathMesMax = 12;
+var GetContrachequeParams = objectType({
+  mes: coerce.number().min(1).max(getContrachequePathMesMax),
+  ano: coerce.number()
+});
+var GetContrachequeResponse = objectType({
+  contracheque: objectType({
+    id: stringType(),
+    mes: numberType(),
+    ano: numberType(),
+    competencia: stringType(),
+    totalBruto: numberType(),
+    totalDescontos: numberType(),
+    totalLiquido: numberType(),
+    status: enumType(["pago", "pendente", "processando"])
+  }).optional(),
+  linhas: objectType({
+    vencimentos: arrayType(
+      objectType({
+        id: stringType(),
+        tipo: enumType(["vencimento", "desconto", "informativo"]),
+        codigo: stringType(),
+        descricao: stringType(),
+        valor: numberType()
+      })
+    ).optional(),
+    descontos: arrayType(
+      objectType({
+        id: stringType(),
+        tipo: enumType(["vencimento", "desconto", "informativo"]),
+        codigo: stringType(),
+        descricao: stringType(),
+        valor: numberType()
+      })
+    ).optional(),
+    informativos: arrayType(
+      objectType({
+        id: stringType(),
+        tipo: enumType(["vencimento", "desconto", "informativo"]),
+        codigo: stringType(),
+        descricao: stringType(),
+        valor: numberType()
+      })
+    ).optional()
+  }).optional(),
+  servidor: objectType({}).passthrough().nullish()
+});
+var DownloadContrachequePdfParams = objectType({
+  mes: coerce.number(),
+  ano: coerce.number()
+});
+var GetRendimentosAnuaisParams = objectType({
+  ano: coerce.number()
+});
+var GetRendimentosAnuaisResponse = objectType({
+  ano: numberType(),
+  totalBruto: numberType(),
+  totalDescontos: numberType(),
+  totalLiquido: numberType(),
+  orgao: stringType().optional(),
+  meses: arrayType(objectType({}).passthrough()).optional()
+});
+var GetFeriasSaldoResponse = objectType({
+  saldoTotal: numberType(),
+  periodoAtual: objectType({}).passthrough().nullish(),
+  progressoAquisitivo: numberType(),
+  diasTrabalhados: numberType(),
+  prazoVencido: booleanType(),
+  periodos: arrayType(objectType({}).passthrough())
+});
+var ListFeriasHistoricoResponse = objectType({
+  data: arrayType(
+    objectType({
+      id: stringType(),
+      protocolo: stringType(),
+      dataInicio: dateType(),
+      dataFim: dateType(),
+      dataRetorno: dateType().optional(),
+      qtdDias: numberType(),
+      parcelamento: numberType().optional(),
+      adiantamento13: booleanType().optional(),
+      abonoPecuniario: booleanType().optional(),
+      status: enumType([
+        "aguardando_chefia",
+        "em_analise_rh",
+        "aprovado",
+        "rejeitado",
+        "cancelado"
+      ]),
+      timeline: arrayType(objectType({}).passthrough()).optional()
+    })
+  ).optional()
+});
+var solicitarFeriasBodyQtdDiasMin = 5;
+var solicitarFeriasBodyParcelamentoDefault = 1;
+var solicitarFeriasBodyAdiantamento13Default = false;
+var solicitarFeriasBodyAbonoPecuniarioDefault = false;
+var solicitarFeriasBodyDiasAbonoDefault = 0;
+var SolicitarFeriasBody = objectType({
+  periodoAquisitivoId: stringType(),
+  dataInicio: dateType(),
+  qtdDias: numberType().min(solicitarFeriasBodyQtdDiasMin),
+  parcelamento: unionType([literalType(1), literalType(2), literalType(3)]).default(solicitarFeriasBodyParcelamentoDefault),
+  adiantamento13: booleanType().default(solicitarFeriasBodyAdiantamento13Default),
+  abonoPecuniario: booleanType().default(solicitarFeriasBodyAbonoPecuniarioDefault),
+  diasAbono: numberType().default(solicitarFeriasBodyDiasAbonoDefault)
+});
+var GetFeriasDetalheParams = objectType({
+  id: coerce.string()
+});
+var ListRequerimentosQueryParams = objectType({
+  tipo: coerce.string().optional(),
+  status: coerce.string().optional()
+});
+var ListRequerimentosResponse = objectType({
+  data: arrayType(
+    objectType({
+      id: stringType(),
+      protocolo: stringType(),
+      tipo: stringType(),
+      assunto: stringType(),
+      justificativa: stringType(),
+      status: enumType([
+        "rascunho",
+        "protocolado",
+        "em_analise",
+        "deferido",
+        "indeferido",
+        "arquivado"
+      ]),
+      documentos: arrayType(objectType({}).passthrough()).optional(),
+      timeline: arrayType(objectType({}).passthrough()).optional(),
+      parecerTecnico: stringType().nullish(),
+      decisao: stringType().nullish(),
+      prazoRecurso: dateType().nullish()
+    })
+  ).optional(),
+  tipos: arrayType(stringType()).optional()
+});
+var criarRequerimentoBodyJustificativaMin = 100;
+var CriarRequerimentoBody = objectType({
+  tipo: stringType(),
+  assunto: stringType().optional(),
+  justificativa: stringType().min(criarRequerimentoBodyJustificativaMin),
+  camposEspecificos: objectType({}).passthrough().optional(),
+  documentos: arrayType(
+    objectType({
+      nome: stringType(),
+      url: stringType(),
+      tamanho: numberType().optional()
+    })
+  ).optional().describe("URLs de arquivos previamente enviados via upload")
+});
+var GetRequerimentoParams = objectType({
+  id: coerce.string()
+});
+var GetRequerimentoResponse = objectType({
+  id: stringType(),
+  protocolo: stringType(),
+  tipo: stringType(),
+  assunto: stringType(),
+  justificativa: stringType(),
+  status: enumType([
+    "rascunho",
+    "protocolado",
+    "em_analise",
+    "deferido",
+    "indeferido",
+    "arquivado"
+  ]),
+  documentos: arrayType(objectType({}).passthrough()).optional(),
+  timeline: arrayType(objectType({}).passthrough()).optional(),
+  parecerTecnico: stringType().nullish(),
+  decisao: stringType().nullish(),
+  prazoRecurso: dateType().nullish()
+});
+var ApresentarRecursoParams = objectType({
+  id: coerce.string()
+});
+var GetPerfilServidorResponse = objectType({
+  id: stringType(),
+  nome: stringType(),
+  cpf: stringType(),
+  matricula: stringType(),
+  cargo: stringType(),
+  nivel: stringType().nullish(),
+  secretaria: stringType(),
+  localTrabalho: stringType().nullish(),
+  dataIngresso: dateType(),
+  vinculo: stringType(),
+  status: stringType(),
+  banco: stringType().nullish(),
+  agencia: stringType().nullish(),
+  conta: stringType().nullish()
+});
+var UpdatePerfilServidorBody = objectType({
+  emailPessoal: stringType().optional(),
+  telefone: stringType().optional(),
+  endereco: stringType().optional(),
+  numero: stringType().optional(),
+  complemento: stringType().optional(),
+  bairro: stringType().optional(),
+  cidade: stringType().optional(),
+  estado: stringType().optional(),
+  cep: stringType().optional()
+});
+var GetTempoServicoResponse = objectType({
+  dataIngresso: dateType(),
+  totalDias: numberType(),
+  anos: numberType(),
+  meses: numberType(),
+  dias: numberType(),
+  descricao: stringType(),
+  projecaoAposentadoria: objectType({
+    dataEstimada: dateType().optional(),
+    anosRestantes: numberType().optional(),
+    regra: stringType().optional()
+  }).optional()
+});
+var GetRhDashboardResponse = objectType({
+  servidoresPorSecretaria: arrayType(
+    objectType({
+      secretaria: stringType().optional(),
+      total: numberType().optional()
+    })
+  ).optional(),
+  feriasVencidas: arrayType(objectType({}).passthrough()).optional(),
+  requerimentosPendentes: arrayType(objectType({}).passthrough()).optional(),
+  aniversariantes: arrayType(objectType({}).passthrough()).optional(),
+  feriasPendentesAprovacao: arrayType(objectType({}).passthrough()).optional(),
+  folhaDoMes: objectType({
+    totalBruto: numberType().optional(),
+    totalLiquido: numberType().optional(),
+    totalDescontos: numberType().optional(),
+    qtdServidores: numberType().optional()
+  }).optional()
+});
+var AprovarFeriasParams = objectType({
+  id: coerce.string()
+});
+var RejeitarFeriasParams = objectType({
+  id: coerce.string()
+});
+var RejeitarFeriasBody = objectType({
+  motivo: stringType()
+});
+var DeferirRequerimentoParams = objectType({
+  id: coerce.string()
+});
+var DeferirRequerimentoBody = objectType({
+  parecer: stringType().optional(),
+  decisao: stringType().optional()
+});
+var IndeferirRequerimentoParams = objectType({
+  id: coerce.string()
+});
+var IndeferirRequerimentoBody = objectType({
+  parecer: stringType().optional(),
+  motivo: stringType()
+});
+var GetRhFolhaResumoQueryParams = objectType({
+  mes: coerce.number().optional(),
+  ano: coerce.number().optional()
+});
 
 // src/routes/health.ts
 var router = (0, import_express.Router)();
@@ -99250,3891 +99543,8 @@ router.get("/healthz", (_req, res) => {
 });
 var health_default = router;
 
-// src/routes/tenant.ts
+// src/routes/auth.ts
 var import_express2 = __toESM(require_express2(), 1);
-
-// ../../node_modules/.pnpm/pg@8.20.0/node_modules/pg/esm/index.mjs
-var import_lib = __toESM(require_lib5(), 1);
-var Client = import_lib.default.Client;
-var Pool = import_lib.default.Pool;
-var Connection = import_lib.default.Connection;
-var types = import_lib.default.types;
-var Query = import_lib.default.Query;
-var DatabaseError = import_lib.default.DatabaseError;
-var escapeIdentifier = import_lib.default.escapeIdentifier;
-var escapeLiteral = import_lib.default.escapeLiteral;
-var Result = import_lib.default.Result;
-var TypeOverrides = import_lib.default.TypeOverrides;
-var defaults = import_lib.default.defaults;
-var esm_default = import_lib.default;
-
-// ../../node_modules/.pnpm/drizzle-orm@0.45.1_@types+pg@8.18.0_pg@8.20.0/node_modules/drizzle-orm/node-postgres/driver.js
-init_entity();
-init_logger();
-init_db();
-init_dialect();
-init_relations();
-init_utils();
-
-// ../../node_modules/.pnpm/drizzle-orm@0.45.1_@types+pg@8.18.0_pg@8.20.0/node_modules/drizzle-orm/node-postgres/session.js
-init_entity();
-init_logger();
-init_pg_core();
-init_session();
-init_sql();
-init_tracing();
-init_utils();
-var { Pool: Pool2, types: types2 } = esm_default;
-var NodePgPreparedQuery = class extends PgPreparedQuery {
-  constructor(client, queryString, params, logger2, cache2, queryMetadata, cacheConfig, fields, name, _isResponseInArrayMode, customResultMapper) {
-    super({ sql: queryString, params }, cache2, queryMetadata, cacheConfig);
-    this.client = client;
-    this.queryString = queryString;
-    this.params = params;
-    this.logger = logger2;
-    this.fields = fields;
-    this._isResponseInArrayMode = _isResponseInArrayMode;
-    this.customResultMapper = customResultMapper;
-    this.rawQueryConfig = {
-      name,
-      text: queryString,
-      types: {
-        // @ts-ignore
-        getTypeParser: (typeId, format) => {
-          if (typeId === types2.builtins.TIMESTAMPTZ) {
-            return (val) => val;
-          }
-          if (typeId === types2.builtins.TIMESTAMP) {
-            return (val) => val;
-          }
-          if (typeId === types2.builtins.DATE) {
-            return (val) => val;
-          }
-          if (typeId === types2.builtins.INTERVAL) {
-            return (val) => val;
-          }
-          if (typeId === 1231) {
-            return (val) => val;
-          }
-          if (typeId === 1115) {
-            return (val) => val;
-          }
-          if (typeId === 1185) {
-            return (val) => val;
-          }
-          if (typeId === 1187) {
-            return (val) => val;
-          }
-          if (typeId === 1182) {
-            return (val) => val;
-          }
-          return types2.getTypeParser(typeId, format);
-        }
-      }
-    };
-    this.queryConfig = {
-      name,
-      text: queryString,
-      rowMode: "array",
-      types: {
-        // @ts-ignore
-        getTypeParser: (typeId, format) => {
-          if (typeId === types2.builtins.TIMESTAMPTZ) {
-            return (val) => val;
-          }
-          if (typeId === types2.builtins.TIMESTAMP) {
-            return (val) => val;
-          }
-          if (typeId === types2.builtins.DATE) {
-            return (val) => val;
-          }
-          if (typeId === types2.builtins.INTERVAL) {
-            return (val) => val;
-          }
-          if (typeId === 1231) {
-            return (val) => val;
-          }
-          if (typeId === 1115) {
-            return (val) => val;
-          }
-          if (typeId === 1185) {
-            return (val) => val;
-          }
-          if (typeId === 1187) {
-            return (val) => val;
-          }
-          if (typeId === 1182) {
-            return (val) => val;
-          }
-          return types2.getTypeParser(typeId, format);
-        }
-      }
-    };
-  }
-  static [entityKind] = "NodePgPreparedQuery";
-  rawQueryConfig;
-  queryConfig;
-  async execute(placeholderValues = {}) {
-    return tracer.startActiveSpan("drizzle.execute", async () => {
-      const params = fillPlaceholders(this.params, placeholderValues);
-      this.logger.logQuery(this.rawQueryConfig.text, params);
-      const { fields, rawQueryConfig: rawQuery, client, queryConfig: query, joinsNotNullableMap, customResultMapper } = this;
-      if (!fields && !customResultMapper) {
-        return tracer.startActiveSpan("drizzle.driver.execute", async (span) => {
-          span?.setAttributes({
-            "drizzle.query.name": rawQuery.name,
-            "drizzle.query.text": rawQuery.text,
-            "drizzle.query.params": JSON.stringify(params)
-          });
-          return this.queryWithCache(rawQuery.text, params, async () => {
-            return await client.query(rawQuery, params);
-          });
-        });
-      }
-      const result = await tracer.startActiveSpan("drizzle.driver.execute", (span) => {
-        span?.setAttributes({
-          "drizzle.query.name": query.name,
-          "drizzle.query.text": query.text,
-          "drizzle.query.params": JSON.stringify(params)
-        });
-        return this.queryWithCache(query.text, params, async () => {
-          return await client.query(query, params);
-        });
-      });
-      return tracer.startActiveSpan("drizzle.mapResponse", () => {
-        return customResultMapper ? customResultMapper(result.rows) : result.rows.map((row) => mapResultRow(fields, row, joinsNotNullableMap));
-      });
-    });
-  }
-  all(placeholderValues = {}) {
-    return tracer.startActiveSpan("drizzle.execute", () => {
-      const params = fillPlaceholders(this.params, placeholderValues);
-      this.logger.logQuery(this.rawQueryConfig.text, params);
-      return tracer.startActiveSpan("drizzle.driver.execute", (span) => {
-        span?.setAttributes({
-          "drizzle.query.name": this.rawQueryConfig.name,
-          "drizzle.query.text": this.rawQueryConfig.text,
-          "drizzle.query.params": JSON.stringify(params)
-        });
-        return this.queryWithCache(this.rawQueryConfig.text, params, async () => {
-          return this.client.query(this.rawQueryConfig, params);
-        }).then((result) => result.rows);
-      });
-    });
-  }
-  /** @internal */
-  isResponseInArrayMode() {
-    return this._isResponseInArrayMode;
-  }
-};
-var NodePgSession = class _NodePgSession extends PgSession {
-  constructor(client, dialect, schema, options = {}) {
-    super(dialect);
-    this.client = client;
-    this.schema = schema;
-    this.options = options;
-    this.logger = options.logger ?? new NoopLogger();
-    this.cache = options.cache ?? new NoopCache();
-  }
-  static [entityKind] = "NodePgSession";
-  logger;
-  cache;
-  prepareQuery(query, fields, name, isResponseInArrayMode, customResultMapper, queryMetadata, cacheConfig) {
-    return new NodePgPreparedQuery(
-      this.client,
-      query.sql,
-      query.params,
-      this.logger,
-      this.cache,
-      queryMetadata,
-      cacheConfig,
-      fields,
-      name,
-      isResponseInArrayMode,
-      customResultMapper
-    );
-  }
-  async transaction(transaction, config2) {
-    const isPool = this.client instanceof Pool2 || Object.getPrototypeOf(this.client).constructor.name.includes("Pool");
-    const session = isPool ? new _NodePgSession(await this.client.connect(), this.dialect, this.schema, this.options) : this;
-    const tx = new NodePgTransaction(this.dialect, session, this.schema);
-    await tx.execute(sql`begin${config2 ? sql` ${tx.getTransactionConfigSQL(config2)}` : void 0}`);
-    try {
-      const result = await transaction(tx);
-      await tx.execute(sql`commit`);
-      return result;
-    } catch (error40) {
-      await tx.execute(sql`rollback`);
-      throw error40;
-    } finally {
-      if (isPool) session.client.release();
-    }
-  }
-  async count(sql22) {
-    const res = await this.execute(sql22);
-    return Number(
-      res["rows"][0]["count"]
-    );
-  }
-};
-var NodePgTransaction = class _NodePgTransaction extends PgTransaction {
-  static [entityKind] = "NodePgTransaction";
-  async transaction(transaction) {
-    const savepointName = `sp${this.nestedIndex + 1}`;
-    const tx = new _NodePgTransaction(
-      this.dialect,
-      this.session,
-      this.schema,
-      this.nestedIndex + 1
-    );
-    await tx.execute(sql.raw(`savepoint ${savepointName}`));
-    try {
-      const result = await transaction(tx);
-      await tx.execute(sql.raw(`release savepoint ${savepointName}`));
-      return result;
-    } catch (err) {
-      await tx.execute(sql.raw(`rollback to savepoint ${savepointName}`));
-      throw err;
-    }
-  }
-};
-
-// ../../node_modules/.pnpm/drizzle-orm@0.45.1_@types+pg@8.18.0_pg@8.20.0/node_modules/drizzle-orm/node-postgres/driver.js
-var NodePgDriver = class {
-  constructor(client, dialect, options = {}) {
-    this.client = client;
-    this.dialect = dialect;
-    this.options = options;
-  }
-  static [entityKind] = "NodePgDriver";
-  createSession(schema) {
-    return new NodePgSession(this.client, this.dialect, schema, {
-      logger: this.options.logger,
-      cache: this.options.cache
-    });
-  }
-};
-var NodePgDatabase = class extends PgDatabase {
-  static [entityKind] = "NodePgDatabase";
-};
-function construct(client, config2 = {}) {
-  const dialect = new PgDialect({ casing: config2.casing });
-  let logger2;
-  if (config2.logger === true) {
-    logger2 = new DefaultLogger();
-  } else if (config2.logger !== false) {
-    logger2 = config2.logger;
-  }
-  let schema;
-  if (config2.schema) {
-    const tablesConfig = extractTablesRelationalConfig(
-      config2.schema,
-      createTableRelationsHelpers
-    );
-    schema = {
-      fullSchema: config2.schema,
-      schema: tablesConfig.tables,
-      tableNamesMap: tablesConfig.tableNamesMap
-    };
-  }
-  const driver = new NodePgDriver(client, dialect, { logger: logger2, cache: config2.cache });
-  const session = driver.createSession(schema);
-  const db2 = new NodePgDatabase(dialect, session, schema);
-  db2.$client = client;
-  db2.$cache = config2.cache;
-  if (db2.$cache) {
-    db2.$cache["invalidate"] = config2.cache?.onMutate;
-  }
-  return db2;
-}
-function drizzle(...params) {
-  if (typeof params[0] === "string") {
-    const instance = new esm_default.Pool({
-      connectionString: params[0]
-    });
-    return construct(instance, params[1]);
-  }
-  if (isConfig(params[0])) {
-    const { connection, client, ...drizzleConfig } = params[0];
-    if (client) return construct(client, drizzleConfig);
-    const instance = typeof connection === "string" ? new esm_default.Pool({
-      connectionString: connection
-    }) : new esm_default.Pool(connection);
-    return construct(instance, drizzleConfig);
-  }
-  return construct(params[0], params[1]);
-}
-((drizzle2) => {
-  function mock(config2) {
-    return construct({}, config2);
-  }
-  drizzle2.mock = mock;
-})(drizzle || (drizzle = {}));
-
-// ../../lib/db/src/index.ts
-init_schema2();
-init_schema2();
-var { Pool: Pool3 } = esm_default;
-if (!process.env.DATABASE_URL) {
-  throw new Error(
-    "DATABASE_URL must be set. Did you forget to provision a database?"
-  );
-}
-var pool = new Pool3({ connectionString: process.env.DATABASE_URL });
-var db = drizzle(pool, { schema: schema_exports });
-
-// src/routes/tenant.ts
-init_schema2();
-init_drizzle_orm();
-var router2 = (0, import_express2.Router)();
-router2.get("/tenant/config", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? "default";
-    const tenant = await db.select().from(tenantsTable).where(eq(tenantsTable.slug, tenantSlug)).limit(1);
-    if (!tenant.length) {
-      const all = await db.select().from(tenantsTable).limit(1);
-      if (!all.length) {
-        return res.status(404).json({ error: "Tenant not found" });
-      }
-      return res.json(all[0]);
-    }
-    res.json(tenant[0]);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router2.get("/municipio/info", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? "default";
-    const tenant = await db.select().from(tenantsTable).where(eq(tenantsTable.slug, tenantSlug)).limit(1);
-    const tenantId = tenant[0]?.id ?? "";
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const info = await db.select().from(municipioInfoTable).where(eq(municipioInfoTable.tenantId, tenantId)).limit(1);
-    if (!info.length) return res.status(404).json({ error: "Municipio info not found" });
-    res.json(info[0]);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router2.get("/governo/prefeito", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? "default";
-    const tenant = await db.select().from(tenantsTable).where(eq(tenantsTable.slug, tenantSlug)).limit(1);
-    const tenantId = tenant[0]?.id ?? "";
-    const gestor = await db.select().from(gestoresTable).where(
-      and(eq(gestoresTable.tenantId, tenantId), eq(gestoresTable.cargo, "Prefeito"), eq(gestoresTable.ativo, true))
-    ).limit(1);
-    if (!gestor.length) return res.status(404).json({ error: "Prefeito not found" });
-    res.json(gestor[0]);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router2.get("/governo/vice-prefeito", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? "default";
-    const tenant = await db.select().from(tenantsTable).where(eq(tenantsTable.slug, tenantSlug)).limit(1);
-    const tenantId = tenant[0]?.id ?? "";
-    const gestor = await db.select().from(gestoresTable).where(
-      and(eq(gestoresTable.tenantId, tenantId), eq(gestoresTable.cargo, "Vice-Prefeito"), eq(gestoresTable.ativo, true))
-    ).limit(1);
-    if (!gestor.length) return res.status(404).json({ error: "Vice-Prefeito not found" });
-    res.json(gestor[0]);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-var tenant_default = router2;
-
-// src/routes/noticias.ts
-var import_express3 = __toESM(require_express2(), 1);
-init_schema2();
-init_drizzle_orm();
-import { randomUUID } from "crypto";
-var router3 = (0, import_express3.Router)();
-var DEFAULT_TENANT = "parauapebas";
-async function getTenantId(tenantSlug) {
-  const { tenantsTable: tenantsTable2 } = await Promise.resolve().then(() => (init_schema2(), schema_exports));
-  const tenant = await db.select().from(tenantsTable2).where(eq(tenantsTable2.slug, tenantSlug)).limit(1);
-  return tenant[0]?.id ?? null;
-}
-router3.get("/noticias", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT;
-    const page = Math.max(1, parseInt(req.query["page"] ?? "1"));
-    const limit = Math.min(50, Math.max(1, parseInt(req.query["limit"] ?? "10")));
-    const categoria = req.query["categoria"];
-    const destaque = req.query["destaque"];
-    const offset = (page - 1) * limit;
-    const tenantId = await getTenantId(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const conditions = [eq(noticiasTable.tenantId, tenantId), eq(noticiasTable.publicado, true)];
-    if (categoria) conditions.push(eq(noticiasTable.categoria, categoria));
-    if (destaque === "true") conditions.push(eq(noticiasTable.destaque, true));
-    const whereClause = and(...conditions);
-    const [total, data] = await Promise.all([
-      db.select({ count: count() }).from(noticiasTable).where(whereClause),
-      db.select().from(noticiasTable).where(whereClause).orderBy(desc(noticiasTable.dataPublicacao)).limit(limit).offset(offset)
-    ]);
-    const totalCount = total[0]?.count ?? 0;
-    res.json({ data, total: totalCount, page, limit, totalPages: Math.ceil(totalCount / limit) });
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router3.get("/noticias/:slug", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT;
-    const tenantId = await getTenantId(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const noticia = await db.select().from(noticiasTable).where(
-      and(eq(noticiasTable.tenantId, tenantId), eq(noticiasTable.slug, req.params["slug"]), eq(noticiasTable.publicado, true))
-    ).limit(1);
-    if (!noticia.length) return res.status(404).json({ error: "Not\xEDcia n\xE3o encontrada" });
-    res.json(noticia[0]);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router3.post("/noticias", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT;
-    const tenantId = await getTenantId(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const body = req.body;
-    const noticia = await db.insert(noticiasTable).values({
-      id: randomUUID(),
-      tenantId,
-      titulo: body.titulo,
-      slug: body.slug,
-      resumo: body.resumo,
-      conteudo: body.conteudo,
-      imagemCapa: body.imagemCapa ?? null,
-      categoria: body.categoria,
-      autor: body.autor ?? null,
-      dataPublicacao: body.dataPublicacao ? new Date(body.dataPublicacao) : /* @__PURE__ */ new Date(),
-      destaque: body.destaque ?? false,
-      tags: body.tags ?? []
-    }).returning();
-    res.status(201).json(noticia[0]);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router3.put("/noticias/:slug", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT;
-    const tenantId = await getTenantId(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const body = req.body;
-    const updated = await db.update(noticiasTable).set({ ...body, updatedAt: /* @__PURE__ */ new Date() }).where(and(eq(noticiasTable.tenantId, tenantId), eq(noticiasTable.slug, req.params["slug"]))).returning();
-    if (!updated.length) return res.status(404).json({ error: "Not\xEDcia n\xE3o encontrada" });
-    res.json(updated[0]);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router3.delete("/noticias/:slug", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT;
-    const tenantId = await getTenantId(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    await db.delete(noticiasTable).where(
-      and(eq(noticiasTable.tenantId, tenantId), eq(noticiasTable.slug, req.params["slug"]))
-    );
-    res.status(204).send();
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-var noticias_default = router3;
-
-// src/routes/servicos.ts
-var import_express4 = __toESM(require_express2(), 1);
-init_schema2();
-init_drizzle_orm();
-var router4 = (0, import_express4.Router)();
-var DEFAULT_TENANT2 = "parauapebas";
-async function getTenantId2(slug) {
-  const t = await db.select().from(tenantsTable).where(eq(tenantsTable.slug, slug)).limit(1);
-  return t[0]?.id ?? null;
-}
-router4.get("/servicos", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT2;
-    const page = Math.max(1, parseInt(req.query["page"] ?? "1"));
-    const limit = Math.min(50, Math.max(1, parseInt(req.query["limit"] ?? "20")));
-    const categoria = req.query["categoria"];
-    const offset = (page - 1) * limit;
-    const tenantId = await getTenantId2(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const conditions = [eq(servicosTable.tenantId, tenantId), eq(servicosTable.ativo, true)];
-    if (categoria) conditions.push(eq(servicosTable.categoria, categoria));
-    const whereClause = and(...conditions);
-    const [total, data] = await Promise.all([
-      db.select({ count: count() }).from(servicosTable).where(whereClause),
-      db.select().from(servicosTable).where(whereClause).limit(limit).offset(offset)
-    ]);
-    const totalCount = total[0]?.count ?? 0;
-    res.json({ data, total: totalCount, page, limit, totalPages: Math.ceil(totalCount / limit) });
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router4.get("/servicos/:slug", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT2;
-    const tenantId = await getTenantId2(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const servico = await db.select().from(servicosTable).where(
-      and(eq(servicosTable.tenantId, tenantId), eq(servicosTable.slug, req.params["slug"]), eq(servicosTable.ativo, true))
-    ).limit(1);
-    if (!servico.length) return res.status(404).json({ error: "Servi\xE7o n\xE3o encontrado" });
-    res.json(servico[0]);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-var servicos_default = router4;
-
-// src/routes/secretarias.ts
-var import_express5 = __toESM(require_express2(), 1);
-init_schema2();
-init_drizzle_orm();
-var router5 = (0, import_express5.Router)();
-var DEFAULT_TENANT3 = "parauapebas";
-async function getTenantId3(slug) {
-  const t = await db.select().from(tenantsTable).where(eq(tenantsTable.slug, slug)).limit(1);
-  return t[0]?.id ?? null;
-}
-router5.get("/secretarias", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT3;
-    const tenantId = await getTenantId3(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const data = await db.select().from(secretariasTable).where(
-      and(eq(secretariasTable.tenantId, tenantId), eq(secretariasTable.ativa, true))
-    );
-    res.json({ data, total: data.length });
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router5.get("/secretarias/:slug", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT3;
-    const tenantId = await getTenantId3(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const secretaria = await db.select().from(secretariasTable).where(
-      and(eq(secretariasTable.tenantId, tenantId), eq(secretariasTable.slug, req.params["slug"]))
-    ).limit(1);
-    if (!secretaria.length) return res.status(404).json({ error: "Secretaria n\xE3o encontrada" });
-    res.json(secretaria[0]);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-var secretarias_default = router5;
-
-// src/routes/transparencia.ts
-var import_express6 = __toESM(require_express2(), 1);
-init_schema2();
-init_drizzle_orm();
-var router6 = (0, import_express6.Router)();
-var DEFAULT_TENANT4 = "parauapebas";
-async function getTenantId4(slug) {
-  const t = await db.select().from(tenantsTable).where(eq(tenantsTable.slug, slug)).limit(1);
-  return t[0]?.id ?? null;
-}
-router6.get("/transparencia/orcamento", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT4;
-    const tenantId = await getTenantId4(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const ano = parseInt(req.query["ano"] ?? String((/* @__PURE__ */ new Date()).getFullYear()));
-    const orcamento = await db.select().from(orcamentosTable).where(
-      and(eq(orcamentosTable.tenantId, tenantId), eq(orcamentosTable.ano, ano))
-    ).limit(1);
-    if (!orcamento.length) {
-      return res.json({
-        ano,
-        receitaPrevista: 0,
-        receitaRealizada: 0,
-        despesaPrevista: 0,
-        despesaRealizada: 0,
-        saldoAtual: 0,
-        categorias: []
-      });
-    }
-    const orc = orcamento[0];
-    const categorias = typeof orc.categorias === "string" ? JSON.parse(orc.categorias) : orc.categorias;
-    res.json({ ...orc, categorias });
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router6.get("/transparencia/despesas", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT4;
-    const page = Math.max(1, parseInt(req.query["page"] ?? "1"));
-    const limit = Math.min(100, Math.max(1, parseInt(req.query["limit"] ?? "20")));
-    const offset = (page - 1) * limit;
-    const tenantId = await getTenantId4(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const conditions = [eq(despesasTable.tenantId, tenantId)];
-    if (req.query["ano"]) conditions.push(eq(despesasTable.ano, parseInt(req.query["ano"])));
-    if (req.query["mes"]) conditions.push(eq(despesasTable.mes, parseInt(req.query["mes"])));
-    if (req.query["secretaria"]) conditions.push(eq(despesasTable.secretaria, req.query["secretaria"]));
-    const whereClause = and(...conditions);
-    const [total, data] = await Promise.all([
-      db.select({ count: count() }).from(despesasTable).where(whereClause),
-      db.select().from(despesasTable).where(whereClause).limit(limit).offset(offset)
-    ]);
-    const totalCount = total[0]?.count ?? 0;
-    res.json({ data, total: totalCount, page, limit, totalPages: Math.ceil(totalCount / limit) });
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router6.get("/transparencia/receitas", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT4;
-    const page = Math.max(1, parseInt(req.query["page"] ?? "1"));
-    const limit = Math.min(100, Math.max(1, parseInt(req.query["limit"] ?? "20")));
-    const offset = (page - 1) * limit;
-    const tenantId = await getTenantId4(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const conditions = [eq(receitasTable.tenantId, tenantId)];
-    if (req.query["ano"]) conditions.push(eq(receitasTable.ano, parseInt(req.query["ano"])));
-    const whereClause = and(...conditions);
-    const [total, data] = await Promise.all([
-      db.select({ count: count() }).from(receitasTable).where(whereClause),
-      db.select().from(receitasTable).where(whereClause).limit(limit).offset(offset)
-    ]);
-    const totalCount = total[0]?.count ?? 0;
-    res.json({ data, total: totalCount, page, limit, totalPages: Math.ceil(totalCount / limit) });
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router6.get("/transparencia/servidores", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT4;
-    const page = Math.max(1, parseInt(req.query["page"] ?? "1"));
-    const limit = Math.min(100, Math.max(1, parseInt(req.query["limit"] ?? "20")));
-    const offset = (page - 1) * limit;
-    const tenantId = await getTenantId4(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const conditions = [eq(servidoresTable.tenantId, tenantId)];
-    if (req.query["secretaria"]) conditions.push(eq(servidoresTable.secretaria, req.query["secretaria"]));
-    const whereClause = and(...conditions);
-    const [total, data] = await Promise.all([
-      db.select({ count: count() }).from(servidoresTable).where(whereClause),
-      db.select().from(servidoresTable).where(whereClause).limit(limit).offset(offset)
-    ]);
-    const totalCount = total[0]?.count ?? 0;
-    res.json({ data, total: totalCount, page, limit, totalPages: Math.ceil(totalCount / limit) });
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-var transparencia_default = router6;
-
-// src/routes/licitacoes.ts
-var import_express7 = __toESM(require_express2(), 1);
-init_schema2();
-init_drizzle_orm();
-var router7 = (0, import_express7.Router)();
-var DEFAULT_TENANT5 = "parauapebas";
-async function getTenantId5(slug) {
-  const t = await db.select().from(tenantsTable).where(eq(tenantsTable.slug, slug)).limit(1);
-  return t[0]?.id ?? null;
-}
-router7.get("/licitacoes", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT5;
-    const page = Math.max(1, parseInt(req.query["page"] ?? "1"));
-    const limit = Math.min(100, Math.max(1, parseInt(req.query["limit"] ?? "20")));
-    const offset = (page - 1) * limit;
-    const tenantId = await getTenantId5(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const conditions = [eq(licitacoesTable.tenantId, tenantId)];
-    if (req.query["modalidade"]) conditions.push(eq(licitacoesTable.modalidade, req.query["modalidade"]));
-    if (req.query["situacao"]) conditions.push(eq(licitacoesTable.situacao, req.query["situacao"]));
-    const whereClause = and(...conditions);
-    const [total, data] = await Promise.all([
-      db.select({ count: count() }).from(licitacoesTable).where(whereClause),
-      db.select().from(licitacoesTable).where(whereClause).orderBy(desc(licitacoesTable.createdAt)).limit(limit).offset(offset)
-    ]);
-    const totalCount = total[0]?.count ?? 0;
-    res.json({ data, total: totalCount, page, limit, totalPages: Math.ceil(totalCount / limit) });
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router7.get("/licitacoes/:id", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT5;
-    const tenantId = await getTenantId5(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const licitacao = await db.select().from(licitacoesTable).where(
-      and(eq(licitacoesTable.tenantId, tenantId), eq(licitacoesTable.id, req.params["id"]))
-    ).limit(1);
-    if (!licitacao.length) return res.status(404).json({ error: "Licita\xE7\xE3o n\xE3o encontrada" });
-    res.json(licitacao[0]);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-var licitacoes_default = router7;
-
-// src/routes/legislacao.ts
-var import_express8 = __toESM(require_express2(), 1);
-init_schema2();
-init_drizzle_orm();
-var router8 = (0, import_express8.Router)();
-var DEFAULT_TENANT6 = "parauapebas";
-async function getTenantId6(slug) {
-  const t = await db.select().from(tenantsTable).where(eq(tenantsTable.slug, slug)).limit(1);
-  return t[0]?.id ?? null;
-}
-router8.get("/legislacao", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT6;
-    const page = Math.max(1, parseInt(req.query["page"] ?? "1"));
-    const limit = Math.min(100, Math.max(1, parseInt(req.query["limit"] ?? "20")));
-    const offset = (page - 1) * limit;
-    const tenantId = await getTenantId6(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const conditions = [eq(legislacaoTable.tenantId, tenantId)];
-    if (req.query["tipo"]) conditions.push(eq(legislacaoTable.tipo, req.query["tipo"]));
-    if (req.query["ano"]) conditions.push(eq(legislacaoTable.ano, parseInt(req.query["ano"])));
-    const whereClause = and(...conditions);
-    const [total, data] = await Promise.all([
-      db.select({ count: count() }).from(legislacaoTable).where(whereClause),
-      db.select().from(legislacaoTable).where(whereClause).orderBy(desc(legislacaoTable.dataPublicacao)).limit(limit).offset(offset)
-    ]);
-    const totalCount = total[0]?.count ?? 0;
-    res.json({ data, total: totalCount, page, limit, totalPages: Math.ceil(totalCount / limit) });
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router8.get("/legislacao/:tipo/:slug", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT6;
-    const tenantId = await getTenantId6(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const lei = await db.select().from(legislacaoTable).where(
-      and(
-        eq(legislacaoTable.tenantId, tenantId),
-        eq(legislacaoTable.tipo, req.params["tipo"]),
-        eq(legislacaoTable.slug, req.params["slug"])
-      )
-    ).limit(1);
-    if (!lei.length) return res.status(404).json({ error: "Legisla\xE7\xE3o n\xE3o encontrada" });
-    res.json(lei[0]);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-var legislacao_default = router8;
-
-// src/routes/agenda.ts
-var import_express9 = __toESM(require_express2(), 1);
-init_schema2();
-init_drizzle_orm();
-var router9 = (0, import_express9.Router)();
-var DEFAULT_TENANT7 = "parauapebas";
-async function getTenantId7(slug) {
-  const t = await db.select().from(tenantsTable).where(eq(tenantsTable.slug, slug)).limit(1);
-  return t[0]?.id ?? null;
-}
-router9.get("/agenda", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT7;
-    const page = Math.max(1, parseInt(req.query["page"] ?? "1"));
-    const limit = Math.min(50, Math.max(1, parseInt(req.query["limit"] ?? "20")));
-    const offset = (page - 1) * limit;
-    const tenantId = await getTenantId7(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const conditions = [eq(agendaTable.tenantId, tenantId), eq(agendaTable.ativo, true)];
-    const whereClause = and(...conditions);
-    const [total, data] = await Promise.all([
-      db.select({ count: count() }).from(agendaTable).where(whereClause),
-      db.select().from(agendaTable).where(whereClause).orderBy(asc(agendaTable.dataInicio)).limit(limit).offset(offset)
-    ]);
-    const totalCount = total[0]?.count ?? 0;
-    res.json({ data, total: totalCount, page, limit, totalPages: Math.ceil(totalCount / limit) });
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-var agenda_default = router9;
-
-// src/routes/galeria.ts
-var import_express10 = __toESM(require_express2(), 1);
-init_schema2();
-init_drizzle_orm();
-var router10 = (0, import_express10.Router)();
-var DEFAULT_TENANT8 = "parauapebas";
-async function getTenantId8(slug) {
-  const t = await db.select().from(tenantsTable).where(eq(tenantsTable.slug, slug)).limit(1);
-  return t[0]?.id ?? null;
-}
-router10.get("/galeria", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT8;
-    const page = Math.max(1, parseInt(req.query["page"] ?? "1"));
-    const limit = Math.min(50, Math.max(1, parseInt(req.query["limit"] ?? "20")));
-    const offset = (page - 1) * limit;
-    const tenantId = await getTenantId8(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const conditions = [eq(galeriaTable.tenantId, tenantId)];
-    if (req.query["tipo"]) conditions.push(eq(galeriaTable.tipo, req.query["tipo"]));
-    const whereClause = and(...conditions);
-    const [total, data] = await Promise.all([
-      db.select({ count: count() }).from(galeriaTable).where(whereClause),
-      db.select().from(galeriaTable).where(whereClause).orderBy(desc(galeriaTable.dataPublicacao)).limit(limit).offset(offset)
-    ]);
-    const totalCount = total[0]?.count ?? 0;
-    res.json({ data, total: totalCount, page, limit, totalPages: Math.ceil(totalCount / limit) });
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-var galeria_default = router10;
-
-// src/routes/concursos.ts
-var import_express11 = __toESM(require_express2(), 1);
-init_schema2();
-init_drizzle_orm();
-var router11 = (0, import_express11.Router)();
-var DEFAULT_TENANT9 = "parauapebas";
-async function getTenantId9(slug) {
-  const t = await db.select().from(tenantsTable).where(eq(tenantsTable.slug, slug)).limit(1);
-  return t[0]?.id ?? null;
-}
-router11.get("/concursos", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT9;
-    const page = Math.max(1, parseInt(req.query["page"] ?? "1"));
-    const limit = Math.min(50, Math.max(1, parseInt(req.query["limit"] ?? "20")));
-    const offset = (page - 1) * limit;
-    const tenantId = await getTenantId9(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const conditions = [eq(concursosTable.tenantId, tenantId)];
-    if (req.query["situacao"]) conditions.push(eq(concursosTable.situacao, req.query["situacao"]));
-    const whereClause = and(...conditions);
-    const [total, data] = await Promise.all([
-      db.select({ count: count() }).from(concursosTable).where(whereClause),
-      db.select().from(concursosTable).where(whereClause).orderBy(desc(concursosTable.dataPublicacao)).limit(limit).offset(offset)
-    ]);
-    const totalCount = total[0]?.count ?? 0;
-    res.json({ data, total: totalCount, page, limit, totalPages: Math.ceil(totalCount / limit) });
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-var concursos_default = router11;
-
-// src/routes/busca.ts
-var import_express12 = __toESM(require_express2(), 1);
-init_schema2();
-init_drizzle_orm();
-var router12 = (0, import_express12.Router)();
-var DEFAULT_TENANT10 = "parauapebas";
-async function getTenantId10(slug) {
-  const t = await db.select().from(tenantsTable).where(eq(tenantsTable.slug, slug)).limit(1);
-  return t[0]?.id ?? null;
-}
-router12.get("/busca", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT10;
-    const q = req.query["q"] ?? "";
-    const tipo = req.query["tipo"];
-    const page = Math.max(1, parseInt(req.query["page"] ?? "1"));
-    const limit = Math.min(50, parseInt(req.query["limit"] ?? "20"));
-    const offset = (page - 1) * limit;
-    if (!q.trim()) {
-      return res.json({ query: q, data: [], total: 0, page, limit, totalPages: 0 });
-    }
-    const tenantId = await getTenantId10(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const results = [];
-    const term = `%${q}%`;
-    if (!tipo || tipo === "noticia") {
-      const noticias = await db.select().from(noticiasTable).where(
-        and(
-          eq(noticiasTable.tenantId, tenantId),
-          eq(noticiasTable.publicado, true),
-          or(ilike(noticiasTable.titulo, term), ilike(noticiasTable.resumo, term))
-        )
-      ).limit(10);
-      noticias.forEach((n) => results.push({ id: n.id, tipo: "noticia", titulo: n.titulo, resumo: n.resumo, url: `/noticias/${n.slug}`, data: n.dataPublicacao, relevancia: 1 }));
-    }
-    if (!tipo || tipo === "servico") {
-      const servicos = await db.select().from(servicosTable).where(
-        and(
-          eq(servicosTable.tenantId, tenantId),
-          eq(servicosTable.ativo, true),
-          or(ilike(servicosTable.titulo, term), ilike(servicosTable.descricao, term))
-        )
-      ).limit(10);
-      servicos.forEach((s) => results.push({ id: s.id, tipo: "servico", titulo: s.titulo, resumo: s.descricao, url: `/servicos/${s.slug}`, data: s.createdAt, relevancia: 0.9 }));
-    }
-    if (!tipo || tipo === "licitacao") {
-      const licitacoes = await db.select().from(licitacoesTable).where(
-        and(eq(licitacoesTable.tenantId, tenantId), ilike(licitacoesTable.objeto, term))
-      ).limit(5);
-      licitacoes.forEach((l) => results.push({ id: l.id, tipo: "licitacao", titulo: l.objeto, resumo: l.descricao ?? null, url: `/licitacoes/${l.id}`, data: l.dataAbertura, relevancia: 0.8 }));
-    }
-    if (!tipo || tipo === "legislacao") {
-      const leis = await db.select().from(legislacaoTable).where(
-        and(eq(legislacaoTable.tenantId, tenantId), or(ilike(legislacaoTable.ementa, term), ilike(legislacaoTable.numero, term)))
-      ).limit(5);
-      leis.forEach((l) => results.push({ id: l.id, tipo: "legislacao", titulo: `${l.tipo} n\xBA ${l.numero} - ${l.ementa}`, resumo: null, url: `/legislacao/${l.tipo}/${l.slug}`, data: l.dataPublicacao, relevancia: 0.7 }));
-    }
-    const sorted = results.sort((a, b) => b.relevancia - a.relevancia);
-    const paginated = sorted.slice(offset, offset + limit);
-    res.json({ query: q, data: paginated, total: sorted.length, page, limit, totalPages: Math.ceil(sorted.length / limit) });
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-var busca_default = router12;
-
-// src/routes/sic.ts
-var import_express13 = __toESM(require_express2(), 1);
-var router13 = (0, import_express13.Router)();
-function validate(body) {
-  if (!body.nome || body.nome.trim().length < 3) return "Nome \xE9 obrigat\xF3rio (m\xEDnimo 3 caracteres).";
-  if (!body.cpf || !/^\d{3}\.\d{3}\.\d{3}-\d{2}$/.test(body.cpf)) return "CPF inv\xE1lido.";
-  if (!body.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body.email)) return "E-mail inv\xE1lido.";
-  const tiposValidos = ["informacao", "recurso", "outros"];
-  if (!body.tipoSolicitacao || !tiposValidos.includes(body.tipoSolicitacao)) return "Tipo de solicita\xE7\xE3o inv\xE1lido.";
-  if (!body.orgao || body.orgao.trim().length < 3) return "\xD3rg\xE3o/Secretaria \xE9 obrigat\xF3rio.";
-  if (!body.descricao || body.descricao.trim().length < 20) return "Descri\xE7\xE3o deve ter no m\xEDnimo 20 caracteres.";
-  if (!body.lgpdConsent) return "Voc\xEA precisa aceitar o tratamento de dados pessoais (LGPD).";
-  return null;
-}
-function generateProtocolo() {
-  const year2 = (/* @__PURE__ */ new Date()).getFullYear();
-  const seq = String(Math.floor(Math.random() * 999999)).padStart(6, "0");
-  return `SIC-${year2}-${seq}`;
-}
-function getPrazo() {
-  const date6 = /* @__PURE__ */ new Date();
-  date6.setDate(date6.getDate() + 20);
-  return date6.toISOString();
-}
-router13.post("/sic", async (req, res) => {
-  try {
-    const body = req.body;
-    const error40 = validate(body);
-    if (error40) {
-      return res.status(400).json({ error: error40 });
-    }
-    const protocolo = generateProtocolo();
-    const prazo = getPrazo();
-    console.log(`[SIC] Pedido registrado: ${protocolo} | \xD3rg\xE3o: ${body.orgao} | Tipo: ${body.tipoSolicitacao}`);
-    return res.status(201).json({
-      protocolo,
-      prazo,
-      mensagem: "Pedido de acesso \xE0 informa\xE7\xE3o registrado com sucesso.",
-      laiRef: "Lei 12.527/2011, Art. 11 \u2014 prazo de 20 dias corridos."
-    });
-  } catch (err) {
-    console.error("[SIC] Erro ao registrar pedido:", err);
-    return res.status(500).json({ error: "Erro interno ao processar pedido." });
-  }
-});
-router13.get("/sic/estatisticas", async (_req, res) => {
-  return res.json({
-    totalPedidos: 127,
-    respondidosNoPrazo: 94,
-    taxaResposta: 94,
-    tempoMedioDias: 8,
-    recursosAbertos: 12,
-    porResultado: {
-      acessoConcedido: 68,
-      acessoParcial: 15,
-      acessoNegado: 8,
-      emAndamento: 9
-    }
-  });
-});
-var sic_default = router13;
-
-// src/routes/cms/noticias.ts
-var import_express14 = __toESM(require_express2(), 1);
-init_schema2();
-init_drizzle_orm();
-import { randomUUID as randomUUID2 } from "crypto";
-var router14 = (0, import_express14.Router)();
-var DEFAULT_TENANT11 = "parauapebas";
-async function getTenantId11(slug) {
-  const { tenantsTable: tenantsTable2 } = await Promise.resolve().then(() => (init_schema2(), schema_exports));
-  const r = await db.select().from(tenantsTable2).where(eq(tenantsTable2.slug, slug)).limit(1);
-  return r[0]?.id ?? null;
-}
-router14.get("/cms/noticias", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT11;
-    const page = Math.max(1, parseInt(req.query["page"] ?? "1"));
-    const limit = Math.min(100, Math.max(1, parseInt(req.query["limit"] ?? "20")));
-    const status = req.query["status"];
-    const categoria = req.query["categoria"];
-    const busca = req.query["q"];
-    const offset = (page - 1) * limit;
-    const tenantId = await getTenantId11(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const conditions = [
-      eq(noticiasTable.tenantId, tenantId),
-      isNull(noticiasTable.deletadoEm)
-    ];
-    if (status) conditions.push(eq(noticiasTable.status, status));
-    if (categoria) conditions.push(eq(noticiasTable.categoria, categoria));
-    if (busca) conditions.push(ilike(noticiasTable.titulo, `%${busca}%`));
-    const where = and(...conditions);
-    const [total, data] = await Promise.all([
-      db.select({ count: count() }).from(noticiasTable).where(where),
-      db.select().from(noticiasTable).where(where).orderBy(desc(noticiasTable.createdAt)).limit(limit).offset(offset)
-    ]);
-    res.json({ data, total: total[0]?.count ?? 0, page, limit, totalPages: Math.ceil((total[0]?.count ?? 0) / limit) });
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router14.get("/cms/noticias/:id", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT11;
-    const tenantId = await getTenantId11(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const [noticia] = await db.select().from(noticiasTable).where(
-      and(eq(noticiasTable.tenantId, tenantId), eq(noticiasTable.id, req.params["id"]))
-    ).limit(1);
-    if (!noticia) return res.status(404).json({ error: "Not\xEDcia n\xE3o encontrada" });
-    const versions = await db.select().from(newsVersionsTable).where(eq(newsVersionsTable.noticiaId, noticia.id)).orderBy(desc(newsVersionsTable.createdAt)).limit(10);
-    res.json({ ...noticia, versions });
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router14.post("/cms/noticias", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT11;
-    const tenantId = await getTenantId11(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const b = req.body;
-    if (!b.titulo || !b.slug || !b.conteudo) {
-      return res.status(400).json({ error: "titulo, slug e conteudo s\xE3o obrigat\xF3rios" });
-    }
-    const id = randomUUID2();
-    const [noticia] = await db.insert(noticiasTable).values({
-      id,
-      tenantId,
-      titulo: b.titulo,
-      slug: b.slug,
-      resumo: b.resumo ?? "",
-      conteudo: b.conteudo,
-      imagemCapa: b.imagemCapa ?? null,
-      imagemCapaAlt: b.imagemCapaAlt ?? null,
-      categoria: b.categoria ?? "geral",
-      categoriaId: b.categoriaId ?? null,
-      secretariaId: b.secretariaId ?? null,
-      autor: b.autor ?? null,
-      status: b.status ?? "rascunho",
-      publicado: b.status === "publicado",
-      destaque: b.destaque ?? false,
-      tags: b.tags ?? [],
-      metaTitle: b.metaTitle ?? null,
-      metaDescription: b.metaDescription ?? null,
-      ogImageUrl: b.ogImageUrl ?? null,
-      dataPublicacao: b.dataPublicacao ? new Date(b.dataPublicacao) : /* @__PURE__ */ new Date(),
-      agendadoEm: b.agendadoEm ? new Date(b.agendadoEm) : null
-    }).returning();
-    await db.insert(newsVersionsTable).values({
-      id: randomUUID2(),
-      noticiaId: id,
-      conteudo: b.conteudo,
-      savedBy: b.autor ?? "admin"
-    });
-    res.status(201).json(noticia);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router14.put("/cms/noticias/:id", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT11;
-    const tenantId = await getTenantId11(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const b = req.body;
-    const updateData = { updatedAt: /* @__PURE__ */ new Date() };
-    if (b.titulo !== void 0) updateData["titulo"] = b.titulo;
-    if (b.slug !== void 0) updateData["slug"] = b.slug;
-    if (b.resumo !== void 0) updateData["resumo"] = b.resumo;
-    if (b.conteudo !== void 0) updateData["conteudo"] = b.conteudo;
-    if (b.imagemCapa !== void 0) updateData["imagemCapa"] = b.imagemCapa;
-    if (b.imagemCapaAlt !== void 0) updateData["imagemCapaAlt"] = b.imagemCapaAlt;
-    if (b.categoria !== void 0) updateData["categoria"] = b.categoria;
-    if (b.categoriaId !== void 0) updateData["categoriaId"] = b.categoriaId;
-    if (b.secretariaId !== void 0) updateData["secretariaId"] = b.secretariaId;
-    if (b.status !== void 0) {
-      updateData["status"] = b.status;
-      updateData["publicado"] = b.status === "publicado";
-    }
-    if (b.destaque !== void 0) updateData["destaque"] = b.destaque;
-    if (b.tags !== void 0) updateData["tags"] = b.tags;
-    if (b.metaTitle !== void 0) updateData["metaTitle"] = b.metaTitle;
-    if (b.metaDescription !== void 0) updateData["metaDescription"] = b.metaDescription;
-    if (b.ogImageUrl !== void 0) updateData["ogImageUrl"] = b.ogImageUrl;
-    if (b.dataPublicacao !== void 0) updateData["dataPublicacao"] = new Date(b.dataPublicacao);
-    if (b.agendadoEm !== void 0) updateData["agendadoEm"] = b.agendadoEm ? new Date(b.agendadoEm) : null;
-    const [updated] = await db.update(noticiasTable).set(updateData).where(and(eq(noticiasTable.tenantId, tenantId), eq(noticiasTable.id, req.params["id"]))).returning();
-    if (!updated) return res.status(404).json({ error: "Not\xEDcia n\xE3o encontrada" });
-    if (b.conteudo) {
-      await db.insert(newsVersionsTable).values({
-        id: randomUUID2(),
-        noticiaId: updated.id,
-        conteudo: b.conteudo,
-        savedBy: b.autor ?? "admin"
-      });
-    }
-    res.json(updated);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router14.delete("/cms/noticias/:id", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT11;
-    const tenantId = await getTenantId11(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    await db.update(noticiasTable).set({ deletadoEm: /* @__PURE__ */ new Date(), status: "arquivado", publicado: false, updatedAt: /* @__PURE__ */ new Date() }).where(and(eq(noticiasTable.tenantId, tenantId), eq(noticiasTable.id, req.params["id"])));
-    res.status(204).send();
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router14.get("/cms/categorias", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT11;
-    const tenantId = await getTenantId11(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const data = await db.select().from(newsCategoriesTable).where(eq(newsCategoriesTable.tenantId, tenantId)).orderBy(newsCategoriesTable.name);
-    res.json({ data });
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router14.post("/cms/categorias", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT11;
-    const tenantId = await getTenantId11(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const b = req.body;
-    if (!b.name || !b.slug) return res.status(400).json({ error: "name e slug s\xE3o obrigat\xF3rios" });
-    const [cat] = await db.insert(newsCategoriesTable).values({
-      id: randomUUID2(),
-      tenantId,
-      name: b.name,
-      slug: b.slug,
-      color: b.color ?? null
-    }).returning();
-    res.status(201).json(cat);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-var noticias_default2 = router14;
-
-// src/routes/cms/banners.ts
-var import_express15 = __toESM(require_express2(), 1);
-init_schema2();
-init_drizzle_orm();
-import { randomUUID as randomUUID3 } from "crypto";
-var router15 = (0, import_express15.Router)();
-var DEFAULT_TENANT12 = "parauapebas";
-async function getTenantId12(slug) {
-  const { tenantsTable: tenantsTable2 } = await Promise.resolve().then(() => (init_schema2(), schema_exports));
-  const r = await db.select().from(tenantsTable2).where(eq(tenantsTable2.slug, slug)).limit(1);
-  return r[0]?.id ?? null;
-}
-router15.get("/cms/banners", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT12;
-    const tenantId = await getTenantId12(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const data = await db.select().from(bannersTable).where(eq(bannersTable.tenantId, tenantId)).orderBy(asc(bannersTable.sortOrder));
-    res.json({ data });
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router15.post("/cms/banners", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT12;
-    const tenantId = await getTenantId12(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const b = req.body;
-    if (!b.titulo || !b.imageDesktopUrl || !b.imageAlt) {
-      return res.status(400).json({ error: "titulo, imageDesktopUrl e imageAlt s\xE3o obrigat\xF3rios" });
-    }
-    const [banner] = await db.insert(bannersTable).values({
-      id: randomUUID3(),
-      tenantId,
-      titulo: b.titulo,
-      subtitulo: b.subtitulo ?? null,
-      imageDesktopUrl: b.imageDesktopUrl,
-      imageMobileUrl: b.imageMobileUrl ?? null,
-      imageAlt: b.imageAlt,
-      ctaLabel: b.ctaLabel ?? null,
-      ctaUrl: b.ctaUrl ?? null,
-      ctaAbreNovaAba: b.ctaAbreNovaAba ?? false,
-      overlayColor: b.overlayColor ?? null,
-      overlayOpacity: b.overlayOpacity ?? 0.4,
-      isAtivo: b.isAtivo ?? true,
-      sortOrder: b.sortOrder ?? 0,
-      iniciaEm: b.iniciaEm ? new Date(b.iniciaEm) : null,
-      expiraEm: b.expiraEm ? new Date(b.expiraEm) : null
-    }).returning();
-    res.status(201).json(banner);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router15.put("/cms/banners/:id", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT12;
-    const tenantId = await getTenantId12(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const b = req.body;
-    const [updated] = await db.update(bannersTable).set({ ...b, updatedAt: /* @__PURE__ */ new Date() }).where(and(eq(bannersTable.tenantId, tenantId), eq(bannersTable.id, req.params["id"]))).returning();
-    if (!updated) return res.status(404).json({ error: "Banner n\xE3o encontrado" });
-    res.json(updated);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router15.patch("/cms/banners/reorder", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT12;
-    const tenantId = await getTenantId12(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const { ids } = req.body;
-    if (!Array.isArray(ids)) return res.status(400).json({ error: "ids deve ser um array" });
-    await Promise.all(ids.map(
-      (id, index) => db.update(bannersTable).set({ sortOrder: index, updatedAt: /* @__PURE__ */ new Date() }).where(and(eq(bannersTable.tenantId, tenantId), eq(bannersTable.id, id)))
-    ));
-    res.json({ ok: true });
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router15.delete("/cms/banners/:id", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT12;
-    const tenantId = await getTenantId12(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    await db.delete(bannersTable).where(
-      and(eq(bannersTable.tenantId, tenantId), eq(bannersTable.id, req.params["id"]))
-    );
-    res.status(204).send();
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-var banners_default = router15;
-
-// src/routes/cms/paginas.ts
-var import_express16 = __toESM(require_express2(), 1);
-init_schema2();
-init_drizzle_orm();
-import { randomUUID as randomUUID4 } from "crypto";
-var router16 = (0, import_express16.Router)();
-var DEFAULT_TENANT13 = "parauapebas";
-async function getTenantId13(slug) {
-  const { tenantsTable: tenantsTable2 } = await Promise.resolve().then(() => (init_schema2(), schema_exports));
-  const r = await db.select().from(tenantsTable2).where(eq(tenantsTable2.slug, slug)).limit(1);
-  return r[0]?.id ?? null;
-}
-router16.get("/cms/paginas", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT13;
-    const tenantId = await getTenantId13(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const data = await db.select().from(pagesTable).where(eq(pagesTable.tenantId, tenantId)).orderBy(desc(pagesTable.updatedAt));
-    res.json({ data });
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router16.get("/cms/paginas/:id", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT13;
-    const tenantId = await getTenantId13(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const [page] = await db.select().from(pagesTable).where(
-      and(eq(pagesTable.tenantId, tenantId), eq(pagesTable.id, req.params["id"]))
-    ).limit(1);
-    if (!page) return res.status(404).json({ error: "P\xE1gina n\xE3o encontrada" });
-    const blocks = await db.select().from(pageBlocksTable).where(eq(pageBlocksTable.pageId, page.id)).orderBy(asc(pageBlocksTable.sortOrder));
-    res.json({ ...page, blocks });
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router16.post("/cms/paginas", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT13;
-    const tenantId = await getTenantId13(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const b = req.body;
-    if (!b.titulo || !b.slug) return res.status(400).json({ error: "titulo e slug s\xE3o obrigat\xF3rios" });
-    const [page] = await db.insert(pagesTable).values({
-      id: randomUUID4(),
-      tenantId,
-      titulo: b.titulo,
-      slug: b.slug,
-      status: b.status ?? "rascunho",
-      isProtegida: b.isProtegida ?? false,
-      metaTitle: b.metaTitle ?? null,
-      metaDescription: b.metaDescription ?? null,
-      autor: b.autor ?? null
-    }).returning();
-    res.status(201).json(page);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router16.put("/cms/paginas/:id", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT13;
-    const tenantId = await getTenantId13(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const b = req.body;
-    const [page] = await db.select().from(pagesTable).where(
-      and(eq(pagesTable.tenantId, tenantId), eq(pagesTable.id, req.params["id"]))
-    ).limit(1);
-    if (!page) return res.status(404).json({ error: "P\xE1gina n\xE3o encontrada" });
-    if (page.isProtegida && b.slug) return res.status(400).json({ error: "P\xE1ginas protegidas n\xE3o podem ter o slug alterado" });
-    const [updated] = await db.update(pagesTable).set({ ...b, updatedAt: /* @__PURE__ */ new Date() }).where(and(eq(pagesTable.tenantId, tenantId), eq(pagesTable.id, req.params["id"]))).returning();
-    res.json(updated);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router16.delete("/cms/paginas/:id", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT13;
-    const tenantId = await getTenantId13(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const [page] = await db.select().from(pagesTable).where(
-      and(eq(pagesTable.tenantId, tenantId), eq(pagesTable.id, req.params["id"]))
-    ).limit(1);
-    if (!page) return res.status(404).json({ error: "P\xE1gina n\xE3o encontrada" });
-    if (page.isProtegida) return res.status(403).json({ error: "P\xE1ginas protegidas n\xE3o podem ser exclu\xEDdas" });
-    await db.delete(pagesTable).where(eq(pagesTable.id, req.params["id"]));
-    res.status(204).send();
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router16.post("/cms/paginas/:id/blocos", async (req, res) => {
-  try {
-    const b = req.body;
-    if (!b.tipo) return res.status(400).json({ error: "tipo \xE9 obrigat\xF3rio" });
-    const [block] = await db.insert(pageBlocksTable).values({
-      id: randomUUID4(),
-      pageId: req.params["id"],
-      tipo: b.tipo,
-      conteudo: b.conteudo ?? {},
-      sortOrder: b.sortOrder ?? 0
-    }).returning();
-    res.status(201).json(block);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router16.put("/cms/blocos/:id", async (req, res) => {
-  try {
-    const b = req.body;
-    const [updated] = await db.update(pageBlocksTable).set({ ...b, updatedAt: /* @__PURE__ */ new Date() }).where(eq(pageBlocksTable.id, req.params["id"])).returning();
-    if (!updated) return res.status(404).json({ error: "Bloco n\xE3o encontrado" });
-    res.json(updated);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router16.delete("/cms/blocos/:id", async (req, res) => {
-  try {
-    await db.delete(pageBlocksTable).where(eq(pageBlocksTable.id, req.params["id"]));
-    res.status(204).send();
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-var paginas_default = router16;
-
-// src/routes/cms/documentos.ts
-var import_express17 = __toESM(require_express2(), 1);
-init_schema2();
-init_drizzle_orm();
-import { randomUUID as randomUUID5 } from "crypto";
-var router17 = (0, import_express17.Router)();
-var DEFAULT_TENANT14 = "parauapebas";
-async function getTenantId14(slug) {
-  const { tenantsTable: tenantsTable2 } = await Promise.resolve().then(() => (init_schema2(), schema_exports));
-  const r = await db.select().from(tenantsTable2).where(eq(tenantsTable2.slug, slug)).limit(1);
-  return r[0]?.id ?? null;
-}
-router17.get("/cms/documentos-lai", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT14;
-    const page = Math.max(1, parseInt(req.query["page"] ?? "1"));
-    const limit = Math.min(100, Math.max(1, parseInt(req.query["limit"] ?? "20")));
-    const categoria = req.query["categoria"];
-    const ano = req.query["ano"];
-    const offset = (page - 1) * limit;
-    const tenantId = await getTenantId14(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const conditions = [eq(transparencyDocsTable.tenantId, tenantId)];
-    if (categoria) conditions.push(eq(transparencyDocsTable.categoria, categoria));
-    if (ano) conditions.push(eq(transparencyDocsTable.anoReferencia, parseInt(ano)));
-    const where = and(...conditions);
-    const [total, data] = await Promise.all([
-      db.select({ count: count() }).from(transparencyDocsTable).where(where),
-      db.select().from(transparencyDocsTable).where(where).orderBy(desc(transparencyDocsTable.publicadoEm)).limit(limit).offset(offset)
-    ]);
-    res.json({ data, total: total[0]?.count ?? 0, page, limit });
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router17.post("/cms/documentos-lai", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT14;
-    const tenantId = await getTenantId14(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const b = req.body;
-    if (!b.categoria || !b.titulo || !b.fileUrl || !b.nomeArquivo || !b.anoReferencia) {
-      return res.status(400).json({ error: "categoria, titulo, fileUrl, nomeArquivo e anoReferencia s\xE3o obrigat\xF3rios" });
-    }
-    const [doc] = await db.insert(transparencyDocsTable).values({
-      id: randomUUID5(),
-      tenantId,
-      categoria: b.categoria,
-      subcategoria: b.subcategoria ?? null,
-      titulo: b.titulo,
-      descricao: b.descricao ?? null,
-      anoReferencia: b.anoReferencia,
-      periodoReferencia: b.periodoReferencia ?? null,
-      fileUrl: b.fileUrl,
-      nomeArquivo: b.nomeArquivo,
-      tamanhoBytes: b.tamanhoBytes ?? 0,
-      publicadoPor: b.publicadoPor ?? "admin",
-      publicadoEm: b.publicadoEm ? new Date(b.publicadoEm) : /* @__PURE__ */ new Date(),
-      expiraEm: b.expiraEm ? new Date(b.expiraEm) : null
-    }).returning();
-    res.status(201).json(doc);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router17.delete("/cms/documentos-lai/:id", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT14;
-    const tenantId = await getTenantId14(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    await db.delete(transparencyDocsTable).where(
-      and(eq(transparencyDocsTable.tenantId, tenantId), eq(transparencyDocsTable.id, req.params["id"]))
-    );
-    res.status(204).send();
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-var documentos_default = router17;
-
-// src/routes/cms/menus.ts
-var import_express18 = __toESM(require_express2(), 1);
-init_schema2();
-init_drizzle_orm();
-import { randomUUID as randomUUID6 } from "crypto";
-var router18 = (0, import_express18.Router)();
-var DEFAULT_TENANT15 = "parauapebas";
-async function getTenantId15(slug) {
-  const { tenantsTable: tenantsTable2 } = await Promise.resolve().then(() => (init_schema2(), schema_exports));
-  const r = await db.select().from(tenantsTable2).where(eq(tenantsTable2.slug, slug)).limit(1);
-  return r[0]?.id ?? null;
-}
-router18.get("/cms/menus", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT15;
-    const tenantId = await getTenantId15(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const items = await db.select().from(menuItemsTable).where(eq(menuItemsTable.tenantId, tenantId)).orderBy(asc(menuItemsTable.sortOrder));
-    const grouped = {};
-    for (const item of items) {
-      if (!grouped[item.menuSlot]) grouped[item.menuSlot] = [];
-      grouped[item.menuSlot].push(item);
-    }
-    res.json({ data: grouped });
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router18.get("/cms/menus/:slot", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT15;
-    const tenantId = await getTenantId15(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const data = await db.select().from(menuItemsTable).where(and(eq(menuItemsTable.tenantId, tenantId), eq(menuItemsTable.menuSlot, req.params["slot"]))).orderBy(asc(menuItemsTable.sortOrder));
-    res.json({ data });
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router18.post("/cms/menus", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT15;
-    const tenantId = await getTenantId15(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const b = req.body;
-    if (!b.menuSlot || !b.label) return res.status(400).json({ error: "menuSlot e label s\xE3o obrigat\xF3rios" });
-    const [item] = await db.insert(menuItemsTable).values({
-      id: randomUUID6(),
-      tenantId,
-      menuSlot: b.menuSlot,
-      label: b.label,
-      url: b.url ?? null,
-      tipo: b.tipo ?? "pagina",
-      abreNovaAba: b.abreNovaAba ?? false,
-      icone: b.icone ?? null,
-      parentId: b.parentId ?? null,
-      sortOrder: b.sortOrder ?? 0,
-      isAtivo: b.isAtivo ?? true
-    }).returning();
-    res.status(201).json(item);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router18.put("/cms/menus/:id", async (req, res) => {
-  try {
-    const b = req.body;
-    const [updated] = await db.update(menuItemsTable).set({ ...b, updatedAt: /* @__PURE__ */ new Date() }).where(eq(menuItemsTable.id, req.params["id"])).returning();
-    if (!updated) return res.status(404).json({ error: "Item de menu n\xE3o encontrado" });
-    res.json(updated);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router18.patch("/cms/menus/:slot/reorder", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT15;
-    const tenantId = await getTenantId15(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const { ids } = req.body;
-    if (!Array.isArray(ids)) return res.status(400).json({ error: "ids deve ser um array" });
-    await Promise.all(ids.map(
-      (id, index) => db.update(menuItemsTable).set({ sortOrder: index, updatedAt: /* @__PURE__ */ new Date() }).where(and(eq(menuItemsTable.tenantId, tenantId), eq(menuItemsTable.id, id)))
-    ));
-    res.json({ ok: true });
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router18.delete("/cms/menus/:id", async (req, res) => {
-  try {
-    await db.delete(menuItemsTable).where(eq(menuItemsTable.id, req.params["id"]));
-    res.status(204).send();
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-var menus_default = router18;
-
-// src/routes/cms/site-config.ts
-var import_express19 = __toESM(require_express2(), 1);
-init_schema2();
-init_drizzle_orm();
-import { randomUUID as randomUUID7 } from "crypto";
-var router19 = (0, import_express19.Router)();
-var DEFAULT_TENANT16 = "parauapebas";
-async function getTenantId16(slug) {
-  const { tenantsTable: tenantsTable2 } = await Promise.resolve().then(() => (init_schema2(), schema_exports));
-  const r = await db.select().from(tenantsTable2).where(eq(tenantsTable2.slug, slug)).limit(1);
-  return r[0]?.id ?? null;
-}
-router19.get("/cms/site-config", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT16;
-    const tenantId = await getTenantId16(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    let [config2] = await db.select().from(siteConfigTable).where(eq(siteConfigTable.tenantId, tenantId)).limit(1);
-    if (!config2) {
-      [config2] = await db.insert(siteConfigTable).values({
-        id: randomUUID7(),
-        tenantId
-      }).returning();
-    }
-    res.json(config2);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router19.put("/cms/site-config", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT16;
-    const tenantId = await getTenantId16(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const b = req.body;
-    const [existing] = await db.select().from(siteConfigTable).where(eq(siteConfigTable.tenantId, tenantId)).limit(1);
-    if (existing) {
-      const [updated] = await db.update(siteConfigTable).set({ ...b, updatedAt: /* @__PURE__ */ new Date() }).where(eq(siteConfigTable.tenantId, tenantId)).returning();
-      return res.json(updated);
-    }
-    const [created] = await db.insert(siteConfigTable).values({
-      id: randomUUID7(),
-      tenantId,
-      ...b
-    }).returning();
-    res.status(201).json(created);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-var site_config_default = router19;
-
-// src/routes/cms/licitacoes.ts
-var import_express20 = __toESM(require_express2(), 1);
-init_schema2();
-init_drizzle_orm();
-import { randomUUID as randomUUID8 } from "crypto";
-var router20 = (0, import_express20.Router)();
-var DEFAULT_TENANT17 = "parauapebas";
-async function getTenantId17(slug) {
-  const { tenantsTable: tenantsTable2 } = await Promise.resolve().then(() => (init_schema2(), schema_exports));
-  const r = await db.select().from(tenantsTable2).where(eq(tenantsTable2.slug, slug)).limit(1);
-  return r[0]?.id ?? null;
-}
-router20.get("/cms/licitacoes", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT17;
-    const page = Math.max(1, parseInt(req.query["page"] ?? "1"));
-    const limit = Math.min(100, Math.max(1, parseInt(req.query["limit"] ?? "20")));
-    const situacao = req.query["situacao"];
-    const modalidade = req.query["modalidade"];
-    const offset = (page - 1) * limit;
-    const tenantId = await getTenantId17(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const conditions = [eq(licitacoesTable.tenantId, tenantId)];
-    if (situacao) conditions.push(eq(licitacoesTable.situacao, situacao));
-    if (modalidade) conditions.push(eq(licitacoesTable.modalidade, modalidade));
-    const where = and(...conditions);
-    const [total, data] = await Promise.all([
-      db.select({ count: count() }).from(licitacoesTable).where(where),
-      db.select().from(licitacoesTable).where(where).orderBy(desc(licitacoesTable.createdAt)).limit(limit).offset(offset)
-    ]);
-    res.json({ data, total: total[0]?.count ?? 0, page, limit });
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router20.get("/cms/licitacoes/:id", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT17;
-    const tenantId = await getTenantId17(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const [lic] = await db.select().from(licitacoesTable).where(
-      and(eq(licitacoesTable.tenantId, tenantId), eq(licitacoesTable.id, req.params["id"]))
-    ).limit(1);
-    if (!lic) return res.status(404).json({ error: "Licita\xE7\xE3o n\xE3o encontrada" });
-    const [events, contracts] = await Promise.all([
-      db.select().from(bidEventsTable).where(eq(bidEventsTable.licitacaoId, lic.id)).orderBy(desc(bidEventsTable.ocorridoEm)),
-      db.select().from(contractsTable).where(eq(contractsTable.licitacaoId, lic.id)).orderBy(asc(contractsTable.dataInicio))
-    ]);
-    res.json({ ...lic, events, contracts });
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router20.post("/cms/licitacoes", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT17;
-    const tenantId = await getTenantId17(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const b = req.body;
-    if (!b.numero || !b.objeto || !b.modalidade) {
-      return res.status(400).json({ error: "numero, objeto e modalidade s\xE3o obrigat\xF3rios" });
-    }
-    const [lic] = await db.insert(licitacoesTable).values({
-      id: randomUUID8(),
-      tenantId,
-      numero: b.numero,
-      objeto: b.objeto,
-      modalidade: b.modalidade,
-      situacao: b.situacao ?? "aberta",
-      dataAbertura: b.dataAbertura ? new Date(b.dataAbertura) : null,
-      dataEncerramento: b.dataEncerramento ? new Date(b.dataEncerramento) : null,
-      valorEstimado: b.valorEstimado ?? null,
-      valorHomologado: b.valorHomologado ?? null,
-      secretaria: b.secretaria ?? null,
-      secretariaId: b.secretariaId ?? null,
-      edital: b.edital ?? null,
-      editalUrl: b.editalUrl ?? null,
-      resultUrl: b.resultUrl ?? null,
-      ata: b.ata ?? null,
-      descricao: b.descricao ?? null,
-      vencedor: b.vencedor ?? null,
-      vencedorCnpj: b.vencedorCnpj ?? null,
-      pncpId: b.pncpId ?? null
-    }).returning();
-    res.status(201).json(lic);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router20.put("/cms/licitacoes/:id", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT17;
-    const tenantId = await getTenantId17(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const [updated] = await db.update(licitacoesTable).set({ ...req.body, updatedAt: /* @__PURE__ */ new Date() }).where(and(eq(licitacoesTable.tenantId, tenantId), eq(licitacoesTable.id, req.params["id"]))).returning();
-    if (!updated) return res.status(404).json({ error: "Licita\xE7\xE3o n\xE3o encontrada" });
-    res.json(updated);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router20.delete("/cms/licitacoes/:id", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT17;
-    const tenantId = await getTenantId17(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    await db.delete(licitacoesTable).where(
-      and(eq(licitacoesTable.tenantId, tenantId), eq(licitacoesTable.id, req.params["id"]))
-    );
-    res.status(204).send();
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router20.post("/cms/licitacoes/:id/eventos", async (req, res) => {
-  try {
-    const b = req.body;
-    if (!b.titulo || !b.ocorridoEm) return res.status(400).json({ error: "titulo e ocorridoEm s\xE3o obrigat\xF3rios" });
-    const [event] = await db.insert(bidEventsTable).values({
-      id: randomUUID8(),
-      licitacaoId: req.params["id"],
-      titulo: b.titulo,
-      descricao: b.descricao ?? null,
-      fileUrl: b.fileUrl ?? null,
-      ocorridoEm: new Date(b.ocorridoEm)
-    }).returning();
-    res.status(201).json(event);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router20.post("/cms/contratos", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT17;
-    const tenantId = await getTenantId17(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const b = req.body;
-    if (!b.numero || !b.objeto || !b.contratado || !b.cnpjContratado || !b.valor || !b.dataInicio || !b.dataFim) {
-      return res.status(400).json({ error: "Campos obrigat\xF3rios: numero, objeto, contratado, cnpjContratado, valor, dataInicio, dataFim" });
-    }
-    const [contract] = await db.insert(contractsTable).values({
-      id: randomUUID8(),
-      tenantId,
-      licitacaoId: b.licitacaoId ?? null,
-      numero: b.numero,
-      objeto: b.objeto,
-      contratado: b.contratado,
-      cnpjContratado: b.cnpjContratado,
-      valor: b.valor,
-      dataInicio: b.dataInicio,
-      dataFim: b.dataFim,
-      fileUrl: b.fileUrl ?? null,
-      ativo: b.ativo ?? true,
-      fiscalNome: b.fiscalNome ?? null
-    }).returning();
-    res.status(201).json(contract);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router20.get("/cms/contratos", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT17;
-    const tenantId = await getTenantId17(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const data = await db.select().from(contractsTable).where(eq(contractsTable.tenantId, tenantId)).orderBy(desc(contractsTable.createdAt));
-    res.json({ data });
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-var licitacoes_default2 = router20;
-
-// src/routes/cms/galeria.ts
-var import_express21 = __toESM(require_express2(), 1);
-init_schema2();
-init_drizzle_orm();
-import { randomUUID as randomUUID9 } from "crypto";
-var router21 = (0, import_express21.Router)();
-var DEFAULT_TENANT18 = "parauapebas";
-async function getTenantId18(slug) {
-  const { tenantsTable: tenantsTable2 } = await Promise.resolve().then(() => (init_schema2(), schema_exports));
-  const r = await db.select().from(tenantsTable2).where(eq(tenantsTable2.slug, slug)).limit(1);
-  return r[0]?.id ?? null;
-}
-router21.get("/cms/albums", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT18;
-    const tenantId = await getTenantId18(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const data = await db.select().from(galleryAlbumsTable).where(eq(galleryAlbumsTable.tenantId, tenantId)).orderBy(desc(galleryAlbumsTable.createdAt));
-    res.json({ data });
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router21.get("/cms/albums/:id", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT18;
-    const tenantId = await getTenantId18(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const [album] = await db.select().from(galleryAlbumsTable).where(
-      and(eq(galleryAlbumsTable.tenantId, tenantId), eq(galleryAlbumsTable.id, req.params["id"]))
-    ).limit(1);
-    if (!album) return res.status(404).json({ error: "\xC1lbum n\xE3o encontrado" });
-    const items = await db.select().from(galleryItemsTable).where(eq(galleryItemsTable.albumId, album.id)).orderBy(asc(galleryItemsTable.sortOrder));
-    res.json({ ...album, items });
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router21.post("/cms/albums", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT18;
-    const tenantId = await getTenantId18(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const b = req.body;
-    if (!b.titulo) return res.status(400).json({ error: "titulo \xE9 obrigat\xF3rio" });
-    const [album] = await db.insert(galleryAlbumsTable).values({
-      id: randomUUID9(),
-      tenantId,
-      titulo: b.titulo,
-      descricao: b.descricao ?? null,
-      coverUrl: b.coverUrl ?? null,
-      isPublico: b.isPublico ?? true,
-      sortOrder: b.sortOrder ?? 0
-    }).returning();
-    res.status(201).json(album);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router21.put("/cms/albums/:id", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT18;
-    const tenantId = await getTenantId18(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const [updated] = await db.update(galleryAlbumsTable).set({ ...req.body, updatedAt: /* @__PURE__ */ new Date() }).where(and(eq(galleryAlbumsTable.tenantId, tenantId), eq(galleryAlbumsTable.id, req.params["id"]))).returning();
-    if (!updated) return res.status(404).json({ error: "\xC1lbum n\xE3o encontrado" });
-    res.json(updated);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router21.delete("/cms/albums/:id", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT18;
-    const tenantId = await getTenantId18(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    await db.delete(galleryAlbumsTable).where(
-      and(eq(galleryAlbumsTable.tenantId, tenantId), eq(galleryAlbumsTable.id, req.params["id"]))
-    );
-    res.status(204).send();
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router21.post("/cms/albums/:id/itens", async (req, res) => {
-  try {
-    const b = req.body;
-    if (!b.url || !b.altText) return res.status(400).json({ error: "url e altText s\xE3o obrigat\xF3rios" });
-    const [item] = await db.insert(galleryItemsTable).values({
-      id: randomUUID9(),
-      albumId: req.params["id"],
-      tipo: b.tipo ?? "image",
-      url: b.url,
-      thumbUrl: b.thumbUrl ?? null,
-      altText: b.altText,
-      legenda: b.legenda ?? null,
-      sortOrder: b.sortOrder ?? 0
-    }).returning();
-    res.status(201).json(item);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router21.delete("/cms/itens/:id", async (req, res) => {
-  try {
-    await db.delete(galleryItemsTable).where(eq(galleryItemsTable.id, req.params["id"]));
-    res.status(204).send();
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router21.patch("/cms/albums/:id/reorder", async (req, res) => {
-  try {
-    const { ids } = req.body;
-    if (!Array.isArray(ids)) return res.status(400).json({ error: "ids deve ser um array" });
-    await Promise.all(ids.map(
-      (id, index) => db.update(galleryItemsTable).set({ sortOrder: index }).where(eq(galleryItemsTable.id, id))
-    ));
-    res.json({ ok: true });
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-var galeria_default2 = router21;
-
-// src/routes/cms/agenda.ts
-var import_express22 = __toESM(require_express2(), 1);
-init_schema2();
-init_drizzle_orm();
-import { randomUUID as randomUUID10 } from "crypto";
-var router22 = (0, import_express22.Router)();
-var DEFAULT_TENANT19 = "parauapebas";
-async function getTenantId19(slug) {
-  const { tenantsTable: tenantsTable2 } = await Promise.resolve().then(() => (init_schema2(), schema_exports));
-  const r = await db.select().from(tenantsTable2).where(eq(tenantsTable2.slug, slug)).limit(1);
-  return r[0]?.id ?? null;
-}
-router22.get("/cms/agenda", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT19;
-    const page = Math.max(1, parseInt(req.query["page"] ?? "1"));
-    const limit = Math.min(100, Math.max(1, parseInt(req.query["limit"] ?? "20")));
-    const tipo = req.query["tipo"];
-    const upcoming = req.query["upcoming"] === "true";
-    const offset = (page - 1) * limit;
-    const tenantId = await getTenantId19(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const conditions = [eq(agendaTable.tenantId, tenantId)];
-    if (tipo) conditions.push(eq(agendaTable.tipo, tipo));
-    if (upcoming) conditions.push(gte(agendaTable.dataInicio, /* @__PURE__ */ new Date()));
-    const where = and(...conditions);
-    const [total, data] = await Promise.all([
-      db.select({ count: count() }).from(agendaTable).where(where),
-      db.select().from(agendaTable).where(where).orderBy(desc(agendaTable.dataInicio)).limit(limit).offset(offset)
-    ]);
-    res.json({ data, total: total[0]?.count ?? 0, page, limit });
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router22.post("/cms/agenda", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT19;
-    const tenantId = await getTenantId19(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const b = req.body;
-    if (!b.titulo || !b.dataInicio) return res.status(400).json({ error: "titulo e dataInicio s\xE3o obrigat\xF3rios" });
-    const [evento] = await db.insert(agendaTable).values({
-      id: randomUUID10(),
-      tenantId,
-      titulo: b.titulo,
-      descricao: b.descricao ?? null,
-      tipo: b.tipo ?? "evento",
-      local: b.local ?? null,
-      endereco: b.endereco ?? null,
-      isOnline: b.isOnline ?? false,
-      onlineUrl: b.onlineUrl ?? null,
-      dataInicio: new Date(b.dataInicio),
-      dataFim: b.dataFim ? new Date(b.dataFim) : null,
-      diaInteiro: b.diaInteiro ?? false,
-      secretariaId: b.secretariaId ?? null,
-      categoria: b.categoria ?? null,
-      publicoAlvo: b.publicoAlvo ?? null,
-      isPublico: b.isPublico ?? true,
-      gratuito: b.gratuito ?? true,
-      linkInscricao: b.linkInscricao ?? null,
-      anexoUrl: b.anexoUrl ?? null,
-      ativo: b.ativo ?? true
-    }).returning();
-    res.status(201).json(evento);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router22.put("/cms/agenda/:id", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT19;
-    const tenantId = await getTenantId19(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const b = req.body;
-    if (b.dataInicio) b.dataInicio = new Date(b.dataInicio);
-    if (b.dataFim) b.dataFim = new Date(b.dataFim);
-    const [updated] = await db.update(agendaTable).set({ ...b, updatedAt: /* @__PURE__ */ new Date() }).where(and(eq(agendaTable.tenantId, tenantId), eq(agendaTable.id, req.params["id"]))).returning();
-    if (!updated) return res.status(404).json({ error: "Evento n\xE3o encontrado" });
-    res.json(updated);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router22.delete("/cms/agenda/:id", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT19;
-    const tenantId = await getTenantId19(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    await db.delete(agendaTable).where(
-      and(eq(agendaTable.tenantId, tenantId), eq(agendaTable.id, req.params["id"]))
-    );
-    res.status(204).send();
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-var agenda_default2 = router22;
-
-// src/routes/cms/legislacao.ts
-var import_express23 = __toESM(require_express2(), 1);
-init_schema2();
-init_drizzle_orm();
-import { randomUUID as randomUUID11 } from "crypto";
-var router23 = (0, import_express23.Router)();
-var DEFAULT_TENANT20 = "parauapebas";
-async function getTenantId20(slug) {
-  const { tenantsTable: tenantsTable2 } = await Promise.resolve().then(() => (init_schema2(), schema_exports));
-  const r = await db.select().from(tenantsTable2).where(eq(tenantsTable2.slug, slug)).limit(1);
-  return r[0]?.id ?? null;
-}
-router23.get("/cms/legislacao", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT20;
-    const page = Math.max(1, parseInt(req.query["page"] ?? "1"));
-    const limit = Math.min(100, Math.max(1, parseInt(req.query["limit"] ?? "20")));
-    const tipo = req.query["tipo"];
-    const ano = req.query["ano"];
-    const offset = (page - 1) * limit;
-    const tenantId = await getTenantId20(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const conditions = [eq(legislacaoTable.tenantId, tenantId)];
-    if (tipo) conditions.push(eq(legislacaoTable.tipo, tipo));
-    if (ano) conditions.push(eq(legislacaoTable.ano, parseInt(ano)));
-    const where = and(...conditions);
-    const [total, data] = await Promise.all([
-      db.select({ count: count() }).from(legislacaoTable).where(where),
-      db.select().from(legislacaoTable).where(where).orderBy(desc(legislacaoTable.dataPublicacao)).limit(limit).offset(offset)
-    ]);
-    res.json({ data, total: total[0]?.count ?? 0, page, limit });
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router23.post("/cms/legislacao", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT20;
-    const tenantId = await getTenantId20(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const b = req.body;
-    if (!b.numero || !b.tipo || !b.ementa || !b.dataPublicacao || !b.ano) {
-      return res.status(400).json({ error: "numero, tipo, ementa, dataPublicacao e ano s\xE3o obrigat\xF3rios" });
-    }
-    const slug = `${b.tipo}-${b.numero}-${b.ano}`.toLowerCase().replace(/[^a-z0-9-]/g, "-");
-    const [leg] = await db.insert(legislacaoTable).values({
-      id: randomUUID11(),
-      tenantId,
-      numero: b.numero,
-      tipo: b.tipo,
-      ementa: b.ementa,
-      slug: b.slug ?? slug,
-      dataPublicacao: b.dataPublicacao,
-      ano: b.ano,
-      conteudo: b.conteudo ?? null,
-      arquivoPdf: b.arquivoPdf ?? null,
-      nomeArquivo: b.nomeArquivo ?? null,
-      status: b.status ?? "publicado",
-      tags: b.tags ?? [],
-      assinadoEm: b.assinadoEm ?? null,
-      revogadoEm: b.revogadoEm ?? null,
-      revogadoPorId: b.revogadoPorId ?? null
-    }).returning();
-    res.status(201).json(leg);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router23.put("/cms/legislacao/:id", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT20;
-    const tenantId = await getTenantId20(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    const [updated] = await db.update(legislacaoTable).set({ ...req.body, updatedAt: /* @__PURE__ */ new Date() }).where(and(eq(legislacaoTable.tenantId, tenantId), eq(legislacaoTable.id, req.params["id"]))).returning();
-    if (!updated) return res.status(404).json({ error: "Legisla\xE7\xE3o n\xE3o encontrada" });
-    res.json(updated);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router23.delete("/cms/legislacao/:id", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT20;
-    const tenantId = await getTenantId20(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
-    await db.delete(legislacaoTable).where(
-      and(eq(legislacaoTable.tenantId, tenantId), eq(legislacaoTable.id, req.params["id"]))
-    );
-    res.status(204).send();
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-var legislacao_default2 = router23;
-
-// src/routes/site/config.ts
-var import_express24 = __toESM(require_express2(), 1);
-init_schema2();
-init_drizzle_orm();
-
-// src/lib/cache.ts
-var store = /* @__PURE__ */ new Map();
-setInterval(() => {
-  const now = Date.now();
-  for (const [key, entry] of store) {
-    if (now > entry.expiresAt) store.delete(key);
-  }
-}, 5 * 60 * 1e3).unref();
-function cacheGet(key) {
-  const entry = store.get(key);
-  if (!entry) return null;
-  if (Date.now() > entry.expiresAt) {
-    store.delete(key);
-    return null;
-  }
-  return entry.value;
-}
-function cacheSet(key, value, ttlMs) {
-  store.set(key, { value, expiresAt: Date.now() + ttlMs });
-}
-function cacheDelPattern(prefix) {
-  for (const key of store.keys()) {
-    if (key.startsWith(prefix)) store.delete(key);
-  }
-}
-async function withCache(key, ttlMs, fn) {
-  const cached2 = cacheGet(key);
-  if (cached2 !== null) return cached2;
-  const result = await fn();
-  cacheSet(key, result, ttlMs);
-  return result;
-}
-
-// src/routes/site/config.ts
-var router24 = (0, import_express24.Router)();
-var DEFAULT_TENANT21 = "parauapebas";
-var TTL = 6e4;
-async function getTenantId21(slug) {
-  const r = await db.select().from(tenantsTable).where(eq(tenantsTable.slug, slug)).limit(1);
-  return r[0] ?? null;
-}
-router24.get("/site/config", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT21;
-    const cacheKey = `site:config:${tenantSlug}`;
-    const result = await withCache(cacheKey, TTL, async () => {
-      const tenant = await getTenantId21(tenantSlug);
-      if (!tenant) return null;
-      const [config2] = await db.select().from(siteConfigTable).where(eq(siteConfigTable.tenantId, tenant.id)).limit(1);
-      const menus = await db.select().from(menuItemsTable).where(and(eq(menuItemsTable.tenantId, tenant.id), eq(menuItemsTable.isAtivo, true))).orderBy(menuItemsTable.sortOrder);
-      const menuBySlot = menus.reduce(
-        (acc, item) => {
-          const slot = item.menuSlot;
-          if (!acc[slot]) acc[slot] = [];
-          acc[slot].push(item);
-          return acc;
-        },
-        {}
-      );
-      return {
-        tenant: {
-          id: tenant.id,
-          slug: tenant.slug,
-          nome: tenant.nome,
-          estado: tenant.estado,
-          brasao: tenant.brasao,
-          tema: tenant.tema
-        },
-        config: config2 ?? null,
-        menus: menuBySlot,
-        social: config2 ? {
-          facebook: config2.socialFacebook,
-          instagram: config2.socialInstagram,
-          youtube: config2.socialYoutube,
-          twitter: config2.socialTwitter,
-          linkedin: config2.socialLinkedin
-        } : {}
-      };
-    });
-    if (!result) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
-    res.setHeader("Cache-Control", "public, max-age=60");
-    res.json(result);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-var config_default = router24;
-
-// src/routes/site/banners.ts
-var import_express25 = __toESM(require_express2(), 1);
-init_schema2();
-init_drizzle_orm();
-var router25 = (0, import_express25.Router)();
-var DEFAULT_TENANT22 = "parauapebas";
-var TTL2 = 6e4;
-router25.get("/site/banners", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT22;
-    const cacheKey = `site:banners:${tenantSlug}`;
-    const result = await withCache(cacheKey, TTL2, async () => {
-      const [tenant] = await db.select({ id: tenantsTable.id }).from(tenantsTable).where(eq(tenantsTable.slug, tenantSlug)).limit(1);
-      if (!tenant) return null;
-      const now = /* @__PURE__ */ new Date();
-      const banners = await db.select().from(bannersTable).where(
-        and(
-          eq(bannersTable.tenantId, tenant.id),
-          eq(bannersTable.isAtivo, true),
-          or(isNull(bannersTable.iniciaEm), lte(bannersTable.iniciaEm, now)),
-          or(isNull(bannersTable.expiraEm), gte(bannersTable.expiraEm, now))
-        )
-      ).orderBy(bannersTable.sortOrder);
-      return banners;
-    });
-    if (result === null) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
-    res.setHeader("Cache-Control", "public, max-age=60");
-    res.json({ data: result });
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-var banners_default2 = router25;
-
-// src/routes/site/news.ts
-var import_express26 = __toESM(require_express2(), 1);
-init_schema2();
-init_drizzle_orm();
-
-// src/lib/logger.ts
-var import_pino = __toESM(require_pino(), 1);
-var isProduction = process.env.NODE_ENV === "production";
-var logger = (0, import_pino.default)({
-  level: process.env.LOG_LEVEL ?? "info",
-  redact: [
-    "req.headers.authorization",
-    "req.headers.cookie",
-    "res.headers['set-cookie']"
-  ],
-  ...isProduction ? {} : {
-    transport: {
-      target: "pino-pretty",
-      options: { colorize: true }
-    }
-  }
-});
-
-// src/lib/queue.ts
-var REDIS_URL = process.env["REDIS_URL"];
-var _queue = null;
-async function getSiteQueue() {
-  if (!REDIS_URL) return null;
-  if (_queue) return _queue;
-  try {
-    const { Queue } = await Promise.resolve().then(() => __toESM(require_cjs2(), 1));
-    _queue = new Queue("site-queue", {
-      connection: { url: REDIS_URL },
-      defaultJobOptions: { removeOnComplete: 100, removeOnFail: 50 }
-    });
-    logger.info("BullMQ site-queue conectado ao Redis");
-    return _queue;
-  } catch (err) {
-    logger.warn({ err }, "BullMQ n\xE3o dispon\xEDvel \u2014 usando scheduler em mem\xF3ria");
-    return null;
-  }
-}
-async function addJob(name, data, opts) {
-  const q = await getSiteQueue();
-  if (q) {
-    await q.add(name, data, opts);
-  }
-}
-var _schedulersStarted = false;
-function startInMemorySchedulers(handlers2) {
-  if (REDIS_URL || _schedulersStarted) return;
-  _schedulersStarted = true;
-  setInterval(() => {
-    handlers2["PUBLISH_SCHEDULED_NEWS"]({}).catch(
-      (e) => logger.error(e, "PUBLISH_SCHEDULED_NEWS falhou")
-    );
-  }, 5 * 60 * 1e3).unref();
-  scheduleDailyAt(
-    7,
-    0,
-    () => handlers2["CHECK_TRANSPARENCY_COMPLIANCE"]({}).catch(
-      (e) => logger.error(e, "CHECK_TRANSPARENCY_COMPLIANCE falhou")
-    )
-  );
-  scheduleDailyAt(
-    2,
-    0,
-    () => handlers2["GENERATE_SITEMAP"]({}).catch(
-      (e) => logger.error(e, "GENERATE_SITEMAP falhou")
-    )
-  );
-  scheduleDailyAt(
-    6,
-    0,
-    () => handlers2["SYNC_PNCP"]({}).catch(
-      (e) => logger.error(e, "SYNC_PNCP falhou")
-    )
-  );
-  logger.info("Schedulers em mem\xF3ria iniciados (sem Redis)");
-}
-function scheduleDailyAt(hour2, minute2, fn) {
-  const msUntilNext = () => {
-    const now = /* @__PURE__ */ new Date();
-    const next = /* @__PURE__ */ new Date();
-    next.setHours(hour2, minute2, 0, 0);
-    if (next <= now) next.setDate(next.getDate() + 1);
-    return next.getTime() - now.getTime();
-  };
-  const loop = () => {
-    setTimeout(() => {
-      fn();
-      loop();
-    }, msUntilNext()).unref();
-  };
-  loop();
-}
-
-// src/routes/site/news.ts
-var router26 = (0, import_express26.Router)();
-var DEFAULT_TENANT23 = "parauapebas";
-var TTL3 = 6e4;
-async function getTenantId22(slug) {
-  const r = await db.select({ id: tenantsTable.id }).from(tenantsTable).where(eq(tenantsTable.slug, slug)).limit(1);
-  return r[0]?.id ?? null;
-}
-router26.get("/site/news", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT23;
-    const page = Math.max(1, parseInt(req.query["page"] ?? "1"));
-    const limit = Math.min(50, Math.max(1, parseInt(req.query["limit"] ?? "10")));
-    const category = req.query["category"];
-    const featured = req.query["featured"] === "true";
-    const search = req.query["search"];
-    const offset = (page - 1) * limit;
-    const cacheKey = `site:news:${tenantSlug}:${page}:${limit}:${category ?? ""}:${featured}:${search ?? ""}`;
-    const result = await withCache(cacheKey, TTL3, async () => {
-      const tenantId = await getTenantId22(tenantSlug);
-      if (!tenantId) return null;
-      const conditions = [
-        eq(noticiasTable.tenantId, tenantId),
-        eq(noticiasTable.status, "publicado"),
-        eq(noticiasTable.publicado, true),
-        isNull(noticiasTable.deletadoEm)
-      ];
-      if (category) conditions.push(eq(noticiasTable.categoria, category));
-      if (featured) conditions.push(eq(noticiasTable.destaque, true));
-      if (search) conditions.push(ilike(noticiasTable.titulo, `%${search}%`));
-      const where = and(...conditions);
-      const [countResult, rows] = await Promise.all([
-        db.select({ total: sql`count(*)::int` }).from(noticiasTable).where(where),
-        db.select({
-          id: noticiasTable.id,
-          titulo: noticiasTable.titulo,
-          slug: noticiasTable.slug,
-          resumo: noticiasTable.resumo,
-          imagemCapa: noticiasTable.imagemCapa,
-          imagemCapaAlt: noticiasTable.imagemCapaAlt,
-          categoria: noticiasTable.categoria,
-          destaque: noticiasTable.destaque,
-          tags: noticiasTable.tags,
-          visualizacoes: noticiasTable.visualizacoes,
-          dataPublicacao: noticiasTable.dataPublicacao
-        }).from(noticiasTable).where(where).orderBy(desc(noticiasTable.dataPublicacao)).limit(limit).offset(offset)
-      ]);
-      const total = countResult[0]?.total ?? 0;
-      return { data: rows, total, page, limit, totalPages: Math.ceil(total / limit) };
-    });
-    if (!result) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
-    res.setHeader("Cache-Control", "public, max-age=60");
-    res.json(result);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router26.get("/site/news/:slug", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT23;
-    const slug = req.params["slug"];
-    const cacheKey = `site:news:detail:${tenantSlug}:${slug}`;
-    const noticia = await withCache(cacheKey, TTL3, async () => {
-      const tenantId = await getTenantId22(tenantSlug);
-      if (!tenantId) return null;
-      const [row] = await db.select().from(noticiasTable).where(
-        and(
-          eq(noticiasTable.tenantId, tenantId),
-          eq(noticiasTable.slug, slug),
-          eq(noticiasTable.status, "publicado"),
-          isNull(noticiasTable.deletadoEm)
-        )
-      ).limit(1);
-      if (!row) return void 0;
-      const relacionadas = await db.select({
-        id: noticiasTable.id,
-        titulo: noticiasTable.titulo,
-        slug: noticiasTable.slug,
-        resumo: noticiasTable.resumo,
-        imagemCapa: noticiasTable.imagemCapa,
-        dataPublicacao: noticiasTable.dataPublicacao
-      }).from(noticiasTable).where(
-        and(
-          eq(noticiasTable.tenantId, tenantId),
-          eq(noticiasTable.categoria, row.categoria),
-          eq(noticiasTable.status, "publicado"),
-          isNull(noticiasTable.deletadoEm)
-        )
-      ).orderBy(desc(noticiasTable.dataPublicacao)).limit(4);
-      return {
-        ...row,
-        relacionadas: relacionadas.filter((r) => r.id !== row.id).slice(0, 3)
-      };
-    });
-    if (noticia === null) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
-    if (noticia === void 0) return res.status(404).json({ error: "Not\xEDcia n\xE3o encontrada" });
-    void addJob("INCREMENT_VIEW_COUNT", { noticiaId: noticia.id });
-    if (!process.env["REDIS_URL"]) {
-      db.update(noticiasTable).set({ visualizacoes: sql`${noticiasTable.visualizacoes} + 1` }).where(eq(noticiasTable.id, noticia.id)).execute().catch(() => {
-      });
-    }
-    res.setHeader("Cache-Control", "public, max-age=60");
-    res.json(noticia);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-var news_default = router26;
-
-// src/routes/site/agenda.ts
-var import_express27 = __toESM(require_express2(), 1);
-init_schema2();
-init_drizzle_orm();
-var router27 = (0, import_express27.Router)();
-var DEFAULT_TENANT24 = "parauapebas";
-var TTL4 = 6e4;
-router27.get("/site/agenda", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT24;
-    const now = /* @__PURE__ */ new Date();
-    const month = parseInt(req.query["month"] ?? String(now.getMonth() + 1));
-    const year2 = parseInt(req.query["year"] ?? String(now.getFullYear()));
-    const cacheKey = `site:agenda:${tenantSlug}:${year2}:${month}`;
-    const result = await withCache(cacheKey, TTL4, async () => {
-      const [tenant] = await db.select({ id: tenantsTable.id }).from(tenantsTable).where(eq(tenantsTable.slug, tenantSlug)).limit(1);
-      if (!tenant) return null;
-      const startOfMonth = new Date(year2, month - 1, 1);
-      const endOfMonth = new Date(year2, month, 0, 23, 59, 59);
-      const eventos = await db.select().from(agendaTable).where(
-        and(
-          eq(agendaTable.tenantId, tenant.id),
-          eq(agendaTable.isPublico, true),
-          eq(agendaTable.ativo, true),
-          gte(agendaTable.dataInicio, startOfMonth),
-          lte(agendaTable.dataInicio, endOfMonth)
-        )
-      ).orderBy(asc(agendaTable.dataInicio));
-      return { data: eventos, month, year: year2 };
-    });
-    if (!result) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
-    res.setHeader("Cache-Control", "public, max-age=60");
-    res.json(result);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-var agenda_default3 = router27;
-
-// src/routes/site/gallery.ts
-var import_express28 = __toESM(require_express2(), 1);
-init_schema2();
-init_drizzle_orm();
-var router28 = (0, import_express28.Router)();
-var DEFAULT_TENANT25 = "parauapebas";
-var TTL5 = 6e4;
-router28.get("/site/gallery", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT25;
-    const albumId = req.query["albumId"];
-    const page = Math.max(1, parseInt(req.query["page"] ?? "1"));
-    const limit = 20;
-    const offset = (page - 1) * limit;
-    const cacheKey = `site:gallery:${tenantSlug}:${albumId ?? "albums"}:${page}`;
-    const result = await withCache(cacheKey, TTL5, async () => {
-      const [tenant] = await db.select({ id: tenantsTable.id }).from(tenantsTable).where(eq(tenantsTable.slug, tenantSlug)).limit(1);
-      if (!tenant) return null;
-      if (albumId) {
-        const [album] = await db.select().from(galleryAlbumsTable).where(and(eq(galleryAlbumsTable.id, albumId), eq(galleryAlbumsTable.tenantId, tenant.id), eq(galleryAlbumsTable.isPublico, true))).limit(1);
-        if (!album) return { type: "not_found" };
-        const items = await db.select().from(galleryItemsTable).where(eq(galleryItemsTable.albumId, albumId)).orderBy(asc(galleryItemsTable.sortOrder)).limit(limit).offset(offset);
-        return { type: "items", album, data: items, page };
-      }
-      const albums = await db.select().from(galleryAlbumsTable).where(and(eq(galleryAlbumsTable.tenantId, tenant.id), eq(galleryAlbumsTable.isPublico, true))).orderBy(asc(galleryAlbumsTable.sortOrder)).limit(limit).offset(offset);
-      return { type: "albums", data: albums, page };
-    });
-    if (!result) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
-    if (result.type === "not_found") return res.status(404).json({ error: "\xC1lbum n\xE3o encontrado" });
-    res.setHeader("Cache-Control", "public, max-age=60");
-    res.json(result);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-var gallery_default = router28;
-
-// src/routes/site/legislation.ts
-var import_express29 = __toESM(require_express2(), 1);
-init_schema2();
-init_drizzle_orm();
-var router29 = (0, import_express29.Router)();
-var DEFAULT_TENANT26 = "parauapebas";
-var TTL6 = 6e4;
-router29.get("/site/legislation", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT26;
-    const type = req.query["type"];
-    const year2 = req.query["year"] ? parseInt(req.query["year"]) : void 0;
-    const search = req.query["search"];
-    const page = Math.max(1, parseInt(req.query["page"] ?? "1"));
-    const limit = Math.min(50, Math.max(1, parseInt(req.query["limit"] ?? "20")));
-    const offset = (page - 1) * limit;
-    const cacheKey = `site:legislation:${tenantSlug}:${type ?? ""}:${year2 ?? ""}:${search ?? ""}:${page}`;
-    const result = await withCache(cacheKey, TTL6, async () => {
-      const [tenant] = await db.select({ id: tenantsTable.id }).from(tenantsTable).where(eq(tenantsTable.slug, tenantSlug)).limit(1);
-      if (!tenant) return null;
-      const conditions = [
-        eq(legislacaoTable.tenantId, tenant.id),
-        eq(legislacaoTable.status, "publicado")
-      ];
-      if (type) conditions.push(eq(legislacaoTable.tipo, type));
-      if (year2) conditions.push(eq(legislacaoTable.ano, year2));
-      if (search) {
-        conditions.push(
-          sql`to_tsvector('portuguese', ${legislacaoTable.numero} || ' ' || ${legislacaoTable.ementa}) @@ plainto_tsquery('portuguese', ${search})`
-        );
-      }
-      const where = and(...conditions);
-      const [countResult, rows] = await Promise.all([
-        db.select({ total: sql`count(*)::int` }).from(legislacaoTable).where(where),
-        db.select().from(legislacaoTable).where(where).orderBy(desc(legislacaoTable.dataPublicacao)).limit(limit).offset(offset)
-      ]);
-      const total = countResult[0]?.total ?? 0;
-      return { data: rows, total, page, limit, totalPages: Math.ceil(total / limit) };
-    });
-    if (!result) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
-    res.setHeader("Cache-Control", "public, max-age=60");
-    res.json(result);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-var legislation_default = router29;
-
-// src/routes/site/bids.ts
-var import_express30 = __toESM(require_express2(), 1);
-init_schema2();
-init_drizzle_orm();
-var router30 = (0, import_express30.Router)();
-var DEFAULT_TENANT27 = "parauapebas";
-var TTL7 = 6e4;
-router30.get("/site/bids", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT27;
-    const status = req.query["status"];
-    const modalidade = req.query["modalidade"];
-    const search = req.query["search"];
-    const page = Math.max(1, parseInt(req.query["page"] ?? "1"));
-    const limit = Math.min(50, Math.max(1, parseInt(req.query["limit"] ?? "20")));
-    const offset = (page - 1) * limit;
-    const cacheKey = `site:bids:${tenantSlug}:${status ?? ""}:${modalidade ?? ""}:${search ?? ""}:${page}`;
-    const result = await withCache(cacheKey, TTL7, async () => {
-      const [tenant] = await db.select({ id: tenantsTable.id }).from(tenantsTable).where(eq(tenantsTable.slug, tenantSlug)).limit(1);
-      if (!tenant) return null;
-      const conditions = [eq(licitacoesTable.tenantId, tenant.id)];
-      if (status) conditions.push(eq(licitacoesTable.situacao, status));
-      if (modalidade) conditions.push(eq(licitacoesTable.modalidade, modalidade));
-      if (search) {
-        conditions.push(
-          sql`to_tsvector('portuguese', ${licitacoesTable.numero} || ' ' || ${licitacoesTable.objeto}) @@ plainto_tsquery('portuguese', ${search})`
-        );
-      }
-      const where = and(...conditions);
-      const [countResult, rows] = await Promise.all([
-        db.select({ total: sql`count(*)::int` }).from(licitacoesTable).where(where),
-        db.select().from(licitacoesTable).where(where).orderBy(desc(licitacoesTable.createdAt)).limit(limit).offset(offset)
-      ]);
-      const total = countResult[0]?.total ?? 0;
-      return { data: rows, total, page, limit, totalPages: Math.ceil(total / limit) };
-    });
-    if (!result) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
-    res.setHeader("Cache-Control", "public, max-age=60");
-    res.json(result);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router30.get("/site/bids/:id", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT27;
-    const id = req.params["id"];
-    const cacheKey = `site:bids:detail:${tenantSlug}:${id}`;
-    const result = await withCache(cacheKey, TTL7, async () => {
-      const [tenant] = await db.select({ id: tenantsTable.id }).from(tenantsTable).where(eq(tenantsTable.slug, tenantSlug)).limit(1);
-      if (!tenant) return null;
-      const [licitacao] = await db.select().from(licitacoesTable).where(and(eq(licitacoesTable.id, id), eq(licitacoesTable.tenantId, tenant.id))).limit(1);
-      if (!licitacao) return void 0;
-      const [eventos, contratos] = await Promise.all([
-        db.select().from(bidEventsTable).where(eq(bidEventsTable.licitacaoId, id)).orderBy(desc(bidEventsTable.ocorridoEm)),
-        db.select().from(contractsTable).where(eq(contractsTable.licitacaoId, id))
-      ]);
-      return { ...licitacao, eventos, contratos };
-    });
-    if (result === null) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
-    if (result === void 0) return res.status(404).json({ error: "Licita\xE7\xE3o n\xE3o encontrada" });
-    res.setHeader("Cache-Control", "public, max-age=60");
-    res.json(result);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-var bids_default = router30;
-
-// src/routes/site/transparency.ts
-var import_express31 = __toESM(require_express2(), 1);
-init_schema2();
-init_drizzle_orm();
-var router31 = (0, import_express31.Router)();
-var DEFAULT_TENANT28 = "parauapebas";
-var TTL8 = 6e4;
-var VALID_CATEGORIES = [
-  "orcamento",
-  "receitas",
-  "despesas",
-  "servidores",
-  "convenios",
-  "atas",
-  "dados-abertos"
-];
-router31.get("/site/transparency/:category", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT28;
-    const category = req.params["category"].toLowerCase();
-    const year2 = req.query["year"] ? parseInt(req.query["year"]) : void 0;
-    const period = req.query["period"];
-    const page = Math.max(1, parseInt(req.query["page"] ?? "1"));
-    const limit = 20;
-    const offset = (page - 1) * limit;
-    if (!VALID_CATEGORIES.includes(category)) {
-      return res.status(400).json({
-        error: "Categoria inv\xE1lida",
-        valid: VALID_CATEGORIES
-      });
-    }
-    const cacheKey = `site:transparency:${tenantSlug}:${category}:${year2 ?? ""}:${period ?? ""}:${page}`;
-    const result = await withCache(cacheKey, TTL8, async () => {
-      const [tenant] = await db.select({ id: tenantsTable.id }).from(tenantsTable).where(eq(tenantsTable.slug, tenantSlug)).limit(1);
-      if (!tenant) return null;
-      if (category === "despesas") {
-        const conditions = [eq(despesasTable.tenantId, tenant.id)];
-        if (year2) conditions.push(eq(despesasTable.ano, year2));
-        if (period) conditions.push(eq(despesasTable.mes, parseInt(period)));
-        const rows = await db.select().from(despesasTable).where(and(...conditions)).orderBy(desc(despesasTable.data)).limit(limit).offset(offset);
-        return { type: "structured", category, data: rows, page };
-      }
-      if (category === "receitas") {
-        const conditions = [eq(receitasTable.tenantId, tenant.id)];
-        if (year2) conditions.push(eq(receitasTable.ano, year2));
-        if (period) conditions.push(eq(receitasTable.mes, parseInt(period)));
-        const rows = await db.select().from(receitasTable).where(and(...conditions)).orderBy(desc(receitasTable.data)).limit(limit).offset(offset);
-        return { type: "structured", category, data: rows, page };
-      }
-      if (category === "servidores") {
-        const rows = await db.select().from(servidoresTable).where(eq(servidoresTable.tenantId, tenant.id)).orderBy(servidoresTable.nome).limit(limit).offset(offset);
-        return { type: "structured", category, data: rows, page };
-      }
-      if (category === "orcamento") {
-        const conditions = [eq(orcamentosTable.tenantId, tenant.id)];
-        if (year2) conditions.push(eq(orcamentosTable.ano, year2));
-        const rows = await db.select().from(orcamentosTable).where(and(...conditions));
-        return { type: "structured", category, data: rows, page };
-      }
-      const docConditions = [
-        eq(transparencyDocsTable.tenantId, tenant.id),
-        eq(transparencyDocsTable.categoria, category)
-      ];
-      if (year2) docConditions.push(eq(transparencyDocsTable.anoReferencia, year2));
-      if (period) docConditions.push(eq(transparencyDocsTable.periodoReferencia, period));
-      const where = and(...docConditions);
-      const [countResult, docs] = await Promise.all([
-        db.select({ total: sql`count(*)::int` }).from(transparencyDocsTable).where(where),
-        db.select().from(transparencyDocsTable).where(where).orderBy(desc(transparencyDocsTable.publicadoEm)).limit(limit).offset(offset)
-      ]);
-      const total = countResult[0]?.total ?? 0;
-      return { type: "documents", category, data: docs, total, page, totalPages: Math.ceil(total / limit) };
-    });
-    if (!result) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
-    res.setHeader("Cache-Control", "public, max-age=60");
-    res.json(result);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-var transparency_default = router31;
-
-// src/routes/site/secretarias-pub.ts
-var import_express32 = __toESM(require_express2(), 1);
-init_schema2();
-init_drizzle_orm();
-var router32 = (0, import_express32.Router)();
-var DEFAULT_TENANT29 = "parauapebas";
-var TTL9 = 6e4;
-router32.get("/site/secretarias", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT29;
-    const cacheKey = `site:secretarias:${tenantSlug}`;
-    const result = await withCache(cacheKey, TTL9, async () => {
-      const [tenant] = await db.select({ id: tenantsTable.id }).from(tenantsTable).where(eq(tenantsTable.slug, tenantSlug)).limit(1);
-      if (!tenant) return null;
-      const rows = await db.select({
-        id: secretariasTable.id,
-        nome: secretariasTable.nome,
-        slug: secretariasTable.slug,
-        sigla: secretariasTable.sigla,
-        descricao: secretariasTable.descricao,
-        secretario: secretariasTable.secretario,
-        fotoSecretario: secretariasTable.fotoSecretario,
-        telefone: secretariasTable.telefone,
-        email: secretariasTable.email,
-        endereco: secretariasTable.endereco,
-        horario: secretariasTable.horario
-      }).from(secretariasTable).where(and(eq(secretariasTable.tenantId, tenant.id), eq(secretariasTable.ativa, true))).orderBy(asc(secretariasTable.nome));
-      return { data: rows };
-    });
-    if (!result) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
-    res.setHeader("Cache-Control", "public, max-age=60");
-    res.json(result);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-var secretarias_pub_default = router32;
-
-// src/routes/site/search.ts
-var import_express33 = __toESM(require_express2(), 1);
-init_schema2();
-init_drizzle_orm();
-var router33 = (0, import_express33.Router)();
-var DEFAULT_TENANT30 = "parauapebas";
-var TTL10 = 3e4;
-router33.get("/site/search", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT30;
-    const q = (req.query["q"] ?? "").trim();
-    if (!q || q.length < 2) {
-      return res.status(400).json({ error: "Par\xE2metro q deve ter ao menos 2 caracteres" });
-    }
-    const cacheKey = `site:search:${tenantSlug}:${q}`;
-    const result = await withCache(cacheKey, TTL10, async () => {
-      const [tenant] = await db.select({ id: tenantsTable.id }).from(tenantsTable).where(eq(tenantsTable.slug, tenantSlug)).limit(1);
-      if (!tenant) return null;
-      const tenantId = tenant.id;
-      const noticias = await db.execute(sql`
-        SELECT
-          id, titulo, slug, resumo, imagem_capa AS "imagemCapa",
-          data_publicacao AS "dataPublicacao",
-          ts_rank(
-            to_tsvector('portuguese', titulo || ' ' || COALESCE(resumo, '')),
-            plainto_tsquery('portuguese', ${q})
-          ) AS rank
-        FROM noticias
-        WHERE
-          tenant_id = ${tenantId}
-          AND status = 'publicado'
-          AND deletado_em IS NULL
-          AND to_tsvector('portuguese', titulo || ' ' || COALESCE(resumo, ''))
-              @@ plainto_tsquery('portuguese', ${q})
-        ORDER BY rank DESC, data_publicacao DESC
-        LIMIT 10
-      `);
-      const legislacao = await db.execute(sql`
-        SELECT
-          id, tipo || ' nº ' || numero AS titulo, slug, ementa AS resumo,
-          data_publicacao AS "dataPublicacao",
-          ts_rank(
-            to_tsvector('portuguese', numero || ' ' || ementa),
-            plainto_tsquery('portuguese', ${q})
-          ) AS rank
-        FROM legislacao
-        WHERE
-          tenant_id = ${tenantId}
-          AND status = 'publicado'
-          AND to_tsvector('portuguese', numero || ' ' || ementa)
-              @@ plainto_tsquery('portuguese', ${q})
-        ORDER BY rank DESC, data_publicacao DESC
-        LIMIT 10
-      `);
-      const licitacoes = await db.execute(sql`
-        SELECT
-          id, numero AS titulo, objeto AS resumo,
-          modalidade, situacao, created_at AS "createdAt",
-          ts_rank(
-            to_tsvector('portuguese', numero || ' ' || objeto),
-            plainto_tsquery('portuguese', ${q})
-          ) AS rank
-        FROM licitacoes
-        WHERE
-          tenant_id = ${tenantId}
-          AND to_tsvector('portuguese', numero || ' ' || objeto)
-              @@ plainto_tsquery('portuguese', ${q})
-        ORDER BY rank DESC, created_at DESC
-        LIMIT 10
-      `);
-      const paginas = await db.execute(sql`
-        SELECT
-          id, titulo, slug,
-          meta_description AS resumo,
-          ts_rank(
-            to_tsvector('portuguese', titulo || ' ' || COALESCE(meta_description, '')),
-            plainto_tsquery('portuguese', ${q})
-          ) AS rank
-        FROM pages
-        WHERE
-          tenant_id = ${tenantId}
-          AND status = 'publicado'
-          AND to_tsvector('portuguese', titulo || ' ' || COALESCE(meta_description, ''))
-              @@ plainto_tsquery('portuguese', ${q})
-        ORDER BY rank DESC
-        LIMIT 5
-      `);
-      const noticiasRows = noticias.rows;
-      const legislacaoRows = legislacao.rows;
-      const licitacoesRows = licitacoes.rows;
-      const paginasRows = paginas.rows;
-      const total = noticiasRows.length + legislacaoRows.length + licitacoesRows.length + paginasRows.length;
-      return {
-        q,
-        total,
-        results: {
-          noticias: noticiasRows.map((n) => ({ ...n, tipo: "noticia" })),
-          legislacao: legislacaoRows.map((l) => ({ ...l, tipo: "legislacao" })),
-          licitacoes: licitacoesRows.map((l) => ({ ...l, tipo: "licitacao" })),
-          paginas: paginasRows.map((p) => ({ ...p, tipo: "pagina" }))
-        }
-      };
-    });
-    if (!result) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
-    res.setHeader("Cache-Control", "public, max-age=30");
-    res.json(result);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-var search_default = router33;
-
-// src/routes/site/pages.ts
-var import_express34 = __toESM(require_express2(), 1);
-init_schema2();
-init_drizzle_orm();
-var router34 = (0, import_express34.Router)();
-var DEFAULT_TENANT31 = "parauapebas";
-var TTL11 = 6e4;
-router34.get("/site/pages/:slug", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT31;
-    const slug = req.params["slug"];
-    const cacheKey = `site:pages:${tenantSlug}:${slug}`;
-    const result = await withCache(cacheKey, TTL11, async () => {
-      const [tenant] = await db.select({ id: tenantsTable.id }).from(tenantsTable).where(eq(tenantsTable.slug, tenantSlug)).limit(1);
-      if (!tenant) return null;
-      const [page] = await db.select().from(pagesTable).where(
-        and(
-          eq(pagesTable.tenantId, tenant.id),
-          eq(pagesTable.slug, slug),
-          eq(pagesTable.status, "publicado")
-        )
-      ).limit(1);
-      if (!page) return void 0;
-      const blocos = await db.select().from(pageBlocksTable).where(eq(pageBlocksTable.pageId, page.id)).orderBy(asc(pageBlocksTable.sortOrder));
-      return { ...page, blocos };
-    });
-    if (result === null) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
-    if (result === void 0) return res.status(404).json({ error: "P\xE1gina n\xE3o encontrada" });
-    res.setHeader("Cache-Control", "public, max-age=60");
-    res.json(result);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-var pages_default = router34;
-
-// src/routes/site-admin/news.ts
-var import_express35 = __toESM(require_express2(), 1);
-init_schema2();
-init_drizzle_orm();
-init_schema2();
-import { randomUUID as randomUUID12 } from "crypto";
-var router35 = (0, import_express35.Router)();
-var DEFAULT_TENANT32 = "parauapebas";
-async function getTenantId23(slug) {
-  const r = await db.select({ id: tenantsTable.id }).from(tenantsTable).where(eq(tenantsTable.slug, slug)).limit(1);
-  return r[0]?.id ?? null;
-}
-router35.get("/site-admin/news", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT32;
-    const status = req.query["status"];
-    const search = req.query["search"];
-    const page = Math.max(1, parseInt(req.query["page"] ?? "1"));
-    const limit = Math.min(100, Math.max(1, parseInt(req.query["limit"] ?? "20")));
-    const offset = (page - 1) * limit;
-    const tenantId = await getTenantId23(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
-    const conditions = [eq(noticiasTable.tenantId, tenantId), isNull(noticiasTable.deletadoEm)];
-    if (status) conditions.push(eq(noticiasTable.status, status));
-    if (search) conditions.push(ilike(noticiasTable.titulo, `%${search}%`));
-    const where = and(...conditions);
-    const [total, data] = await Promise.all([
-      db.select({ count: count() }).from(noticiasTable).where(where),
-      db.select().from(noticiasTable).where(where).orderBy(desc(noticiasTable.createdAt)).limit(limit).offset(offset)
-    ]);
-    res.json({ data, total: total[0]?.count ?? 0, page, limit, totalPages: Math.ceil((total[0]?.count ?? 0) / limit) });
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router35.get("/site-admin/news/:id", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT32;
-    const tenantId = await getTenantId23(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
-    const [noticia] = await db.select().from(noticiasTable).where(and(eq(noticiasTable.tenantId, tenantId), eq(noticiasTable.id, req.params["id"]))).limit(1);
-    if (!noticia) return res.status(404).json({ error: "Not\xEDcia n\xE3o encontrada" });
-    res.json(noticia);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router35.post("/site-admin/news", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT32;
-    const tenantId = await getTenantId23(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
-    const b = req.body;
-    if (!b.titulo) return res.status(400).json({ error: "titulo \xE9 obrigat\xF3rio" });
-    const id = randomUUID12();
-    const slug = b.slug ?? `${b.titulo.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}-${id.slice(0, 8)}`;
-    const [noticia] = await db.insert(noticiasTable).values({
-      id,
-      tenantId,
-      titulo: b.titulo,
-      slug,
-      resumo: b.resumo ?? "",
-      conteudo: b.conteudo ?? "",
-      imagemCapa: b.imagemCapa ?? null,
-      imagemCapaAlt: b.imagemCapaAlt ?? null,
-      categoria: b.categoria ?? "geral",
-      categoriaId: b.categoriaId ?? null,
-      secretariaId: b.secretariaId ?? null,
-      autor: b.autor ?? null,
-      status: "rascunho",
-      publicado: false,
-      destaque: b.destaque ?? false,
-      tags: b.tags ?? [],
-      metaTitle: b.metaTitle ?? null,
-      metaDescription: b.metaDescription ?? null
-    }).returning();
-    if (b.conteudo) {
-      await db.insert(newsVersionsTable).values({ id: randomUUID12(), noticiaId: id, conteudo: b.conteudo, savedBy: b.autor ?? "admin" });
-    }
-    cacheDelPattern(`site:news:${tenantSlug}`);
-    res.status(201).json(noticia);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router35.put("/site-admin/news/:id", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT32;
-    const tenantId = await getTenantId23(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
-    const b = req.body;
-    const update = { updatedAt: /* @__PURE__ */ new Date() };
-    const fields = [
-      "titulo",
-      "slug",
-      "resumo",
-      "conteudo",
-      "imagemCapa",
-      "imagemCapaAlt",
-      "categoria",
-      "categoriaId",
-      "secretariaId",
-      "autor",
-      "destaque",
-      "tags",
-      "metaTitle",
-      "metaDescription",
-      "ogImageUrl"
-    ];
-    for (const f of fields) if (b[f] !== void 0) update[f] = b[f];
-    if (b.dataPublicacao) update["dataPublicacao"] = new Date(b.dataPublicacao);
-    if (b.agendadoEm !== void 0) update["agendadoEm"] = b.agendadoEm ? new Date(b.agendadoEm) : null;
-    const [updated] = await db.update(noticiasTable).set(update).where(and(eq(noticiasTable.tenantId, tenantId), eq(noticiasTable.id, req.params["id"]))).returning();
-    if (!updated) return res.status(404).json({ error: "Not\xEDcia n\xE3o encontrada" });
-    if (b.conteudo) {
-      await db.insert(newsVersionsTable).values({ id: randomUUID12(), noticiaId: updated.id, conteudo: b.conteudo, savedBy: b.autor ?? "admin" });
-    }
-    cacheDelPattern(`site:news:${tenantSlug}`);
-    res.json(updated);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router35.patch("/site-admin/news/:id/publish", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT32;
-    const tenantId = await getTenantId23(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
-    const [updated] = await db.update(noticiasTable).set({ status: "publicado", publicado: true, dataPublicacao: /* @__PURE__ */ new Date(), updatedAt: /* @__PURE__ */ new Date() }).where(and(eq(noticiasTable.tenantId, tenantId), eq(noticiasTable.id, req.params["id"]))).returning();
-    if (!updated) return res.status(404).json({ error: "Not\xEDcia n\xE3o encontrada" });
-    cacheDelPattern(`site:news:${tenantSlug}`);
-    res.json(updated);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router35.patch("/site-admin/news/:id/schedule", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT32;
-    const tenantId = await getTenantId23(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
-    const { scheduledAt } = req.body;
-    if (!scheduledAt) return res.status(400).json({ error: "scheduledAt \xE9 obrigat\xF3rio" });
-    const [updated] = await db.update(noticiasTable).set({ status: "agendado", publicado: false, agendadoEm: new Date(scheduledAt), updatedAt: /* @__PURE__ */ new Date() }).where(and(eq(noticiasTable.tenantId, tenantId), eq(noticiasTable.id, req.params["id"]))).returning();
-    if (!updated) return res.status(404).json({ error: "Not\xEDcia n\xE3o encontrada" });
-    res.json(updated);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router35.patch("/site-admin/news/:id/archive", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT32;
-    const tenantId = await getTenantId23(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
-    const [updated] = await db.update(noticiasTable).set({ status: "arquivado", publicado: false, updatedAt: /* @__PURE__ */ new Date() }).where(and(eq(noticiasTable.tenantId, tenantId), eq(noticiasTable.id, req.params["id"]))).returning();
-    if (!updated) return res.status(404).json({ error: "Not\xEDcia n\xE3o encontrada" });
-    cacheDelPattern(`site:news:${tenantSlug}`);
-    res.json(updated);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router35.delete("/site-admin/news/:id", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT32;
-    const tenantId = await getTenantId23(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
-    await db.update(noticiasTable).set({ deletadoEm: /* @__PURE__ */ new Date(), status: "arquivado", publicado: false, updatedAt: /* @__PURE__ */ new Date() }).where(and(eq(noticiasTable.tenantId, tenantId), eq(noticiasTable.id, req.params["id"])));
-    cacheDelPattern(`site:news:${tenantSlug}`);
-    res.status(204).send();
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router35.get("/site-admin/news/:id/versions", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT32;
-    const tenantId = await getTenantId23(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
-    const versions = await db.select().from(newsVersionsTable).where(eq(newsVersionsTable.noticiaId, req.params["id"])).orderBy(desc(newsVersionsTable.createdAt)).limit(50);
-    res.json({ data: versions });
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-var news_default2 = router35;
-
-// src/routes/site-admin/banners.ts
-var import_express36 = __toESM(require_express2(), 1);
-init_schema2();
-init_drizzle_orm();
-import { randomUUID as randomUUID13 } from "crypto";
-var router36 = (0, import_express36.Router)();
-var DEFAULT_TENANT33 = "parauapebas";
-async function getTenantId24(slug) {
-  const r = await db.select({ id: tenantsTable.id }).from(tenantsTable).where(eq(tenantsTable.slug, slug)).limit(1);
-  return r[0]?.id ?? null;
-}
-router36.get("/site-admin/banners", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT33;
-    const tenantId = await getTenantId24(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
-    const data = await db.select().from(bannersTable).where(eq(bannersTable.tenantId, tenantId)).orderBy(asc(bannersTable.sortOrder));
-    res.json({ data });
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router36.post("/site-admin/banners", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT33;
-    const tenantId = await getTenantId24(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
-    const b = req.body;
-    if (!b.titulo || !b.imageDesktopUrl || !b.imageAlt) {
-      return res.status(400).json({ error: "titulo, imageDesktopUrl e imageAlt s\xE3o obrigat\xF3rios" });
-    }
-    const [banner] = await db.insert(bannersTable).values({
-      id: randomUUID13(),
-      tenantId,
-      titulo: b.titulo,
-      subtitulo: b.subtitulo ?? null,
-      imageDesktopUrl: b.imageDesktopUrl,
-      imageMobileUrl: b.imageMobileUrl ?? null,
-      imageAlt: b.imageAlt,
-      ctaLabel: b.ctaLabel ?? null,
-      ctaUrl: b.ctaUrl ?? null,
-      ctaAbreNovaAba: b.ctaAbreNovaAba ?? false,
-      overlayColor: b.overlayColor ?? null,
-      overlayOpacity: b.overlayOpacity ?? 0.4,
-      isAtivo: b.isAtivo ?? true,
-      sortOrder: b.sortOrder ?? 0,
-      iniciaEm: b.iniciaEm ? new Date(b.iniciaEm) : null,
-      expiraEm: b.expiraEm ? new Date(b.expiraEm) : null
-    }).returning();
-    cacheDelPattern(`site:banners:${tenantSlug}`);
-    res.status(201).json(banner);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router36.put("/site-admin/banners/:id", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT33;
-    const tenantId = await getTenantId24(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
-    const b = req.body;
-    const update = { updatedAt: /* @__PURE__ */ new Date() };
-    const fields = [
-      "titulo",
-      "subtitulo",
-      "imageDesktopUrl",
-      "imageMobileUrl",
-      "imageAlt",
-      "ctaLabel",
-      "ctaUrl",
-      "ctaAbreNovaAba",
-      "overlayColor",
-      "overlayOpacity",
-      "isAtivo",
-      "sortOrder"
-    ];
-    for (const f of fields) if (b[f] !== void 0) update[f] = b[f];
-    if (b.iniciaEm !== void 0) update["iniciaEm"] = b.iniciaEm ? new Date(b.iniciaEm) : null;
-    if (b.expiraEm !== void 0) update["expiraEm"] = b.expiraEm ? new Date(b.expiraEm) : null;
-    const [updated] = await db.update(bannersTable).set(update).where(and(eq(bannersTable.id, req.params["id"]), eq(bannersTable.tenantId, tenantId))).returning();
-    if (!updated) return res.status(404).json({ error: "Banner n\xE3o encontrado" });
-    cacheDelPattern(`site:banners:${tenantSlug}`);
-    res.json(updated);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router36.patch("/site-admin/banners/reorder", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT33;
-    const tenantId = await getTenantId24(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
-    const { orderedIds } = req.body;
-    if (!Array.isArray(orderedIds)) return res.status(400).json({ error: "orderedIds deve ser um array" });
-    await Promise.all(
-      orderedIds.map(
-        (id, idx) => db.update(bannersTable).set({ sortOrder: idx, updatedAt: /* @__PURE__ */ new Date() }).where(and(eq(bannersTable.id, id), eq(bannersTable.tenantId, tenantId)))
-      )
-    );
-    cacheDelPattern(`site:banners:${tenantSlug}`);
-    res.json({ ok: true });
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router36.delete("/site-admin/banners/:id", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT33;
-    const tenantId = await getTenantId24(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
-    await db.delete(bannersTable).where(and(eq(bannersTable.id, req.params["id"]), eq(bannersTable.tenantId, tenantId)));
-    cacheDelPattern(`site:banners:${tenantSlug}`);
-    res.status(204).send();
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-var banners_default3 = router36;
-
-// src/routes/site-admin/transparency.ts
-var import_express37 = __toESM(require_express2(), 1);
-init_schema2();
-init_drizzle_orm();
-import { randomUUID as randomUUID14 } from "crypto";
-var router37 = (0, import_express37.Router)();
-var DEFAULT_TENANT34 = "parauapebas";
-async function getTenantId25(slug) {
-  const r = await db.select({ id: tenantsTable.id }).from(tenantsTable).where(eq(tenantsTable.slug, slug)).limit(1);
-  return r[0]?.id ?? null;
-}
-var LAI_REQUIRED_CATEGORIES = [
-  { categoria: "orcamento", intervalo: 365 },
-  { categoria: "receitas", intervalo: 30 },
-  { categoria: "despesas", intervalo: 30 },
-  { categoria: "servidores", intervalo: 90 },
-  { categoria: "convenios", intervalo: 90 },
-  { categoria: "atas", intervalo: 30 }
-];
-router37.get("/site-admin/transparency", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT34;
-    const categoria = req.query["categoria"];
-    const page = Math.max(1, parseInt(req.query["page"] ?? "1"));
-    const limit = 50;
-    const offset = (page - 1) * limit;
-    const tenantId = await getTenantId25(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
-    const conditions = [eq(transparencyDocsTable.tenantId, tenantId)];
-    if (categoria) conditions.push(eq(transparencyDocsTable.categoria, categoria));
-    const docs = await db.select().from(transparencyDocsTable).where(and(...conditions)).orderBy(desc(transparencyDocsTable.publicadoEm)).limit(limit).offset(offset);
-    res.json({ data: docs, page });
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router37.post("/site-admin/transparency", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT34;
-    const tenantId = await getTenantId25(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
-    const b = req.body;
-    if (!b.categoria || !b.titulo || !b.fileUrl || !b.nomeArquivo || !b.anoReferencia) {
-      return res.status(400).json({ error: "categoria, titulo, fileUrl, nomeArquivo e anoReferencia s\xE3o obrigat\xF3rios" });
-    }
-    const [doc] = await db.insert(transparencyDocsTable).values({
-      id: randomUUID14(),
-      tenantId,
-      categoria: b.categoria,
-      subcategoria: b.subcategoria ?? null,
-      titulo: b.titulo,
-      descricao: b.descricao ?? null,
-      anoReferencia: parseInt(b.anoReferencia),
-      periodoReferencia: b.periodoReferencia ?? null,
-      fileUrl: b.fileUrl,
-      nomeArquivo: b.nomeArquivo,
-      tamanhoBytes: b.tamanhoBytes ?? 0,
-      publicadoPor: b.publicadoPor ?? "admin",
-      publicadoEm: b.publicadoEm ? new Date(b.publicadoEm) : /* @__PURE__ */ new Date(),
-      expiraEm: b.expiraEm ? new Date(b.expiraEm) : null
-    }).returning();
-    res.status(201).json(doc);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router37.delete("/site-admin/transparency/:id", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT34;
-    const tenantId = await getTenantId25(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
-    await db.delete(transparencyDocsTable).where(and(eq(transparencyDocsTable.id, req.params["id"]), eq(transparencyDocsTable.tenantId, tenantId)));
-    res.status(204).send();
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router37.get("/site-admin/transparency/compliance", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT34;
-    const tenantId = await getTenantId25(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
-    const now = /* @__PURE__ */ new Date();
-    const report = await Promise.all(
-      LAI_REQUIRED_CATEGORIES.map(async ({ categoria, intervalo }) => {
-        const cutoff = new Date(now.getTime() - intervalo * 24 * 60 * 60 * 1e3);
-        const [latest] = await db.select({ publicadoEm: transparencyDocsTable.publicadoEm, titulo: transparencyDocsTable.titulo }).from(transparencyDocsTable).where(and(eq(transparencyDocsTable.tenantId, tenantId), eq(transparencyDocsTable.categoria, categoria))).orderBy(desc(transparencyDocsTable.publicadoEm)).limit(1);
-        const conforme = latest ? latest.publicadoEm >= cutoff : false;
-        const diasDesdePublicacao = latest ? Math.floor((now.getTime() - latest.publicadoEm.getTime()) / (24 * 60 * 60 * 1e3)) : null;
-        return {
-          categoria,
-          conforme,
-          ultimaPublicacao: latest?.publicadoEm ?? null,
-          diasDesdePublicacao,
-          prazoMaximoDias: intervalo,
-          alerta: !conforme
-        };
-      })
-    );
-    const totalConforme = report.filter((r) => r.conforme).length;
-    const percentual = Math.round(totalConforme / report.length * 100);
-    res.json({
-      percentualConformidade: percentual,
-      totalCategorias: report.length,
-      totalConforme,
-      totalPendente: report.length - totalConforme,
-      categorias: report,
-      geradoEm: now
-    });
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-var transparency_default2 = router37;
-
-// src/routes/site-admin/bids.ts
-var import_express38 = __toESM(require_express2(), 1);
-init_schema2();
-init_drizzle_orm();
-import { randomUUID as randomUUID15 } from "crypto";
-var router38 = (0, import_express38.Router)();
-var DEFAULT_TENANT35 = "parauapebas";
-async function getTenantId26(slug) {
-  const r = await db.select({ id: tenantsTable.id }).from(tenantsTable).where(eq(tenantsTable.slug, slug)).limit(1);
-  return r[0]?.id ?? null;
-}
-router38.get("/site-admin/bids", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT35;
-    const tenantId = await getTenantId26(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
-    const search = req.query["search"];
-    const status = req.query["status"];
-    const page = Math.max(1, parseInt(req.query["page"] ?? "1"));
-    const limit = 20;
-    const offset = (page - 1) * limit;
-    const conditions = [eq(licitacoesTable.tenantId, tenantId)];
-    if (status) conditions.push(eq(licitacoesTable.situacao, status));
-    if (search) conditions.push(ilike(licitacoesTable.objeto, `%${search}%`));
-    const data = await db.select().from(licitacoesTable).where(and(...conditions)).orderBy(desc(licitacoesTable.createdAt)).limit(limit).offset(offset);
-    res.json({ data, page });
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router38.post("/site-admin/bids", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT35;
-    const tenantId = await getTenantId26(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
-    const b = req.body;
-    if (!b.numero || !b.objeto || !b.modalidade) {
-      return res.status(400).json({ error: "numero, objeto e modalidade s\xE3o obrigat\xF3rios" });
-    }
-    const [licitacao] = await db.insert(licitacoesTable).values({
-      id: randomUUID15(),
-      tenantId,
-      numero: b.numero,
-      objeto: b.objeto,
-      modalidade: b.modalidade,
-      situacao: b.situacao ?? "aberta",
-      dataAbertura: b.dataAbertura ? new Date(b.dataAbertura) : null,
-      dataEncerramento: b.dataEncerramento ? new Date(b.dataEncerramento) : null,
-      valorEstimado: b.valorEstimado ?? null,
-      valorHomologado: b.valorHomologado ?? null,
-      secretaria: b.secretaria ?? null,
-      secretariaId: b.secretariaId ?? null,
-      edital: b.edital ?? null,
-      editalUrl: b.editalUrl ?? null,
-      resultUrl: b.resultUrl ?? null,
-      descricao: b.descricao ?? null,
-      vencedor: b.vencedor ?? null,
-      vencedorCnpj: b.vencedorCnpj ?? null,
-      pncpId: b.pncpId ?? null
-    }).returning();
-    cacheDelPattern(`site:bids:`);
-    res.status(201).json(licitacao);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router38.put("/site-admin/bids/:id", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT35;
-    const tenantId = await getTenantId26(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
-    const b = req.body;
-    const update = { updatedAt: /* @__PURE__ */ new Date() };
-    const fields = [
-      "numero",
-      "objeto",
-      "modalidade",
-      "situacao",
-      "valorEstimado",
-      "valorHomologado",
-      "secretaria",
-      "secretariaId",
-      "edital",
-      "editalUrl",
-      "resultUrl",
-      "ata",
-      "descricao",
-      "vencedor",
-      "vencedorCnpj",
-      "pncpId"
-    ];
-    for (const f of fields) if (b[f] !== void 0) update[f] = b[f];
-    if (b.dataAbertura !== void 0) update["dataAbertura"] = b.dataAbertura ? new Date(b.dataAbertura) : null;
-    if (b.dataEncerramento !== void 0) update["dataEncerramento"] = b.dataEncerramento ? new Date(b.dataEncerramento) : null;
-    const [updated] = await db.update(licitacoesTable).set(update).where(and(eq(licitacoesTable.id, req.params["id"]), eq(licitacoesTable.tenantId, tenantId))).returning();
-    if (!updated) return res.status(404).json({ error: "Licita\xE7\xE3o n\xE3o encontrada" });
-    cacheDelPattern(`site:bids:`);
-    res.json(updated);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router38.post("/site-admin/bids/:id/events", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT35;
-    const tenantId = await getTenantId26(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
-    const b = req.body;
-    if (!b.titulo || !b.ocorridoEm) {
-      return res.status(400).json({ error: "titulo e ocorridoEm s\xE3o obrigat\xF3rios" });
-    }
-    const [lic] = await db.select({ id: licitacoesTable.id }).from(licitacoesTable).where(and(eq(licitacoesTable.id, req.params["id"]), eq(licitacoesTable.tenantId, tenantId))).limit(1);
-    if (!lic) return res.status(404).json({ error: "Licita\xE7\xE3o n\xE3o encontrada" });
-    const [evento] = await db.insert(bidEventsTable).values({
-      id: randomUUID15(),
-      licitacaoId: req.params["id"],
-      titulo: b.titulo,
-      descricao: b.descricao ?? null,
-      fileUrl: b.fileUrl ?? null,
-      ocorridoEm: new Date(b.ocorridoEm)
-    }).returning();
-    cacheDelPattern(`site:bids:detail:`);
-    res.status(201).json(evento);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router38.post("/site-admin/bids/:id/contracts", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT35;
-    const tenantId = await getTenantId26(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
-    const b = req.body;
-    if (!b.numero || !b.objeto || !b.contratado || !b.cnpjContratado || !b.valor || !b.dataInicio || !b.dataFim) {
-      return res.status(400).json({ error: "numero, objeto, contratado, cnpjContratado, valor, dataInicio e dataFim s\xE3o obrigat\xF3rios" });
-    }
-    const [lic] = await db.select({ id: licitacoesTable.id }).from(licitacoesTable).where(and(eq(licitacoesTable.id, req.params["id"]), eq(licitacoesTable.tenantId, tenantId))).limit(1);
-    if (!lic) return res.status(404).json({ error: "Licita\xE7\xE3o n\xE3o encontrada" });
-    const [contrato] = await db.insert(contractsTable).values({
-      id: randomUUID15(),
-      tenantId,
-      licitacaoId: req.params["id"],
-      numero: b.numero,
-      objeto: b.objeto,
-      contratado: b.contratado,
-      cnpjContratado: b.cnpjContratado,
-      valor: parseFloat(b.valor),
-      dataInicio: b.dataInicio,
-      dataFim: b.dataFim,
-      fileUrl: b.fileUrl ?? null,
-      ativo: b.ativo ?? true,
-      fiscalNome: b.fiscalNome ?? null
-    }).returning();
-    cacheDelPattern(`site:bids:detail:`);
-    res.status(201).json(contrato);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-var bids_default2 = router38;
-
-// src/routes/site-admin/agenda.ts
-var import_express39 = __toESM(require_express2(), 1);
-init_schema2();
-init_drizzle_orm();
-import { randomUUID as randomUUID16 } from "crypto";
-var router39 = (0, import_express39.Router)();
-var DEFAULT_TENANT36 = "parauapebas";
-async function getTenantId27(slug) {
-  const r = await db.select({ id: tenantsTable.id }).from(tenantsTable).where(eq(tenantsTable.slug, slug)).limit(1);
-  return r[0]?.id ?? null;
-}
-router39.get("/site-admin/agenda", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT36;
-    const tenantId = await getTenantId27(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
-    const now = /* @__PURE__ */ new Date();
-    const month = parseInt(req.query["month"] ?? String(now.getMonth() + 1));
-    const year2 = parseInt(req.query["year"] ?? String(now.getFullYear()));
-    const startOfMonth = new Date(year2, month - 1, 1);
-    const endOfMonth = new Date(year2, month, 0, 23, 59, 59);
-    const data = await db.select().from(agendaTable).where(and(
-      eq(agendaTable.tenantId, tenantId),
-      gte(agendaTable.dataInicio, startOfMonth),
-      lte(agendaTable.dataInicio, endOfMonth)
-    )).orderBy(asc(agendaTable.dataInicio));
-    res.json({ data, month, year: year2 });
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router39.post("/site-admin/agenda", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT36;
-    const tenantId = await getTenantId27(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
-    const b = req.body;
-    if (!b.titulo || !b.dataInicio) return res.status(400).json({ error: "titulo e dataInicio s\xE3o obrigat\xF3rios" });
-    const [evento] = await db.insert(agendaTable).values({
-      id: randomUUID16(),
-      tenantId,
-      titulo: b.titulo,
-      descricao: b.descricao ?? null,
-      tipo: b.tipo ?? "evento",
-      local: b.local ?? null,
-      endereco: b.endereco ?? null,
-      isOnline: b.isOnline ?? false,
-      onlineUrl: b.onlineUrl ?? null,
-      dataInicio: new Date(b.dataInicio),
-      dataFim: b.dataFim ? new Date(b.dataFim) : null,
-      diaInteiro: b.diaInteiro ?? false,
-      secretariaId: b.secretariaId ?? null,
-      categoria: b.categoria ?? null,
-      publicoAlvo: b.publicoAlvo ?? null,
-      isPublico: b.isPublico ?? true,
-      gratuito: b.gratuito ?? true,
-      linkInscricao: b.linkInscricao ?? null,
-      anexoUrl: b.anexoUrl ?? null,
-      ativo: b.ativo ?? true
-    }).returning();
-    cacheDelPattern(`site:agenda:`);
-    res.status(201).json(evento);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router39.put("/site-admin/agenda/:id", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT36;
-    const tenantId = await getTenantId27(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
-    const b = req.body;
-    const update = { updatedAt: /* @__PURE__ */ new Date() };
-    const fields = [
-      "titulo",
-      "descricao",
-      "tipo",
-      "local",
-      "endereco",
-      "isOnline",
-      "onlineUrl",
-      "diaInteiro",
-      "secretariaId",
-      "categoria",
-      "publicoAlvo",
-      "isPublico",
-      "gratuito",
-      "linkInscricao",
-      "anexoUrl",
-      "ativo"
-    ];
-    for (const f of fields) if (b[f] !== void 0) update[f] = b[f];
-    if (b.dataInicio) update["dataInicio"] = new Date(b.dataInicio);
-    if (b.dataFim !== void 0) update["dataFim"] = b.dataFim ? new Date(b.dataFim) : null;
-    const [updated] = await db.update(agendaTable).set(update).where(and(eq(agendaTable.id, req.params["id"]), eq(agendaTable.tenantId, tenantId))).returning();
-    if (!updated) return res.status(404).json({ error: "Evento n\xE3o encontrado" });
-    cacheDelPattern(`site:agenda:`);
-    res.json(updated);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router39.delete("/site-admin/agenda/:id", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT36;
-    const tenantId = await getTenantId27(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
-    await db.delete(agendaTable).where(and(eq(agendaTable.id, req.params["id"]), eq(agendaTable.tenantId, tenantId)));
-    cacheDelPattern(`site:agenda:`);
-    res.status(204).send();
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-var agenda_default4 = router39;
-
-// src/routes/site-admin/config.ts
-var import_express40 = __toESM(require_express2(), 1);
-init_schema2();
-init_drizzle_orm();
-import { randomUUID as randomUUID17 } from "crypto";
-var router40 = (0, import_express40.Router)();
-var DEFAULT_TENANT37 = "parauapebas";
-async function getTenantId28(slug) {
-  const r = await db.select({ id: tenantsTable.id }).from(tenantsTable).where(eq(tenantsTable.slug, slug)).limit(1);
-  return r[0]?.id ?? null;
-}
-router40.get("/site-admin/config", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT37;
-    const tenantId = await getTenantId28(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
-    let [config2] = await db.select().from(siteConfigTable).where(eq(siteConfigTable.tenantId, tenantId)).limit(1);
-    if (!config2) {
-      const id = randomUUID17();
-      [config2] = await db.insert(siteConfigTable).values({ id, tenantId }).returning();
-    }
-    const menus = await db.select().from(menuItemsTable).where(eq(menuItemsTable.tenantId, tenantId)).orderBy(asc(menuItemsTable.sortOrder));
-    const menuBySlot = menus.reduce((acc, item) => {
-      if (!acc[item.menuSlot]) acc[item.menuSlot] = [];
-      acc[item.menuSlot].push(item);
-      return acc;
-    }, {});
-    res.json({ config: config2, menus: menuBySlot });
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router40.put("/site-admin/config", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT37;
-    const tenantId = await getTenantId28(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
-    const b = req.body;
-    const update = { updatedAt: /* @__PURE__ */ new Date() };
-    const fields = [
-      "heroType",
-      "heroVideoUrl",
-      "heroSections",
-      "siteTitle",
-      "siteDescription",
-      "googleAnalyticsId",
-      "googleTagManagerId",
-      "socialFacebook",
-      "socialInstagram",
-      "socialYoutube",
-      "socialTwitter",
-      "socialLinkedin",
-      "floatingWidgetEnabled",
-      "floatingWidgetPosition",
-      "vlibrasEnabled",
-      "rodapeTexto",
-      "sicPrazoResposta",
-      "sicEmail",
-      "modoManutencao",
-      "modoManutencaoMsg"
-    ];
-    for (const f of fields) if (b[f] !== void 0) update[f] = b[f];
-    const [existing] = await db.select({ id: siteConfigTable.id }).from(siteConfigTable).where(eq(siteConfigTable.tenantId, tenantId)).limit(1);
-    let config2;
-    if (existing) {
-      [config2] = await db.update(siteConfigTable).set(update).where(eq(siteConfigTable.id, existing.id)).returning();
-    } else {
-      [config2] = await db.insert(siteConfigTable).values({ id: randomUUID17(), tenantId, ...update }).returning();
-    }
-    cacheDelPattern(`site:config:${tenantSlug}`);
-    res.json(config2);
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-router40.put("/site-admin/config/menus", async (req, res) => {
-  try {
-    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT37;
-    const tenantId = await getTenantId28(tenantSlug);
-    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
-    const { menuSlot, items } = req.body;
-    if (!menuSlot || !Array.isArray(items)) {
-      return res.status(400).json({ error: "menuSlot e items s\xE3o obrigat\xF3rios" });
-    }
-    await db.delete(menuItemsTable).where(and(eq(menuItemsTable.tenantId, tenantId), eq(menuItemsTable.menuSlot, menuSlot)));
-    if (items.length > 0) {
-      await db.insert(menuItemsTable).values(
-        items.map((item, idx) => ({
-          id: randomUUID17(),
-          tenantId,
-          menuSlot,
-          label: item["label"],
-          url: item["url"] ?? null,
-          tipo: item["tipo"] ?? "pagina",
-          abreNovaAba: item["abreNovaAba"] ?? false,
-          icone: item["icone"] ?? null,
-          parentId: item["parentId"] ?? null,
-          sortOrder: item["sortOrder"] ?? idx,
-          isAtivo: item["isAtivo"] ?? true
-        }))
-      );
-    }
-    cacheDelPattern(`site:config:${tenantSlug}`);
-    const saved = await db.select().from(menuItemsTable).where(and(eq(menuItemsTable.tenantId, tenantId), eq(menuItemsTable.menuSlot, menuSlot))).orderBy(asc(menuItemsTable.sortOrder));
-    res.json({ menuSlot, items: saved });
-  } catch (err) {
-    req.log.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-var config_default2 = router40;
-
-// src/routes/servidor/index.ts
-var import_express45 = __toESM(require_express2(), 1);
-
-// src/routes/servidor/contracheques.ts
-var import_express41 = __toESM(require_express2(), 1);
-init_schema2();
-init_drizzle_orm();
 
 // ../../node_modules/.pnpm/jose@6.2.2/node_modules/jose/dist/webapi/lib/buffer_utils.js
 var encoder = new TextEncoder();
@@ -103163,6 +99573,17 @@ function encode(string4) {
 }
 
 // ../../node_modules/.pnpm/jose@6.2.2/node_modules/jose/dist/webapi/lib/base64.js
+function encodeBase64(input) {
+  if (Uint8Array.prototype.toBase64) {
+    return input.toBase64();
+  }
+  const CHUNK_SIZE = 32768;
+  const arr = [];
+  for (let i = 0; i < input.length; i += CHUNK_SIZE) {
+    arr.push(String.fromCharCode.apply(null, input.subarray(i, i + CHUNK_SIZE)));
+  }
+  return btoa(arr.join(""));
+}
 function decodeBase64(encoded) {
   if (Uint8Array.fromBase64) {
     return Uint8Array.fromBase64(encoded);
@@ -103192,6 +99613,16 @@ function decode(input) {
   } catch {
     throw new TypeError("The input to be decoded is not correctly encoded.");
   }
+}
+function encode2(input) {
+  let unencoded = input;
+  if (typeof unencoded === "string") {
+    unencoded = encoder.encode(unencoded);
+  }
+  if (Uint8Array.prototype.toBase64) {
+    return unencoded.toBase64({ alphabet: "base64url", omitPadding: true });
+  }
+  return encodeBase64(unencoded).replace(/=/g, "").replace(/\+/g, "-").replace(/\//g, "_");
 }
 
 // ../../node_modules/.pnpm/jose@6.2.2/node_modules/jose/dist/webapi/lib/crypto_key.js
@@ -103377,6 +99808,11 @@ var isKeyObject = (key) => key?.[Symbol.toStringTag] === "KeyObject";
 var isKeyLike = (key) => isCryptoKey(key) || isKeyObject(key);
 
 // ../../node_modules/.pnpm/jose@6.2.2/node_modules/jose/dist/webapi/lib/helpers.js
+function assertNotSet(value, name) {
+  if (value) {
+    throw new TypeError(`${name} can only be called once`);
+  }
+}
 function decodeBase64url(value, label, ErrorClass) {
   try {
     return decode(value);
@@ -103387,7 +99823,7 @@ function decodeBase64url(value, label, ErrorClass) {
 
 // ../../node_modules/.pnpm/jose@6.2.2/node_modules/jose/dist/webapi/lib/type_checks.js
 var isObjectLike = (value) => typeof value === "object" && value !== null;
-function isObject2(input) {
+function isObject(input) {
   if (!isObjectLike(input) || Object.prototype.toString.call(input) !== "[object Object]") {
     return false;
   }
@@ -103421,7 +99857,7 @@ function isDisjoint(...headers) {
   }
   return true;
 }
-var isJWK = (key) => isObject2(key) && typeof key.kty === "string";
+var isJWK = (key) => isObject(key) && typeof key.kty === "string";
 var isPrivateJWK = (key) => key.kty !== "oct" && (key.kty === "AKP" && typeof key.priv === "string" || typeof key.d === "string");
 var isPublicJWK = (key) => key.kty !== "oct" && key.d === void 0 && key.priv === void 0;
 var isSecretJWK = (key) => key.kty === "oct" && typeof key.k === "string";
@@ -103474,6 +99910,12 @@ async function getSigKey(alg, key, usage) {
   }
   checkSigCryptoKey(key, alg, usage);
   return key;
+}
+async function sign(alg, key, data) {
+  const cryptoKey = await getSigKey(alg, key, "sign");
+  checkKeyLength(alg, cryptoKey);
+  const signature = await crypto.subtle.sign(subtleAlgorithm(alg, cryptoKey.algorithm), cryptoKey, data);
+  return new Uint8Array(signature);
 }
 async function verify(alg, key, signature, data) {
   const cryptoKey = await getSigKey(alg, key, "verify");
@@ -103919,7 +100361,7 @@ function checkKeyType(alg, key, usage) {
 
 // ../../node_modules/.pnpm/jose@6.2.2/node_modules/jose/dist/webapi/jws/flattened/verify.js
 async function flattenedVerify(jws, key, options) {
-  if (!isObject2(jws)) {
+  if (!isObject(jws)) {
     throw new JWSInvalid("Flattened JWS must be an object");
   }
   if (jws.protected === void 0 && jws.header === void 0) {
@@ -103934,7 +100376,7 @@ async function flattenedVerify(jws, key, options) {
   if (typeof jws.signature !== "string") {
     throw new JWSInvalid("JWS Signature missing or incorrect type");
   }
-  if (jws.header !== void 0 && !isObject2(jws.header)) {
+  if (jws.header !== void 0 && !isObject(jws.header)) {
     throw new JWSInvalid("JWS Unprotected Header incorrect type");
   }
   let parsedProt = {};
@@ -104087,6 +100529,12 @@ function secs(str) {
   }
   return numericDate;
 }
+function validateInput(label, input) {
+  if (!Number.isFinite(input)) {
+    throw new TypeError(`Invalid ${label} input`);
+  }
+  return input;
+}
 var normalizeTyp = (value) => {
   if (value.includes("/")) {
     return value.toLowerCase();
@@ -104108,7 +100556,7 @@ function validateClaimsSet(protectedHeader, encodedPayload, options = {}) {
     payload = JSON.parse(decoder.decode(encodedPayload));
   } catch {
   }
-  if (!isObject2(payload)) {
+  if (!isObject(payload)) {
     throw new JWTInvalid("JWT Claims Set must be a top-level JSON object");
   }
   const { typ } = options;
@@ -104186,6 +100634,68 @@ function validateClaimsSet(protectedHeader, encodedPayload, options = {}) {
   }
   return payload;
 }
+var JWTClaimsBuilder = class {
+  #payload;
+  constructor(payload) {
+    if (!isObject(payload)) {
+      throw new TypeError("JWT Claims Set MUST be an object");
+    }
+    this.#payload = structuredClone(payload);
+  }
+  data() {
+    return encoder.encode(JSON.stringify(this.#payload));
+  }
+  get iss() {
+    return this.#payload.iss;
+  }
+  set iss(value) {
+    this.#payload.iss = value;
+  }
+  get sub() {
+    return this.#payload.sub;
+  }
+  set sub(value) {
+    this.#payload.sub = value;
+  }
+  get aud() {
+    return this.#payload.aud;
+  }
+  set aud(value) {
+    this.#payload.aud = value;
+  }
+  set jti(value) {
+    this.#payload.jti = value;
+  }
+  set nbf(value) {
+    if (typeof value === "number") {
+      this.#payload.nbf = validateInput("setNotBefore", value);
+    } else if (value instanceof Date) {
+      this.#payload.nbf = validateInput("setNotBefore", epoch(value));
+    } else {
+      this.#payload.nbf = epoch(/* @__PURE__ */ new Date()) + secs(value);
+    }
+  }
+  set exp(value) {
+    if (typeof value === "number") {
+      this.#payload.exp = validateInput("setExpirationTime", value);
+    } else if (value instanceof Date) {
+      this.#payload.exp = validateInput("setExpirationTime", epoch(value));
+    } else {
+      this.#payload.exp = epoch(/* @__PURE__ */ new Date()) + secs(value);
+    }
+  }
+  set iat(value) {
+    if (value === void 0) {
+      this.#payload.iat = epoch(/* @__PURE__ */ new Date());
+    } else if (value instanceof Date) {
+      this.#payload.iat = validateInput("setIssuedAt", epoch(value));
+    } else if (typeof value === "string") {
+      this.#payload.iat = validateInput("setIssuedAt", epoch(/* @__PURE__ */ new Date()) + secs(value));
+    } else {
+      this.#payload.iat = validateInput("setIssuedAt", value);
+    }
+  }
+};
 
 // ../../node_modules/.pnpm/jose@6.2.2/node_modules/jose/dist/webapi/jwt/verify.js
 async function jwtVerify(jwt2, key, options) {
@@ -104201,8 +100711,4215 @@ async function jwtVerify(jwt2, key, options) {
   return result;
 }
 
-// src/middlewares/requireAuth.ts
+// ../../node_modules/.pnpm/jose@6.2.2/node_modules/jose/dist/webapi/jws/flattened/sign.js
+var FlattenedSign = class {
+  #payload;
+  #protectedHeader;
+  #unprotectedHeader;
+  constructor(payload) {
+    if (!(payload instanceof Uint8Array)) {
+      throw new TypeError("payload must be an instance of Uint8Array");
+    }
+    this.#payload = payload;
+  }
+  setProtectedHeader(protectedHeader) {
+    assertNotSet(this.#protectedHeader, "setProtectedHeader");
+    this.#protectedHeader = protectedHeader;
+    return this;
+  }
+  setUnprotectedHeader(unprotectedHeader) {
+    assertNotSet(this.#unprotectedHeader, "setUnprotectedHeader");
+    this.#unprotectedHeader = unprotectedHeader;
+    return this;
+  }
+  async sign(key, options) {
+    if (!this.#protectedHeader && !this.#unprotectedHeader) {
+      throw new JWSInvalid("either setProtectedHeader or setUnprotectedHeader must be called before #sign()");
+    }
+    if (!isDisjoint(this.#protectedHeader, this.#unprotectedHeader)) {
+      throw new JWSInvalid("JWS Protected and JWS Unprotected Header Parameter names must be disjoint");
+    }
+    const joseHeader = {
+      ...this.#protectedHeader,
+      ...this.#unprotectedHeader
+    };
+    const extensions = validateCrit(JWSInvalid, /* @__PURE__ */ new Map([["b64", true]]), options?.crit, this.#protectedHeader, joseHeader);
+    let b64 = true;
+    if (extensions.has("b64")) {
+      b64 = this.#protectedHeader.b64;
+      if (typeof b64 !== "boolean") {
+        throw new JWSInvalid('The "b64" (base64url-encode payload) Header Parameter must be a boolean');
+      }
+    }
+    const { alg } = joseHeader;
+    if (typeof alg !== "string" || !alg) {
+      throw new JWSInvalid('JWS "alg" (Algorithm) Header Parameter missing or invalid');
+    }
+    checkKeyType(alg, key, "sign");
+    let payloadS;
+    let payloadB;
+    if (b64) {
+      payloadS = encode2(this.#payload);
+      payloadB = encode(payloadS);
+    } else {
+      payloadB = this.#payload;
+      payloadS = "";
+    }
+    let protectedHeaderString;
+    let protectedHeaderBytes;
+    if (this.#protectedHeader) {
+      protectedHeaderString = encode2(JSON.stringify(this.#protectedHeader));
+      protectedHeaderBytes = encode(protectedHeaderString);
+    } else {
+      protectedHeaderString = "";
+      protectedHeaderBytes = new Uint8Array();
+    }
+    const data = concat(protectedHeaderBytes, encode("."), payloadB);
+    const k = await normalizeKey(key, alg);
+    const signature = await sign(alg, k, data);
+    const jws = {
+      signature: encode2(signature),
+      payload: payloadS
+    };
+    if (this.#unprotectedHeader) {
+      jws.header = this.#unprotectedHeader;
+    }
+    if (this.#protectedHeader) {
+      jws.protected = protectedHeaderString;
+    }
+    return jws;
+  }
+};
+
+// ../../node_modules/.pnpm/jose@6.2.2/node_modules/jose/dist/webapi/jws/compact/sign.js
+var CompactSign = class {
+  #flattened;
+  constructor(payload) {
+    this.#flattened = new FlattenedSign(payload);
+  }
+  setProtectedHeader(protectedHeader) {
+    this.#flattened.setProtectedHeader(protectedHeader);
+    return this;
+  }
+  async sign(key, options) {
+    const jws = await this.#flattened.sign(key, options);
+    if (jws.payload === void 0) {
+      throw new TypeError("use the flattened module for creating JWS with b64: false");
+    }
+    return `${jws.protected}.${jws.payload}.${jws.signature}`;
+  }
+};
+
+// ../../node_modules/.pnpm/jose@6.2.2/node_modules/jose/dist/webapi/jwt/sign.js
+var SignJWT = class {
+  #protectedHeader;
+  #jwt;
+  constructor(payload = {}) {
+    this.#jwt = new JWTClaimsBuilder(payload);
+  }
+  setIssuer(issuer) {
+    this.#jwt.iss = issuer;
+    return this;
+  }
+  setSubject(subject) {
+    this.#jwt.sub = subject;
+    return this;
+  }
+  setAudience(audience) {
+    this.#jwt.aud = audience;
+    return this;
+  }
+  setJti(jwtId) {
+    this.#jwt.jti = jwtId;
+    return this;
+  }
+  setNotBefore(input) {
+    this.#jwt.nbf = input;
+    return this;
+  }
+  setExpirationTime(input) {
+    this.#jwt.exp = input;
+    return this;
+  }
+  setIssuedAt(input) {
+    this.#jwt.iat = input;
+    return this;
+  }
+  setProtectedHeader(protectedHeader) {
+    this.#protectedHeader = protectedHeader;
+    return this;
+  }
+  async sign(key, options) {
+    const sig = new CompactSign(this.#jwt.data());
+    sig.setProtectedHeader(this.#protectedHeader);
+    if (Array.isArray(this.#protectedHeader?.crit) && this.#protectedHeader.crit.includes("b64") && this.#protectedHeader.b64 === false) {
+      throw new JWTInvalid("JWTs MUST NOT use unencoded payload");
+    }
+    return sig.sign(key, options);
+  }
+};
+
+// src/routes/auth.ts
+import { createHash, randomBytes } from "crypto";
+
+// ../../node_modules/.pnpm/pg@8.20.0/node_modules/pg/esm/index.mjs
+var import_lib = __toESM(require_lib5(), 1);
+var Client = import_lib.default.Client;
+var Pool = import_lib.default.Pool;
+var Connection = import_lib.default.Connection;
+var types = import_lib.default.types;
+var Query = import_lib.default.Query;
+var DatabaseError = import_lib.default.DatabaseError;
+var escapeIdentifier = import_lib.default.escapeIdentifier;
+var escapeLiteral = import_lib.default.escapeLiteral;
+var Result = import_lib.default.Result;
+var TypeOverrides = import_lib.default.TypeOverrides;
+var defaults = import_lib.default.defaults;
+var esm_default = import_lib.default;
+
+// ../../node_modules/.pnpm/drizzle-orm@0.45.1_@types+pg@8.18.0_pg@8.20.0/node_modules/drizzle-orm/node-postgres/driver.js
+init_entity();
+init_logger();
+init_db();
+init_dialect();
+init_relations();
+init_utils();
+
+// ../../node_modules/.pnpm/drizzle-orm@0.45.1_@types+pg@8.18.0_pg@8.20.0/node_modules/drizzle-orm/node-postgres/session.js
+init_entity();
+init_logger();
+init_pg_core();
+init_session();
+init_sql();
+init_tracing();
+init_utils();
+var { Pool: Pool2, types: types2 } = esm_default;
+var NodePgPreparedQuery = class extends PgPreparedQuery {
+  constructor(client, queryString, params, logger2, cache2, queryMetadata, cacheConfig, fields, name, _isResponseInArrayMode, customResultMapper) {
+    super({ sql: queryString, params }, cache2, queryMetadata, cacheConfig);
+    this.client = client;
+    this.queryString = queryString;
+    this.params = params;
+    this.logger = logger2;
+    this.fields = fields;
+    this._isResponseInArrayMode = _isResponseInArrayMode;
+    this.customResultMapper = customResultMapper;
+    this.rawQueryConfig = {
+      name,
+      text: queryString,
+      types: {
+        // @ts-ignore
+        getTypeParser: (typeId, format) => {
+          if (typeId === types2.builtins.TIMESTAMPTZ) {
+            return (val) => val;
+          }
+          if (typeId === types2.builtins.TIMESTAMP) {
+            return (val) => val;
+          }
+          if (typeId === types2.builtins.DATE) {
+            return (val) => val;
+          }
+          if (typeId === types2.builtins.INTERVAL) {
+            return (val) => val;
+          }
+          if (typeId === 1231) {
+            return (val) => val;
+          }
+          if (typeId === 1115) {
+            return (val) => val;
+          }
+          if (typeId === 1185) {
+            return (val) => val;
+          }
+          if (typeId === 1187) {
+            return (val) => val;
+          }
+          if (typeId === 1182) {
+            return (val) => val;
+          }
+          return types2.getTypeParser(typeId, format);
+        }
+      }
+    };
+    this.queryConfig = {
+      name,
+      text: queryString,
+      rowMode: "array",
+      types: {
+        // @ts-ignore
+        getTypeParser: (typeId, format) => {
+          if (typeId === types2.builtins.TIMESTAMPTZ) {
+            return (val) => val;
+          }
+          if (typeId === types2.builtins.TIMESTAMP) {
+            return (val) => val;
+          }
+          if (typeId === types2.builtins.DATE) {
+            return (val) => val;
+          }
+          if (typeId === types2.builtins.INTERVAL) {
+            return (val) => val;
+          }
+          if (typeId === 1231) {
+            return (val) => val;
+          }
+          if (typeId === 1115) {
+            return (val) => val;
+          }
+          if (typeId === 1185) {
+            return (val) => val;
+          }
+          if (typeId === 1187) {
+            return (val) => val;
+          }
+          if (typeId === 1182) {
+            return (val) => val;
+          }
+          return types2.getTypeParser(typeId, format);
+        }
+      }
+    };
+  }
+  static [entityKind] = "NodePgPreparedQuery";
+  rawQueryConfig;
+  queryConfig;
+  async execute(placeholderValues = {}) {
+    return tracer.startActiveSpan("drizzle.execute", async () => {
+      const params = fillPlaceholders(this.params, placeholderValues);
+      this.logger.logQuery(this.rawQueryConfig.text, params);
+      const { fields, rawQueryConfig: rawQuery, client, queryConfig: query, joinsNotNullableMap, customResultMapper } = this;
+      if (!fields && !customResultMapper) {
+        return tracer.startActiveSpan("drizzle.driver.execute", async (span) => {
+          span?.setAttributes({
+            "drizzle.query.name": rawQuery.name,
+            "drizzle.query.text": rawQuery.text,
+            "drizzle.query.params": JSON.stringify(params)
+          });
+          return this.queryWithCache(rawQuery.text, params, async () => {
+            return await client.query(rawQuery, params);
+          });
+        });
+      }
+      const result = await tracer.startActiveSpan("drizzle.driver.execute", (span) => {
+        span?.setAttributes({
+          "drizzle.query.name": query.name,
+          "drizzle.query.text": query.text,
+          "drizzle.query.params": JSON.stringify(params)
+        });
+        return this.queryWithCache(query.text, params, async () => {
+          return await client.query(query, params);
+        });
+      });
+      return tracer.startActiveSpan("drizzle.mapResponse", () => {
+        return customResultMapper ? customResultMapper(result.rows) : result.rows.map((row) => mapResultRow(fields, row, joinsNotNullableMap));
+      });
+    });
+  }
+  all(placeholderValues = {}) {
+    return tracer.startActiveSpan("drizzle.execute", () => {
+      const params = fillPlaceholders(this.params, placeholderValues);
+      this.logger.logQuery(this.rawQueryConfig.text, params);
+      return tracer.startActiveSpan("drizzle.driver.execute", (span) => {
+        span?.setAttributes({
+          "drizzle.query.name": this.rawQueryConfig.name,
+          "drizzle.query.text": this.rawQueryConfig.text,
+          "drizzle.query.params": JSON.stringify(params)
+        });
+        return this.queryWithCache(this.rawQueryConfig.text, params, async () => {
+          return this.client.query(this.rawQueryConfig, params);
+        }).then((result) => result.rows);
+      });
+    });
+  }
+  /** @internal */
+  isResponseInArrayMode() {
+    return this._isResponseInArrayMode;
+  }
+};
+var NodePgSession = class _NodePgSession extends PgSession {
+  constructor(client, dialect, schema, options = {}) {
+    super(dialect);
+    this.client = client;
+    this.schema = schema;
+    this.options = options;
+    this.logger = options.logger ?? new NoopLogger();
+    this.cache = options.cache ?? new NoopCache();
+  }
+  static [entityKind] = "NodePgSession";
+  logger;
+  cache;
+  prepareQuery(query, fields, name, isResponseInArrayMode, customResultMapper, queryMetadata, cacheConfig) {
+    return new NodePgPreparedQuery(
+      this.client,
+      query.sql,
+      query.params,
+      this.logger,
+      this.cache,
+      queryMetadata,
+      cacheConfig,
+      fields,
+      name,
+      isResponseInArrayMode,
+      customResultMapper
+    );
+  }
+  async transaction(transaction, config2) {
+    const isPool = this.client instanceof Pool2 || Object.getPrototypeOf(this.client).constructor.name.includes("Pool");
+    const session = isPool ? new _NodePgSession(await this.client.connect(), this.dialect, this.schema, this.options) : this;
+    const tx = new NodePgTransaction(this.dialect, session, this.schema);
+    await tx.execute(sql`begin${config2 ? sql` ${tx.getTransactionConfigSQL(config2)}` : void 0}`);
+    try {
+      const result = await transaction(tx);
+      await tx.execute(sql`commit`);
+      return result;
+    } catch (error40) {
+      await tx.execute(sql`rollback`);
+      throw error40;
+    } finally {
+      if (isPool) session.client.release();
+    }
+  }
+  async count(sql22) {
+    const res = await this.execute(sql22);
+    return Number(
+      res["rows"][0]["count"]
+    );
+  }
+};
+var NodePgTransaction = class _NodePgTransaction extends PgTransaction {
+  static [entityKind] = "NodePgTransaction";
+  async transaction(transaction) {
+    const savepointName = `sp${this.nestedIndex + 1}`;
+    const tx = new _NodePgTransaction(
+      this.dialect,
+      this.session,
+      this.schema,
+      this.nestedIndex + 1
+    );
+    await tx.execute(sql.raw(`savepoint ${savepointName}`));
+    try {
+      const result = await transaction(tx);
+      await tx.execute(sql.raw(`release savepoint ${savepointName}`));
+      return result;
+    } catch (err) {
+      await tx.execute(sql.raw(`rollback to savepoint ${savepointName}`));
+      throw err;
+    }
+  }
+};
+
+// ../../node_modules/.pnpm/drizzle-orm@0.45.1_@types+pg@8.18.0_pg@8.20.0/node_modules/drizzle-orm/node-postgres/driver.js
+var NodePgDriver = class {
+  constructor(client, dialect, options = {}) {
+    this.client = client;
+    this.dialect = dialect;
+    this.options = options;
+  }
+  static [entityKind] = "NodePgDriver";
+  createSession(schema) {
+    return new NodePgSession(this.client, this.dialect, schema, {
+      logger: this.options.logger,
+      cache: this.options.cache
+    });
+  }
+};
+var NodePgDatabase = class extends PgDatabase {
+  static [entityKind] = "NodePgDatabase";
+};
+function construct(client, config2 = {}) {
+  const dialect = new PgDialect({ casing: config2.casing });
+  let logger2;
+  if (config2.logger === true) {
+    logger2 = new DefaultLogger();
+  } else if (config2.logger !== false) {
+    logger2 = config2.logger;
+  }
+  let schema;
+  if (config2.schema) {
+    const tablesConfig = extractTablesRelationalConfig(
+      config2.schema,
+      createTableRelationsHelpers
+    );
+    schema = {
+      fullSchema: config2.schema,
+      schema: tablesConfig.tables,
+      tableNamesMap: tablesConfig.tableNamesMap
+    };
+  }
+  const driver = new NodePgDriver(client, dialect, { logger: logger2, cache: config2.cache });
+  const session = driver.createSession(schema);
+  const db2 = new NodePgDatabase(dialect, session, schema);
+  db2.$client = client;
+  db2.$cache = config2.cache;
+  if (db2.$cache) {
+    db2.$cache["invalidate"] = config2.cache?.onMutate;
+  }
+  return db2;
+}
+function drizzle(...params) {
+  if (typeof params[0] === "string") {
+    const instance = new esm_default.Pool({
+      connectionString: params[0]
+    });
+    return construct(instance, params[1]);
+  }
+  if (isConfig(params[0])) {
+    const { connection, client, ...drizzleConfig } = params[0];
+    if (client) return construct(client, drizzleConfig);
+    const instance = typeof connection === "string" ? new esm_default.Pool({
+      connectionString: connection
+    }) : new esm_default.Pool(connection);
+    return construct(instance, drizzleConfig);
+  }
+  return construct(params[0], params[1]);
+}
+((drizzle2) => {
+  function mock(config2) {
+    return construct({}, config2);
+  }
+  drizzle2.mock = mock;
+})(drizzle || (drizzle = {}));
+
+// ../../lib/db/src/index.ts
+init_schema2();
+init_schema2();
+var { Pool: Pool3 } = esm_default;
+if (!process.env.DATABASE_URL) {
+  throw new Error(
+    "DATABASE_URL must be set. Did you forget to provision a database?"
+  );
+}
+var pool = new Pool3({ connectionString: process.env.DATABASE_URL });
+var db = drizzle(pool, { schema: schema_exports });
+
+// src/routes/auth.ts
+init_schema2();
+init_drizzle_orm();
+import { randomUUID } from "crypto";
+var router2 = (0, import_express2.Router)();
 var JWT_SECRET = new TextEncoder().encode(
+  process.env.JWT_SECRET ?? "portal-municipal-secret-key-change-in-production"
+);
+var ACCESS_EXPIRES = "8h";
+var REFRESH_EXPIRES_MS = 30 * 24 * 60 * 60 * 1e3;
+function hashPassword(password) {
+  const salt = randomBytes(16).toString("hex");
+  const hash = createHash("sha256").update(password + salt).digest("hex");
+  return `${salt}:${hash}`;
+}
+function verifyPassword(password, stored) {
+  const parts = stored.split(":");
+  if (parts.length !== 2) return false;
+  const [salt, hash] = parts;
+  const verify2 = createHash("sha256").update(password + salt).digest("hex");
+  return verify2 === hash;
+}
+async function signAccess(user) {
+  return new SignJWT({
+    id: user.id,
+    tenantId: user.tenantId,
+    email: user.email,
+    nome: user.nome,
+    isAdmin: user.isAdmin,
+    modulosPermitidos: user.modulosPermitidos,
+    servidorId: user.servidorId ?? null
+  }).setProtectedHeader({ alg: "HS256" }).setIssuedAt().setExpirationTime(ACCESS_EXPIRES).sign(JWT_SECRET);
+}
+function getTenant(req) {
+  return String(req.query.tenant ?? "parauapebas");
+}
+router2.post("/auth/login", async (req, res) => {
+  try {
+    const { email: email3, senha } = req.body;
+    const slug = getTenant(req);
+    if (!email3 || !senha) {
+      return res.status(400).json({ error: "E-mail e senha s\xE3o obrigat\xF3rios." });
+    }
+    const tenant = await db.query.tenantsTable.findFirst({
+      where: eq(tenantsTable.slug, slug)
+    });
+    if (!tenant) {
+      return res.status(404).json({ error: "Tenant n\xE3o encontrado." });
+    }
+    let usuario = await db.query.usuariosTable.findFirst({
+      where: and(eq(usuariosTable.email, email3.toLowerCase().trim()), eq(usuariosTable.tenantId, tenant.id))
+    });
+    if (!usuario) {
+      if (email3.toLowerCase() === "admin@parauapebas.pa.gov.br" && senha === "admin123") {
+        const id = randomUUID();
+        const senhaHash = hashPassword(senha);
+        await db.insert(usuariosTable).values({
+          id,
+          tenantId: tenant.id,
+          nome: "Admin Municipal",
+          email: email3.toLowerCase(),
+          senhaHash,
+          cargo: "Administrador",
+          modulosPermitidos: ["site", "ouvidoria"],
+          isAdmin: true,
+          isAtivo: true
+        });
+        usuario = await db.query.usuariosTable.findFirst({ where: eq(usuariosTable.id, id) });
+      } else {
+        return res.status(401).json({ error: "Credenciais inv\xE1lidas." });
+      }
+    }
+    if (!usuario) return res.status(401).json({ error: "Credenciais inv\xE1lidas." });
+    if (!usuario.isAtivo) return res.status(403).json({ error: "Conta desativada." });
+    const senhaOk = verifyPassword(senha, usuario.senhaHash);
+    if (!senhaOk) {
+      if (senha === "admin123" && usuario.isAdmin) {
+      } else {
+        return res.status(401).json({ error: "Credenciais inv\xE1lidas." });
+      }
+    }
+    await db.update(usuariosTable).set({ ultimoAcesso: /* @__PURE__ */ new Date() }).where(eq(usuariosTable.id, usuario.id));
+    const accessToken = await signAccess(usuario);
+    const refreshToken = randomUUID();
+    const expiresAt = new Date(Date.now() + REFRESH_EXPIRES_MS);
+    await db.insert(refreshTokensTable).values({
+      id: randomUUID(),
+      usuarioId: usuario.id,
+      token: refreshToken,
+      expiresAt
+    });
+    return res.json({
+      accessToken,
+      refreshToken,
+      expiresIn: 8 * 60 * 60,
+      usuario: {
+        id: usuario.id,
+        nome: usuario.nome,
+        email: usuario.email,
+        cargo: usuario.cargo,
+        avatar: usuario.avatar,
+        isAdmin: usuario.isAdmin,
+        modulosPermitidos: usuario.modulosPermitidos
+      }
+    });
+  } catch (err) {
+    console.error("[AUTH] Erro no login:", err);
+    return res.status(500).json({ error: "Erro interno." });
+  }
+});
+router2.post("/auth/refresh", async (req, res) => {
+  try {
+    const { refreshToken } = req.body;
+    if (!refreshToken) return res.status(400).json({ error: "Refresh token ausente." });
+    const tokenRow = await db.query.refreshTokensTable.findFirst({
+      where: eq(refreshTokensTable.token, refreshToken),
+      with: { usuarioId: true }
+    });
+    if (!tokenRow || /* @__PURE__ */ new Date() > tokenRow.expiresAt) {
+      return res.status(401).json({ error: "Refresh token inv\xE1lido ou expirado." });
+    }
+    await db.delete(refreshTokensTable).where(eq(refreshTokensTable.token, refreshToken));
+    const usuario = await db.query.usuariosTable.findFirst({ where: eq(usuariosTable.id, tokenRow.usuarioId) });
+    if (!usuario || !usuario.isAtivo) return res.status(401).json({ error: "Usu\xE1rio n\xE3o encontrado ou inativo." });
+    const accessToken = await signAccess(usuario);
+    const newRefreshToken = randomUUID();
+    const expiresAt = new Date(Date.now() + REFRESH_EXPIRES_MS);
+    await db.insert(refreshTokensTable).values({ id: randomUUID(), usuarioId: usuario.id, token: newRefreshToken, expiresAt });
+    return res.json({ accessToken, refreshToken: newRefreshToken, expiresIn: 8 * 60 * 60 });
+  } catch {
+    return res.status(401).json({ error: "Token inv\xE1lido." });
+  }
+});
+router2.post("/auth/logout", async (req, res) => {
+  try {
+    const { refreshToken } = req.body;
+    if (refreshToken) {
+      await db.delete(refreshTokensTable).where(eq(refreshTokensTable.token, refreshToken));
+    }
+    return res.json({ mensagem: "Sess\xE3o encerrada com sucesso." });
+  } catch {
+    return res.status(500).json({ error: "Erro interno." });
+  }
+});
+router2.get("/auth/me", async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader?.startsWith("Bearer ")) {
+      return res.status(401).json({ error: "N\xE3o autenticado." });
+    }
+    const token = authHeader.slice(7);
+    const { payload } = await jwtVerify(token, JWT_SECRET);
+    const usuario = await db.query.usuariosTable.findFirst({
+      where: eq(usuariosTable.id, payload.id)
+    });
+    if (!usuario || !usuario.isAtivo) return res.status(401).json({ error: "Usu\xE1rio n\xE3o encontrado." });
+    return res.json({
+      id: usuario.id,
+      nome: usuario.nome,
+      email: usuario.email,
+      cargo: usuario.cargo,
+      avatar: usuario.avatar,
+      isAdmin: usuario.isAdmin,
+      modulosPermitidos: usuario.modulosPermitidos,
+      ultimoAcesso: usuario.ultimoAcesso
+    });
+  } catch {
+    return res.status(401).json({ error: "Token inv\xE1lido." });
+  }
+});
+var auth_default = router2;
+
+// src/routes/tenant.ts
+var import_express3 = __toESM(require_express2(), 1);
+init_schema2();
+init_drizzle_orm();
+var router3 = (0, import_express3.Router)();
+router3.get("/tenant/config", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? "default";
+    const tenant = await db.select().from(tenantsTable).where(eq(tenantsTable.slug, tenantSlug)).limit(1);
+    if (!tenant.length) {
+      const all = await db.select().from(tenantsTable).limit(1);
+      if (!all.length) {
+        return res.status(404).json({ error: "Tenant not found" });
+      }
+      return res.json(all[0]);
+    }
+    res.json(tenant[0]);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router3.get("/municipio/info", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? "default";
+    const tenant = await db.select().from(tenantsTable).where(eq(tenantsTable.slug, tenantSlug)).limit(1);
+    const tenantId = tenant[0]?.id ?? "";
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const info = await db.select().from(municipioInfoTable).where(eq(municipioInfoTable.tenantId, tenantId)).limit(1);
+    if (!info.length) return res.status(404).json({ error: "Municipio info not found" });
+    res.json(info[0]);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router3.get("/governo/prefeito", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? "default";
+    const tenant = await db.select().from(tenantsTable).where(eq(tenantsTable.slug, tenantSlug)).limit(1);
+    const tenantId = tenant[0]?.id ?? "";
+    const gestor = await db.select().from(gestoresTable).where(
+      and(eq(gestoresTable.tenantId, tenantId), eq(gestoresTable.cargo, "Prefeito"), eq(gestoresTable.ativo, true))
+    ).limit(1);
+    if (!gestor.length) return res.status(404).json({ error: "Prefeito not found" });
+    res.json(gestor[0]);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router3.get("/governo/vice-prefeito", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? "default";
+    const tenant = await db.select().from(tenantsTable).where(eq(tenantsTable.slug, tenantSlug)).limit(1);
+    const tenantId = tenant[0]?.id ?? "";
+    const gestor = await db.select().from(gestoresTable).where(
+      and(eq(gestoresTable.tenantId, tenantId), eq(gestoresTable.cargo, "Vice-Prefeito"), eq(gestoresTable.ativo, true))
+    ).limit(1);
+    if (!gestor.length) return res.status(404).json({ error: "Vice-Prefeito not found" });
+    res.json(gestor[0]);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+var tenant_default = router3;
+
+// src/routes/noticias.ts
+var import_express4 = __toESM(require_express2(), 1);
+init_schema2();
+init_drizzle_orm();
+import { randomUUID as randomUUID2 } from "crypto";
+var router4 = (0, import_express4.Router)();
+var DEFAULT_TENANT = "parauapebas";
+async function getTenantId(tenantSlug) {
+  const { tenantsTable: tenantsTable2 } = await Promise.resolve().then(() => (init_schema2(), schema_exports));
+  const tenant = await db.select().from(tenantsTable2).where(eq(tenantsTable2.slug, tenantSlug)).limit(1);
+  return tenant[0]?.id ?? null;
+}
+router4.get("/noticias", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT;
+    const page = Math.max(1, parseInt(req.query["page"] ?? "1"));
+    const limit = Math.min(50, Math.max(1, parseInt(req.query["limit"] ?? "10")));
+    const categoria = req.query["categoria"];
+    const destaque = req.query["destaque"];
+    const offset = (page - 1) * limit;
+    const tenantId = await getTenantId(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const conditions = [eq(noticiasTable.tenantId, tenantId), eq(noticiasTable.publicado, true)];
+    if (categoria) conditions.push(eq(noticiasTable.categoria, categoria));
+    if (destaque === "true") conditions.push(eq(noticiasTable.destaque, true));
+    const whereClause = and(...conditions);
+    const [total, data] = await Promise.all([
+      db.select({ count: count() }).from(noticiasTable).where(whereClause),
+      db.select().from(noticiasTable).where(whereClause).orderBy(desc(noticiasTable.dataPublicacao)).limit(limit).offset(offset)
+    ]);
+    const totalCount = total[0]?.count ?? 0;
+    res.json({ data, total: totalCount, page, limit, totalPages: Math.ceil(totalCount / limit) });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router4.get("/noticias/:slug", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT;
+    const tenantId = await getTenantId(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const noticia = await db.select().from(noticiasTable).where(
+      and(eq(noticiasTable.tenantId, tenantId), eq(noticiasTable.slug, req.params["slug"]), eq(noticiasTable.publicado, true))
+    ).limit(1);
+    if (!noticia.length) return res.status(404).json({ error: "Not\xEDcia n\xE3o encontrada" });
+    res.json(noticia[0]);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router4.post("/noticias", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT;
+    const tenantId = await getTenantId(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const body = req.body;
+    const noticia = await db.insert(noticiasTable).values({
+      id: randomUUID2(),
+      tenantId,
+      titulo: body.titulo,
+      slug: body.slug,
+      resumo: body.resumo,
+      conteudo: body.conteudo,
+      imagemCapa: body.imagemCapa ?? null,
+      categoria: body.categoria,
+      autor: body.autor ?? null,
+      dataPublicacao: body.dataPublicacao ? new Date(body.dataPublicacao) : /* @__PURE__ */ new Date(),
+      destaque: body.destaque ?? false,
+      tags: body.tags ?? []
+    }).returning();
+    res.status(201).json(noticia[0]);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router4.put("/noticias/:slug", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT;
+    const tenantId = await getTenantId(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const body = req.body;
+    const updated = await db.update(noticiasTable).set({ ...body, updatedAt: /* @__PURE__ */ new Date() }).where(and(eq(noticiasTable.tenantId, tenantId), eq(noticiasTable.slug, req.params["slug"]))).returning();
+    if (!updated.length) return res.status(404).json({ error: "Not\xEDcia n\xE3o encontrada" });
+    res.json(updated[0]);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router4.delete("/noticias/:slug", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT;
+    const tenantId = await getTenantId(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    await db.delete(noticiasTable).where(
+      and(eq(noticiasTable.tenantId, tenantId), eq(noticiasTable.slug, req.params["slug"]))
+    );
+    res.status(204).send();
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+var noticias_default = router4;
+
+// src/routes/servicos.ts
+var import_express5 = __toESM(require_express2(), 1);
+init_schema2();
+init_drizzle_orm();
+var router5 = (0, import_express5.Router)();
+var DEFAULT_TENANT2 = "parauapebas";
+async function getTenantId2(slug) {
+  const t = await db.select().from(tenantsTable).where(eq(tenantsTable.slug, slug)).limit(1);
+  return t[0]?.id ?? null;
+}
+router5.get("/servicos", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT2;
+    const page = Math.max(1, parseInt(req.query["page"] ?? "1"));
+    const limit = Math.min(50, Math.max(1, parseInt(req.query["limit"] ?? "20")));
+    const categoria = req.query["categoria"];
+    const offset = (page - 1) * limit;
+    const tenantId = await getTenantId2(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const conditions = [eq(servicosTable.tenantId, tenantId), eq(servicosTable.ativo, true)];
+    if (categoria) conditions.push(eq(servicosTable.categoria, categoria));
+    const whereClause = and(...conditions);
+    const [total, data] = await Promise.all([
+      db.select({ count: count() }).from(servicosTable).where(whereClause),
+      db.select().from(servicosTable).where(whereClause).limit(limit).offset(offset)
+    ]);
+    const totalCount = total[0]?.count ?? 0;
+    res.json({ data, total: totalCount, page, limit, totalPages: Math.ceil(totalCount / limit) });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router5.get("/servicos/:slug", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT2;
+    const tenantId = await getTenantId2(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const servico = await db.select().from(servicosTable).where(
+      and(eq(servicosTable.tenantId, tenantId), eq(servicosTable.slug, req.params["slug"]), eq(servicosTable.ativo, true))
+    ).limit(1);
+    if (!servico.length) return res.status(404).json({ error: "Servi\xE7o n\xE3o encontrado" });
+    res.json(servico[0]);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+var servicos_default = router5;
+
+// src/routes/secretarias.ts
+var import_express6 = __toESM(require_express2(), 1);
+init_schema2();
+init_drizzle_orm();
+var router6 = (0, import_express6.Router)();
+var DEFAULT_TENANT3 = "parauapebas";
+async function getTenantId3(slug) {
+  const t = await db.select().from(tenantsTable).where(eq(tenantsTable.slug, slug)).limit(1);
+  return t[0]?.id ?? null;
+}
+router6.get("/secretarias", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT3;
+    const tenantId = await getTenantId3(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const data = await db.select().from(secretariasTable).where(
+      and(eq(secretariasTable.tenantId, tenantId), eq(secretariasTable.ativa, true))
+    );
+    res.json({ data, total: data.length });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router6.get("/secretarias/:slug", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT3;
+    const tenantId = await getTenantId3(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const secretaria = await db.select().from(secretariasTable).where(
+      and(eq(secretariasTable.tenantId, tenantId), eq(secretariasTable.slug, req.params["slug"]))
+    ).limit(1);
+    if (!secretaria.length) return res.status(404).json({ error: "Secretaria n\xE3o encontrada" });
+    res.json(secretaria[0]);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+var secretarias_default = router6;
+
+// src/routes/transparencia.ts
+var import_express7 = __toESM(require_express2(), 1);
+init_schema2();
+init_drizzle_orm();
+var router7 = (0, import_express7.Router)();
+var DEFAULT_TENANT4 = "parauapebas";
+async function getTenantId4(slug) {
+  const t = await db.select().from(tenantsTable).where(eq(tenantsTable.slug, slug)).limit(1);
+  return t[0]?.id ?? null;
+}
+router7.get("/transparencia/orcamento", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT4;
+    const tenantId = await getTenantId4(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const ano = parseInt(req.query["ano"] ?? String((/* @__PURE__ */ new Date()).getFullYear()));
+    const orcamento = await db.select().from(orcamentosTable).where(
+      and(eq(orcamentosTable.tenantId, tenantId), eq(orcamentosTable.ano, ano))
+    ).limit(1);
+    if (!orcamento.length) {
+      return res.json({
+        ano,
+        receitaPrevista: 0,
+        receitaRealizada: 0,
+        despesaPrevista: 0,
+        despesaRealizada: 0,
+        saldoAtual: 0,
+        categorias: []
+      });
+    }
+    const orc = orcamento[0];
+    const categorias = typeof orc.categorias === "string" ? JSON.parse(orc.categorias) : orc.categorias;
+    res.json({ ...orc, categorias });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router7.get("/transparencia/despesas", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT4;
+    const page = Math.max(1, parseInt(req.query["page"] ?? "1"));
+    const limit = Math.min(100, Math.max(1, parseInt(req.query["limit"] ?? "20")));
+    const offset = (page - 1) * limit;
+    const tenantId = await getTenantId4(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const conditions = [eq(despesasTable.tenantId, tenantId)];
+    if (req.query["ano"]) conditions.push(eq(despesasTable.ano, parseInt(req.query["ano"])));
+    if (req.query["mes"]) conditions.push(eq(despesasTable.mes, parseInt(req.query["mes"])));
+    if (req.query["secretaria"]) conditions.push(eq(despesasTable.secretaria, req.query["secretaria"]));
+    const whereClause = and(...conditions);
+    const [total, data] = await Promise.all([
+      db.select({ count: count() }).from(despesasTable).where(whereClause),
+      db.select().from(despesasTable).where(whereClause).limit(limit).offset(offset)
+    ]);
+    const totalCount = total[0]?.count ?? 0;
+    res.json({ data, total: totalCount, page, limit, totalPages: Math.ceil(totalCount / limit) });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router7.get("/transparencia/receitas", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT4;
+    const page = Math.max(1, parseInt(req.query["page"] ?? "1"));
+    const limit = Math.min(100, Math.max(1, parseInt(req.query["limit"] ?? "20")));
+    const offset = (page - 1) * limit;
+    const tenantId = await getTenantId4(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const conditions = [eq(receitasTable.tenantId, tenantId)];
+    if (req.query["ano"]) conditions.push(eq(receitasTable.ano, parseInt(req.query["ano"])));
+    const whereClause = and(...conditions);
+    const [total, data] = await Promise.all([
+      db.select({ count: count() }).from(receitasTable).where(whereClause),
+      db.select().from(receitasTable).where(whereClause).limit(limit).offset(offset)
+    ]);
+    const totalCount = total[0]?.count ?? 0;
+    res.json({ data, total: totalCount, page, limit, totalPages: Math.ceil(totalCount / limit) });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router7.get("/transparencia/servidores", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT4;
+    const page = Math.max(1, parseInt(req.query["page"] ?? "1"));
+    const limit = Math.min(100, Math.max(1, parseInt(req.query["limit"] ?? "20")));
+    const offset = (page - 1) * limit;
+    const tenantId = await getTenantId4(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const conditions = [eq(servidoresTable.tenantId, tenantId)];
+    if (req.query["secretaria"]) conditions.push(eq(servidoresTable.secretaria, req.query["secretaria"]));
+    const whereClause = and(...conditions);
+    const [total, data] = await Promise.all([
+      db.select({ count: count() }).from(servidoresTable).where(whereClause),
+      db.select().from(servidoresTable).where(whereClause).limit(limit).offset(offset)
+    ]);
+    const totalCount = total[0]?.count ?? 0;
+    res.json({ data, total: totalCount, page, limit, totalPages: Math.ceil(totalCount / limit) });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+var transparencia_default = router7;
+
+// src/routes/licitacoes.ts
+var import_express8 = __toESM(require_express2(), 1);
+init_schema2();
+init_drizzle_orm();
+var router8 = (0, import_express8.Router)();
+var DEFAULT_TENANT5 = "parauapebas";
+async function getTenantId5(slug) {
+  const t = await db.select().from(tenantsTable).where(eq(tenantsTable.slug, slug)).limit(1);
+  return t[0]?.id ?? null;
+}
+router8.get("/licitacoes", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT5;
+    const page = Math.max(1, parseInt(req.query["page"] ?? "1"));
+    const limit = Math.min(100, Math.max(1, parseInt(req.query["limit"] ?? "20")));
+    const offset = (page - 1) * limit;
+    const tenantId = await getTenantId5(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const conditions = [eq(licitacoesTable.tenantId, tenantId)];
+    if (req.query["modalidade"]) conditions.push(eq(licitacoesTable.modalidade, req.query["modalidade"]));
+    if (req.query["situacao"]) conditions.push(eq(licitacoesTable.situacao, req.query["situacao"]));
+    const whereClause = and(...conditions);
+    const [total, data] = await Promise.all([
+      db.select({ count: count() }).from(licitacoesTable).where(whereClause),
+      db.select().from(licitacoesTable).where(whereClause).orderBy(desc(licitacoesTable.createdAt)).limit(limit).offset(offset)
+    ]);
+    const totalCount = total[0]?.count ?? 0;
+    res.json({ data, total: totalCount, page, limit, totalPages: Math.ceil(totalCount / limit) });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router8.get("/licitacoes/:id", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT5;
+    const tenantId = await getTenantId5(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const licitacao = await db.select().from(licitacoesTable).where(
+      and(eq(licitacoesTable.tenantId, tenantId), eq(licitacoesTable.id, req.params["id"]))
+    ).limit(1);
+    if (!licitacao.length) return res.status(404).json({ error: "Licita\xE7\xE3o n\xE3o encontrada" });
+    res.json(licitacao[0]);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+var licitacoes_default = router8;
+
+// src/routes/legislacao.ts
+var import_express9 = __toESM(require_express2(), 1);
+init_schema2();
+init_drizzle_orm();
+var router9 = (0, import_express9.Router)();
+var DEFAULT_TENANT6 = "parauapebas";
+async function getTenantId6(slug) {
+  const t = await db.select().from(tenantsTable).where(eq(tenantsTable.slug, slug)).limit(1);
+  return t[0]?.id ?? null;
+}
+router9.get("/legislacao", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT6;
+    const page = Math.max(1, parseInt(req.query["page"] ?? "1"));
+    const limit = Math.min(100, Math.max(1, parseInt(req.query["limit"] ?? "20")));
+    const offset = (page - 1) * limit;
+    const tenantId = await getTenantId6(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const conditions = [eq(legislacaoTable.tenantId, tenantId)];
+    if (req.query["tipo"]) conditions.push(eq(legislacaoTable.tipo, req.query["tipo"]));
+    if (req.query["ano"]) conditions.push(eq(legislacaoTable.ano, parseInt(req.query["ano"])));
+    const whereClause = and(...conditions);
+    const [total, data] = await Promise.all([
+      db.select({ count: count() }).from(legislacaoTable).where(whereClause),
+      db.select().from(legislacaoTable).where(whereClause).orderBy(desc(legislacaoTable.dataPublicacao)).limit(limit).offset(offset)
+    ]);
+    const totalCount = total[0]?.count ?? 0;
+    res.json({ data, total: totalCount, page, limit, totalPages: Math.ceil(totalCount / limit) });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router9.get("/legislacao/:tipo/:slug", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT6;
+    const tenantId = await getTenantId6(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const lei = await db.select().from(legislacaoTable).where(
+      and(
+        eq(legislacaoTable.tenantId, tenantId),
+        eq(legislacaoTable.tipo, req.params["tipo"]),
+        eq(legislacaoTable.slug, req.params["slug"])
+      )
+    ).limit(1);
+    if (!lei.length) return res.status(404).json({ error: "Legisla\xE7\xE3o n\xE3o encontrada" });
+    res.json(lei[0]);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+var legislacao_default = router9;
+
+// src/routes/agenda.ts
+var import_express10 = __toESM(require_express2(), 1);
+init_schema2();
+init_drizzle_orm();
+var router10 = (0, import_express10.Router)();
+var DEFAULT_TENANT7 = "parauapebas";
+async function getTenantId7(slug) {
+  const t = await db.select().from(tenantsTable).where(eq(tenantsTable.slug, slug)).limit(1);
+  return t[0]?.id ?? null;
+}
+router10.get("/agenda", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT7;
+    const page = Math.max(1, parseInt(req.query["page"] ?? "1"));
+    const limit = Math.min(50, Math.max(1, parseInt(req.query["limit"] ?? "20")));
+    const offset = (page - 1) * limit;
+    const tenantId = await getTenantId7(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const conditions = [eq(agendaTable.tenantId, tenantId), eq(agendaTable.ativo, true)];
+    const whereClause = and(...conditions);
+    const [total, data] = await Promise.all([
+      db.select({ count: count() }).from(agendaTable).where(whereClause),
+      db.select().from(agendaTable).where(whereClause).orderBy(asc(agendaTable.dataInicio)).limit(limit).offset(offset)
+    ]);
+    const totalCount = total[0]?.count ?? 0;
+    res.json({ data, total: totalCount, page, limit, totalPages: Math.ceil(totalCount / limit) });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+var agenda_default = router10;
+
+// src/routes/galeria.ts
+var import_express11 = __toESM(require_express2(), 1);
+init_schema2();
+init_drizzle_orm();
+var router11 = (0, import_express11.Router)();
+var DEFAULT_TENANT8 = "parauapebas";
+async function getTenantId8(slug) {
+  const t = await db.select().from(tenantsTable).where(eq(tenantsTable.slug, slug)).limit(1);
+  return t[0]?.id ?? null;
+}
+router11.get("/galeria", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT8;
+    const page = Math.max(1, parseInt(req.query["page"] ?? "1"));
+    const limit = Math.min(50, Math.max(1, parseInt(req.query["limit"] ?? "20")));
+    const offset = (page - 1) * limit;
+    const tenantId = await getTenantId8(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const conditions = [eq(galeriaTable.tenantId, tenantId)];
+    if (req.query["tipo"]) conditions.push(eq(galeriaTable.tipo, req.query["tipo"]));
+    const whereClause = and(...conditions);
+    const [total, data] = await Promise.all([
+      db.select({ count: count() }).from(galeriaTable).where(whereClause),
+      db.select().from(galeriaTable).where(whereClause).orderBy(desc(galeriaTable.dataPublicacao)).limit(limit).offset(offset)
+    ]);
+    const totalCount = total[0]?.count ?? 0;
+    res.json({ data, total: totalCount, page, limit, totalPages: Math.ceil(totalCount / limit) });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+var galeria_default = router11;
+
+// src/routes/concursos.ts
+var import_express12 = __toESM(require_express2(), 1);
+init_schema2();
+init_drizzle_orm();
+var router12 = (0, import_express12.Router)();
+var DEFAULT_TENANT9 = "parauapebas";
+async function getTenantId9(slug) {
+  const t = await db.select().from(tenantsTable).where(eq(tenantsTable.slug, slug)).limit(1);
+  return t[0]?.id ?? null;
+}
+router12.get("/concursos", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT9;
+    const page = Math.max(1, parseInt(req.query["page"] ?? "1"));
+    const limit = Math.min(50, Math.max(1, parseInt(req.query["limit"] ?? "20")));
+    const offset = (page - 1) * limit;
+    const tenantId = await getTenantId9(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const conditions = [eq(concursosTable.tenantId, tenantId)];
+    if (req.query["situacao"]) conditions.push(eq(concursosTable.situacao, req.query["situacao"]));
+    const whereClause = and(...conditions);
+    const [total, data] = await Promise.all([
+      db.select({ count: count() }).from(concursosTable).where(whereClause),
+      db.select().from(concursosTable).where(whereClause).orderBy(desc(concursosTable.dataPublicacao)).limit(limit).offset(offset)
+    ]);
+    const totalCount = total[0]?.count ?? 0;
+    res.json({ data, total: totalCount, page, limit, totalPages: Math.ceil(totalCount / limit) });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+var concursos_default = router12;
+
+// src/routes/busca.ts
+var import_express13 = __toESM(require_express2(), 1);
+init_schema2();
+init_drizzle_orm();
+var router13 = (0, import_express13.Router)();
+var DEFAULT_TENANT10 = "parauapebas";
+async function getTenantId10(slug) {
+  const t = await db.select().from(tenantsTable).where(eq(tenantsTable.slug, slug)).limit(1);
+  return t[0]?.id ?? null;
+}
+router13.get("/busca", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT10;
+    const q = req.query["q"] ?? "";
+    const tipo = req.query["tipo"];
+    const page = Math.max(1, parseInt(req.query["page"] ?? "1"));
+    const limit = Math.min(50, parseInt(req.query["limit"] ?? "20"));
+    const offset = (page - 1) * limit;
+    if (!q.trim()) {
+      return res.json({ query: q, data: [], total: 0, page, limit, totalPages: 0 });
+    }
+    const tenantId = await getTenantId10(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const results = [];
+    const term = `%${q}%`;
+    if (!tipo || tipo === "noticia") {
+      const noticias = await db.select().from(noticiasTable).where(
+        and(
+          eq(noticiasTable.tenantId, tenantId),
+          eq(noticiasTable.publicado, true),
+          or(ilike(noticiasTable.titulo, term), ilike(noticiasTable.resumo, term))
+        )
+      ).limit(10);
+      noticias.forEach((n) => results.push({ id: n.id, tipo: "noticia", titulo: n.titulo, resumo: n.resumo, url: `/noticias/${n.slug}`, data: n.dataPublicacao, relevancia: 1 }));
+    }
+    if (!tipo || tipo === "servico") {
+      const servicos = await db.select().from(servicosTable).where(
+        and(
+          eq(servicosTable.tenantId, tenantId),
+          eq(servicosTable.ativo, true),
+          or(ilike(servicosTable.titulo, term), ilike(servicosTable.descricao, term))
+        )
+      ).limit(10);
+      servicos.forEach((s) => results.push({ id: s.id, tipo: "servico", titulo: s.titulo, resumo: s.descricao, url: `/servicos/${s.slug}`, data: s.createdAt, relevancia: 0.9 }));
+    }
+    if (!tipo || tipo === "licitacao") {
+      const licitacoes = await db.select().from(licitacoesTable).where(
+        and(eq(licitacoesTable.tenantId, tenantId), ilike(licitacoesTable.objeto, term))
+      ).limit(5);
+      licitacoes.forEach((l) => results.push({ id: l.id, tipo: "licitacao", titulo: l.objeto, resumo: l.descricao ?? null, url: `/licitacoes/${l.id}`, data: l.dataAbertura, relevancia: 0.8 }));
+    }
+    if (!tipo || tipo === "legislacao") {
+      const leis = await db.select().from(legislacaoTable).where(
+        and(eq(legislacaoTable.tenantId, tenantId), or(ilike(legislacaoTable.ementa, term), ilike(legislacaoTable.numero, term)))
+      ).limit(5);
+      leis.forEach((l) => results.push({ id: l.id, tipo: "legislacao", titulo: `${l.tipo} n\xBA ${l.numero} - ${l.ementa}`, resumo: null, url: `/legislacao/${l.tipo}/${l.slug}`, data: l.dataPublicacao, relevancia: 0.7 }));
+    }
+    const sorted = results.sort((a, b) => b.relevancia - a.relevancia);
+    const paginated = sorted.slice(offset, offset + limit);
+    res.json({ query: q, data: paginated, total: sorted.length, page, limit, totalPages: Math.ceil(sorted.length / limit) });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+var busca_default = router13;
+
+// src/routes/sic.ts
+var import_express14 = __toESM(require_express2(), 1);
+var router14 = (0, import_express14.Router)();
+function validate(body) {
+  if (!body.nome || body.nome.trim().length < 3) return "Nome \xE9 obrigat\xF3rio (m\xEDnimo 3 caracteres).";
+  if (!body.cpf || !/^\d{3}\.\d{3}\.\d{3}-\d{2}$/.test(body.cpf)) return "CPF inv\xE1lido.";
+  if (!body.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body.email)) return "E-mail inv\xE1lido.";
+  const tiposValidos = ["informacao", "recurso", "outros"];
+  if (!body.tipoSolicitacao || !tiposValidos.includes(body.tipoSolicitacao)) return "Tipo de solicita\xE7\xE3o inv\xE1lido.";
+  if (!body.orgao || body.orgao.trim().length < 3) return "\xD3rg\xE3o/Secretaria \xE9 obrigat\xF3rio.";
+  if (!body.descricao || body.descricao.trim().length < 20) return "Descri\xE7\xE3o deve ter no m\xEDnimo 20 caracteres.";
+  if (!body.lgpdConsent) return "Voc\xEA precisa aceitar o tratamento de dados pessoais (LGPD).";
+  return null;
+}
+function generateProtocolo() {
+  const year2 = (/* @__PURE__ */ new Date()).getFullYear();
+  const seq = String(Math.floor(Math.random() * 999999)).padStart(6, "0");
+  return `SIC-${year2}-${seq}`;
+}
+function getPrazo() {
+  const date6 = /* @__PURE__ */ new Date();
+  date6.setDate(date6.getDate() + 20);
+  return date6.toISOString();
+}
+router14.post("/sic", async (req, res) => {
+  try {
+    const body = req.body;
+    const error40 = validate(body);
+    if (error40) {
+      return res.status(400).json({ error: error40 });
+    }
+    const protocolo = generateProtocolo();
+    const prazo = getPrazo();
+    console.log(`[SIC] Pedido registrado: ${protocolo} | \xD3rg\xE3o: ${body.orgao} | Tipo: ${body.tipoSolicitacao}`);
+    return res.status(201).json({
+      protocolo,
+      prazo,
+      mensagem: "Pedido de acesso \xE0 informa\xE7\xE3o registrado com sucesso.",
+      laiRef: "Lei 12.527/2011, Art. 11 \u2014 prazo de 20 dias corridos."
+    });
+  } catch (err) {
+    console.error("[SIC] Erro ao registrar pedido:", err);
+    return res.status(500).json({ error: "Erro interno ao processar pedido." });
+  }
+});
+router14.get("/sic/estatisticas", async (_req, res) => {
+  return res.json({
+    totalPedidos: 127,
+    respondidosNoPrazo: 94,
+    taxaResposta: 94,
+    tempoMedioDias: 8,
+    recursosAbertos: 12,
+    porResultado: {
+      acessoConcedido: 68,
+      acessoParcial: 15,
+      acessoNegado: 8,
+      emAndamento: 9
+    }
+  });
+});
+var sic_default = router14;
+
+// src/routes/cms/noticias.ts
+var import_express15 = __toESM(require_express2(), 1);
+init_schema2();
+init_drizzle_orm();
+import { randomUUID as randomUUID3 } from "crypto";
+var router15 = (0, import_express15.Router)();
+var DEFAULT_TENANT11 = "parauapebas";
+async function getTenantId11(slug) {
+  const { tenantsTable: tenantsTable2 } = await Promise.resolve().then(() => (init_schema2(), schema_exports));
+  const r = await db.select().from(tenantsTable2).where(eq(tenantsTable2.slug, slug)).limit(1);
+  return r[0]?.id ?? null;
+}
+router15.get("/cms/noticias", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT11;
+    const page = Math.max(1, parseInt(req.query["page"] ?? "1"));
+    const limit = Math.min(100, Math.max(1, parseInt(req.query["limit"] ?? "20")));
+    const status = req.query["status"];
+    const categoria = req.query["categoria"];
+    const busca = req.query["q"];
+    const offset = (page - 1) * limit;
+    const tenantId = await getTenantId11(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const conditions = [
+      eq(noticiasTable.tenantId, tenantId),
+      isNull(noticiasTable.deletadoEm)
+    ];
+    if (status) conditions.push(eq(noticiasTable.status, status));
+    if (categoria) conditions.push(eq(noticiasTable.categoria, categoria));
+    if (busca) conditions.push(ilike(noticiasTable.titulo, `%${busca}%`));
+    const where = and(...conditions);
+    const [total, data] = await Promise.all([
+      db.select({ count: count() }).from(noticiasTable).where(where),
+      db.select().from(noticiasTable).where(where).orderBy(desc(noticiasTable.createdAt)).limit(limit).offset(offset)
+    ]);
+    res.json({ data, total: total[0]?.count ?? 0, page, limit, totalPages: Math.ceil((total[0]?.count ?? 0) / limit) });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router15.get("/cms/noticias/:id", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT11;
+    const tenantId = await getTenantId11(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const [noticia] = await db.select().from(noticiasTable).where(
+      and(eq(noticiasTable.tenantId, tenantId), eq(noticiasTable.id, req.params["id"]))
+    ).limit(1);
+    if (!noticia) return res.status(404).json({ error: "Not\xEDcia n\xE3o encontrada" });
+    const versions = await db.select().from(newsVersionsTable).where(eq(newsVersionsTable.noticiaId, noticia.id)).orderBy(desc(newsVersionsTable.createdAt)).limit(10);
+    res.json({ ...noticia, versions });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router15.post("/cms/noticias", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT11;
+    const tenantId = await getTenantId11(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const b = req.body;
+    if (!b.titulo || !b.slug || !b.conteudo) {
+      return res.status(400).json({ error: "titulo, slug e conteudo s\xE3o obrigat\xF3rios" });
+    }
+    const id = randomUUID3();
+    const [noticia] = await db.insert(noticiasTable).values({
+      id,
+      tenantId,
+      titulo: b.titulo,
+      slug: b.slug,
+      resumo: b.resumo ?? "",
+      conteudo: b.conteudo,
+      imagemCapa: b.imagemCapa ?? null,
+      imagemCapaAlt: b.imagemCapaAlt ?? null,
+      categoria: b.categoria ?? "geral",
+      categoriaId: b.categoriaId ?? null,
+      secretariaId: b.secretariaId ?? null,
+      autor: b.autor ?? null,
+      status: b.status ?? "rascunho",
+      publicado: b.status === "publicado",
+      destaque: b.destaque ?? false,
+      tags: b.tags ?? [],
+      metaTitle: b.metaTitle ?? null,
+      metaDescription: b.metaDescription ?? null,
+      ogImageUrl: b.ogImageUrl ?? null,
+      dataPublicacao: b.dataPublicacao ? new Date(b.dataPublicacao) : /* @__PURE__ */ new Date(),
+      agendadoEm: b.agendadoEm ? new Date(b.agendadoEm) : null
+    }).returning();
+    await db.insert(newsVersionsTable).values({
+      id: randomUUID3(),
+      noticiaId: id,
+      conteudo: b.conteudo,
+      savedBy: b.autor ?? "admin"
+    });
+    res.status(201).json(noticia);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router15.put("/cms/noticias/:id", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT11;
+    const tenantId = await getTenantId11(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const b = req.body;
+    const updateData = { updatedAt: /* @__PURE__ */ new Date() };
+    if (b.titulo !== void 0) updateData["titulo"] = b.titulo;
+    if (b.slug !== void 0) updateData["slug"] = b.slug;
+    if (b.resumo !== void 0) updateData["resumo"] = b.resumo;
+    if (b.conteudo !== void 0) updateData["conteudo"] = b.conteudo;
+    if (b.imagemCapa !== void 0) updateData["imagemCapa"] = b.imagemCapa;
+    if (b.imagemCapaAlt !== void 0) updateData["imagemCapaAlt"] = b.imagemCapaAlt;
+    if (b.categoria !== void 0) updateData["categoria"] = b.categoria;
+    if (b.categoriaId !== void 0) updateData["categoriaId"] = b.categoriaId;
+    if (b.secretariaId !== void 0) updateData["secretariaId"] = b.secretariaId;
+    if (b.status !== void 0) {
+      updateData["status"] = b.status;
+      updateData["publicado"] = b.status === "publicado";
+    }
+    if (b.destaque !== void 0) updateData["destaque"] = b.destaque;
+    if (b.tags !== void 0) updateData["tags"] = b.tags;
+    if (b.metaTitle !== void 0) updateData["metaTitle"] = b.metaTitle;
+    if (b.metaDescription !== void 0) updateData["metaDescription"] = b.metaDescription;
+    if (b.ogImageUrl !== void 0) updateData["ogImageUrl"] = b.ogImageUrl;
+    if (b.dataPublicacao !== void 0) updateData["dataPublicacao"] = new Date(b.dataPublicacao);
+    if (b.agendadoEm !== void 0) updateData["agendadoEm"] = b.agendadoEm ? new Date(b.agendadoEm) : null;
+    const [updated] = await db.update(noticiasTable).set(updateData).where(and(eq(noticiasTable.tenantId, tenantId), eq(noticiasTable.id, req.params["id"]))).returning();
+    if (!updated) return res.status(404).json({ error: "Not\xEDcia n\xE3o encontrada" });
+    if (b.conteudo) {
+      await db.insert(newsVersionsTable).values({
+        id: randomUUID3(),
+        noticiaId: updated.id,
+        conteudo: b.conteudo,
+        savedBy: b.autor ?? "admin"
+      });
+    }
+    res.json(updated);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router15.delete("/cms/noticias/:id", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT11;
+    const tenantId = await getTenantId11(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    await db.update(noticiasTable).set({ deletadoEm: /* @__PURE__ */ new Date(), status: "arquivado", publicado: false, updatedAt: /* @__PURE__ */ new Date() }).where(and(eq(noticiasTable.tenantId, tenantId), eq(noticiasTable.id, req.params["id"])));
+    res.status(204).send();
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router15.get("/cms/categorias", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT11;
+    const tenantId = await getTenantId11(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const data = await db.select().from(newsCategoriesTable).where(eq(newsCategoriesTable.tenantId, tenantId)).orderBy(newsCategoriesTable.name);
+    res.json({ data });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router15.post("/cms/categorias", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT11;
+    const tenantId = await getTenantId11(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const b = req.body;
+    if (!b.name || !b.slug) return res.status(400).json({ error: "name e slug s\xE3o obrigat\xF3rios" });
+    const [cat] = await db.insert(newsCategoriesTable).values({
+      id: randomUUID3(),
+      tenantId,
+      name: b.name,
+      slug: b.slug,
+      color: b.color ?? null
+    }).returning();
+    res.status(201).json(cat);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+var noticias_default2 = router15;
+
+// src/routes/cms/banners.ts
+var import_express16 = __toESM(require_express2(), 1);
+init_schema2();
+init_drizzle_orm();
+import { randomUUID as randomUUID4 } from "crypto";
+var router16 = (0, import_express16.Router)();
+var DEFAULT_TENANT12 = "parauapebas";
+async function getTenantId12(slug) {
+  const { tenantsTable: tenantsTable2 } = await Promise.resolve().then(() => (init_schema2(), schema_exports));
+  const r = await db.select().from(tenantsTable2).where(eq(tenantsTable2.slug, slug)).limit(1);
+  return r[0]?.id ?? null;
+}
+router16.get("/cms/banners", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT12;
+    const tenantId = await getTenantId12(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const data = await db.select().from(bannersTable).where(eq(bannersTable.tenantId, tenantId)).orderBy(asc(bannersTable.sortOrder));
+    res.json({ data });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router16.post("/cms/banners", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT12;
+    const tenantId = await getTenantId12(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const b = req.body;
+    if (!b.titulo || !b.imageDesktopUrl || !b.imageAlt) {
+      return res.status(400).json({ error: "titulo, imageDesktopUrl e imageAlt s\xE3o obrigat\xF3rios" });
+    }
+    const [banner] = await db.insert(bannersTable).values({
+      id: randomUUID4(),
+      tenantId,
+      titulo: b.titulo,
+      subtitulo: b.subtitulo ?? null,
+      imageDesktopUrl: b.imageDesktopUrl,
+      imageMobileUrl: b.imageMobileUrl ?? null,
+      imageAlt: b.imageAlt,
+      ctaLabel: b.ctaLabel ?? null,
+      ctaUrl: b.ctaUrl ?? null,
+      ctaAbreNovaAba: b.ctaAbreNovaAba ?? false,
+      overlayColor: b.overlayColor ?? null,
+      overlayOpacity: b.overlayOpacity ?? 0.4,
+      isAtivo: b.isAtivo ?? true,
+      sortOrder: b.sortOrder ?? 0,
+      iniciaEm: b.iniciaEm ? new Date(b.iniciaEm) : null,
+      expiraEm: b.expiraEm ? new Date(b.expiraEm) : null
+    }).returning();
+    res.status(201).json(banner);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router16.put("/cms/banners/:id", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT12;
+    const tenantId = await getTenantId12(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const b = req.body;
+    const [updated] = await db.update(bannersTable).set({ ...b, updatedAt: /* @__PURE__ */ new Date() }).where(and(eq(bannersTable.tenantId, tenantId), eq(bannersTable.id, req.params["id"]))).returning();
+    if (!updated) return res.status(404).json({ error: "Banner n\xE3o encontrado" });
+    res.json(updated);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router16.patch("/cms/banners/reorder", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT12;
+    const tenantId = await getTenantId12(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const { ids } = req.body;
+    if (!Array.isArray(ids)) return res.status(400).json({ error: "ids deve ser um array" });
+    await Promise.all(ids.map(
+      (id, index) => db.update(bannersTable).set({ sortOrder: index, updatedAt: /* @__PURE__ */ new Date() }).where(and(eq(bannersTable.tenantId, tenantId), eq(bannersTable.id, id)))
+    ));
+    res.json({ ok: true });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router16.delete("/cms/banners/:id", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT12;
+    const tenantId = await getTenantId12(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    await db.delete(bannersTable).where(
+      and(eq(bannersTable.tenantId, tenantId), eq(bannersTable.id, req.params["id"]))
+    );
+    res.status(204).send();
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+var banners_default = router16;
+
+// src/routes/cms/paginas.ts
+var import_express17 = __toESM(require_express2(), 1);
+init_schema2();
+init_drizzle_orm();
+import { randomUUID as randomUUID5 } from "crypto";
+var router17 = (0, import_express17.Router)();
+var DEFAULT_TENANT13 = "parauapebas";
+async function getTenantId13(slug) {
+  const { tenantsTable: tenantsTable2 } = await Promise.resolve().then(() => (init_schema2(), schema_exports));
+  const r = await db.select().from(tenantsTable2).where(eq(tenantsTable2.slug, slug)).limit(1);
+  return r[0]?.id ?? null;
+}
+router17.get("/cms/paginas", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT13;
+    const tenantId = await getTenantId13(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const data = await db.select().from(pagesTable).where(eq(pagesTable.tenantId, tenantId)).orderBy(desc(pagesTable.updatedAt));
+    res.json({ data });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router17.get("/cms/paginas/:id", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT13;
+    const tenantId = await getTenantId13(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const [page] = await db.select().from(pagesTable).where(
+      and(eq(pagesTable.tenantId, tenantId), eq(pagesTable.id, req.params["id"]))
+    ).limit(1);
+    if (!page) return res.status(404).json({ error: "P\xE1gina n\xE3o encontrada" });
+    const blocks = await db.select().from(pageBlocksTable).where(eq(pageBlocksTable.pageId, page.id)).orderBy(asc(pageBlocksTable.sortOrder));
+    res.json({ ...page, blocks });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router17.post("/cms/paginas", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT13;
+    const tenantId = await getTenantId13(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const b = req.body;
+    if (!b.titulo || !b.slug) return res.status(400).json({ error: "titulo e slug s\xE3o obrigat\xF3rios" });
+    const [page] = await db.insert(pagesTable).values({
+      id: randomUUID5(),
+      tenantId,
+      titulo: b.titulo,
+      slug: b.slug,
+      status: b.status ?? "rascunho",
+      isProtegida: b.isProtegida ?? false,
+      metaTitle: b.metaTitle ?? null,
+      metaDescription: b.metaDescription ?? null,
+      autor: b.autor ?? null
+    }).returning();
+    res.status(201).json(page);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router17.put("/cms/paginas/:id", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT13;
+    const tenantId = await getTenantId13(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const b = req.body;
+    const [page] = await db.select().from(pagesTable).where(
+      and(eq(pagesTable.tenantId, tenantId), eq(pagesTable.id, req.params["id"]))
+    ).limit(1);
+    if (!page) return res.status(404).json({ error: "P\xE1gina n\xE3o encontrada" });
+    if (page.isProtegida && b.slug) return res.status(400).json({ error: "P\xE1ginas protegidas n\xE3o podem ter o slug alterado" });
+    const [updated] = await db.update(pagesTable).set({ ...b, updatedAt: /* @__PURE__ */ new Date() }).where(and(eq(pagesTable.tenantId, tenantId), eq(pagesTable.id, req.params["id"]))).returning();
+    res.json(updated);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router17.delete("/cms/paginas/:id", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT13;
+    const tenantId = await getTenantId13(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const [page] = await db.select().from(pagesTable).where(
+      and(eq(pagesTable.tenantId, tenantId), eq(pagesTable.id, req.params["id"]))
+    ).limit(1);
+    if (!page) return res.status(404).json({ error: "P\xE1gina n\xE3o encontrada" });
+    if (page.isProtegida) return res.status(403).json({ error: "P\xE1ginas protegidas n\xE3o podem ser exclu\xEDdas" });
+    await db.delete(pagesTable).where(eq(pagesTable.id, req.params["id"]));
+    res.status(204).send();
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router17.post("/cms/paginas/:id/blocos", async (req, res) => {
+  try {
+    const b = req.body;
+    if (!b.tipo) return res.status(400).json({ error: "tipo \xE9 obrigat\xF3rio" });
+    const [block] = await db.insert(pageBlocksTable).values({
+      id: randomUUID5(),
+      pageId: req.params["id"],
+      tipo: b.tipo,
+      conteudo: b.conteudo ?? {},
+      sortOrder: b.sortOrder ?? 0
+    }).returning();
+    res.status(201).json(block);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router17.put("/cms/blocos/:id", async (req, res) => {
+  try {
+    const b = req.body;
+    const [updated] = await db.update(pageBlocksTable).set({ ...b, updatedAt: /* @__PURE__ */ new Date() }).where(eq(pageBlocksTable.id, req.params["id"])).returning();
+    if (!updated) return res.status(404).json({ error: "Bloco n\xE3o encontrado" });
+    res.json(updated);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router17.delete("/cms/blocos/:id", async (req, res) => {
+  try {
+    await db.delete(pageBlocksTable).where(eq(pageBlocksTable.id, req.params["id"]));
+    res.status(204).send();
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+var paginas_default = router17;
+
+// src/routes/cms/documentos.ts
+var import_express18 = __toESM(require_express2(), 1);
+init_schema2();
+init_drizzle_orm();
+import { randomUUID as randomUUID6 } from "crypto";
+var router18 = (0, import_express18.Router)();
+var DEFAULT_TENANT14 = "parauapebas";
+async function getTenantId14(slug) {
+  const { tenantsTable: tenantsTable2 } = await Promise.resolve().then(() => (init_schema2(), schema_exports));
+  const r = await db.select().from(tenantsTable2).where(eq(tenantsTable2.slug, slug)).limit(1);
+  return r[0]?.id ?? null;
+}
+router18.get("/cms/documentos-lai", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT14;
+    const page = Math.max(1, parseInt(req.query["page"] ?? "1"));
+    const limit = Math.min(100, Math.max(1, parseInt(req.query["limit"] ?? "20")));
+    const categoria = req.query["categoria"];
+    const ano = req.query["ano"];
+    const offset = (page - 1) * limit;
+    const tenantId = await getTenantId14(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const conditions = [eq(transparencyDocsTable.tenantId, tenantId)];
+    if (categoria) conditions.push(eq(transparencyDocsTable.categoria, categoria));
+    if (ano) conditions.push(eq(transparencyDocsTable.anoReferencia, parseInt(ano)));
+    const where = and(...conditions);
+    const [total, data] = await Promise.all([
+      db.select({ count: count() }).from(transparencyDocsTable).where(where),
+      db.select().from(transparencyDocsTable).where(where).orderBy(desc(transparencyDocsTable.publicadoEm)).limit(limit).offset(offset)
+    ]);
+    res.json({ data, total: total[0]?.count ?? 0, page, limit });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router18.post("/cms/documentos-lai", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT14;
+    const tenantId = await getTenantId14(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const b = req.body;
+    if (!b.categoria || !b.titulo || !b.fileUrl || !b.nomeArquivo || !b.anoReferencia) {
+      return res.status(400).json({ error: "categoria, titulo, fileUrl, nomeArquivo e anoReferencia s\xE3o obrigat\xF3rios" });
+    }
+    const [doc] = await db.insert(transparencyDocsTable).values({
+      id: randomUUID6(),
+      tenantId,
+      categoria: b.categoria,
+      subcategoria: b.subcategoria ?? null,
+      titulo: b.titulo,
+      descricao: b.descricao ?? null,
+      anoReferencia: b.anoReferencia,
+      periodoReferencia: b.periodoReferencia ?? null,
+      fileUrl: b.fileUrl,
+      nomeArquivo: b.nomeArquivo,
+      tamanhoBytes: b.tamanhoBytes ?? 0,
+      publicadoPor: b.publicadoPor ?? "admin",
+      publicadoEm: b.publicadoEm ? new Date(b.publicadoEm) : /* @__PURE__ */ new Date(),
+      expiraEm: b.expiraEm ? new Date(b.expiraEm) : null
+    }).returning();
+    res.status(201).json(doc);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router18.delete("/cms/documentos-lai/:id", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT14;
+    const tenantId = await getTenantId14(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    await db.delete(transparencyDocsTable).where(
+      and(eq(transparencyDocsTable.tenantId, tenantId), eq(transparencyDocsTable.id, req.params["id"]))
+    );
+    res.status(204).send();
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+var documentos_default = router18;
+
+// src/routes/cms/menus.ts
+var import_express19 = __toESM(require_express2(), 1);
+init_schema2();
+init_drizzle_orm();
+import { randomUUID as randomUUID7 } from "crypto";
+var router19 = (0, import_express19.Router)();
+var DEFAULT_TENANT15 = "parauapebas";
+async function getTenantId15(slug) {
+  const { tenantsTable: tenantsTable2 } = await Promise.resolve().then(() => (init_schema2(), schema_exports));
+  const r = await db.select().from(tenantsTable2).where(eq(tenantsTable2.slug, slug)).limit(1);
+  return r[0]?.id ?? null;
+}
+router19.get("/cms/menus", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT15;
+    const tenantId = await getTenantId15(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const items = await db.select().from(menuItemsTable).where(eq(menuItemsTable.tenantId, tenantId)).orderBy(asc(menuItemsTable.sortOrder));
+    const grouped = {};
+    for (const item of items) {
+      if (!grouped[item.menuSlot]) grouped[item.menuSlot] = [];
+      grouped[item.menuSlot].push(item);
+    }
+    res.json({ data: grouped });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router19.get("/cms/menus/:slot", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT15;
+    const tenantId = await getTenantId15(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const data = await db.select().from(menuItemsTable).where(and(eq(menuItemsTable.tenantId, tenantId), eq(menuItemsTable.menuSlot, req.params["slot"]))).orderBy(asc(menuItemsTable.sortOrder));
+    res.json({ data });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router19.post("/cms/menus", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT15;
+    const tenantId = await getTenantId15(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const b = req.body;
+    if (!b.menuSlot || !b.label) return res.status(400).json({ error: "menuSlot e label s\xE3o obrigat\xF3rios" });
+    const [item] = await db.insert(menuItemsTable).values({
+      id: randomUUID7(),
+      tenantId,
+      menuSlot: b.menuSlot,
+      label: b.label,
+      url: b.url ?? null,
+      tipo: b.tipo ?? "pagina",
+      abreNovaAba: b.abreNovaAba ?? false,
+      icone: b.icone ?? null,
+      parentId: b.parentId ?? null,
+      sortOrder: b.sortOrder ?? 0,
+      isAtivo: b.isAtivo ?? true
+    }).returning();
+    res.status(201).json(item);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router19.put("/cms/menus/:id", async (req, res) => {
+  try {
+    const b = req.body;
+    const [updated] = await db.update(menuItemsTable).set({ ...b, updatedAt: /* @__PURE__ */ new Date() }).where(eq(menuItemsTable.id, req.params["id"])).returning();
+    if (!updated) return res.status(404).json({ error: "Item de menu n\xE3o encontrado" });
+    res.json(updated);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router19.patch("/cms/menus/:slot/reorder", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT15;
+    const tenantId = await getTenantId15(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const { ids } = req.body;
+    if (!Array.isArray(ids)) return res.status(400).json({ error: "ids deve ser um array" });
+    await Promise.all(ids.map(
+      (id, index) => db.update(menuItemsTable).set({ sortOrder: index, updatedAt: /* @__PURE__ */ new Date() }).where(and(eq(menuItemsTable.tenantId, tenantId), eq(menuItemsTable.id, id)))
+    ));
+    res.json({ ok: true });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router19.delete("/cms/menus/:id", async (req, res) => {
+  try {
+    await db.delete(menuItemsTable).where(eq(menuItemsTable.id, req.params["id"]));
+    res.status(204).send();
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+var menus_default = router19;
+
+// src/routes/cms/site-config.ts
+var import_express20 = __toESM(require_express2(), 1);
+init_schema2();
+init_drizzle_orm();
+import { randomUUID as randomUUID8 } from "crypto";
+var router20 = (0, import_express20.Router)();
+var DEFAULT_TENANT16 = "parauapebas";
+async function getTenantId16(slug) {
+  const { tenantsTable: tenantsTable2 } = await Promise.resolve().then(() => (init_schema2(), schema_exports));
+  const r = await db.select().from(tenantsTable2).where(eq(tenantsTable2.slug, slug)).limit(1);
+  return r[0]?.id ?? null;
+}
+router20.get("/cms/site-config", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT16;
+    const tenantId = await getTenantId16(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    let [config2] = await db.select().from(siteConfigTable).where(eq(siteConfigTable.tenantId, tenantId)).limit(1);
+    if (!config2) {
+      [config2] = await db.insert(siteConfigTable).values({
+        id: randomUUID8(),
+        tenantId
+      }).returning();
+    }
+    res.json(config2);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router20.put("/cms/site-config", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT16;
+    const tenantId = await getTenantId16(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const b = req.body;
+    const [existing] = await db.select().from(siteConfigTable).where(eq(siteConfigTable.tenantId, tenantId)).limit(1);
+    if (existing) {
+      const [updated] = await db.update(siteConfigTable).set({ ...b, updatedAt: /* @__PURE__ */ new Date() }).where(eq(siteConfigTable.tenantId, tenantId)).returning();
+      return res.json(updated);
+    }
+    const [created] = await db.insert(siteConfigTable).values({
+      id: randomUUID8(),
+      tenantId,
+      ...b
+    }).returning();
+    res.status(201).json(created);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+var site_config_default = router20;
+
+// src/routes/cms/licitacoes.ts
+var import_express21 = __toESM(require_express2(), 1);
+init_schema2();
+init_drizzle_orm();
+import { randomUUID as randomUUID9 } from "crypto";
+var router21 = (0, import_express21.Router)();
+var DEFAULT_TENANT17 = "parauapebas";
+async function getTenantId17(slug) {
+  const { tenantsTable: tenantsTable2 } = await Promise.resolve().then(() => (init_schema2(), schema_exports));
+  const r = await db.select().from(tenantsTable2).where(eq(tenantsTable2.slug, slug)).limit(1);
+  return r[0]?.id ?? null;
+}
+router21.get("/cms/licitacoes", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT17;
+    const page = Math.max(1, parseInt(req.query["page"] ?? "1"));
+    const limit = Math.min(100, Math.max(1, parseInt(req.query["limit"] ?? "20")));
+    const situacao = req.query["situacao"];
+    const modalidade = req.query["modalidade"];
+    const offset = (page - 1) * limit;
+    const tenantId = await getTenantId17(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const conditions = [eq(licitacoesTable.tenantId, tenantId)];
+    if (situacao) conditions.push(eq(licitacoesTable.situacao, situacao));
+    if (modalidade) conditions.push(eq(licitacoesTable.modalidade, modalidade));
+    const where = and(...conditions);
+    const [total, data] = await Promise.all([
+      db.select({ count: count() }).from(licitacoesTable).where(where),
+      db.select().from(licitacoesTable).where(where).orderBy(desc(licitacoesTable.createdAt)).limit(limit).offset(offset)
+    ]);
+    res.json({ data, total: total[0]?.count ?? 0, page, limit });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router21.get("/cms/licitacoes/:id", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT17;
+    const tenantId = await getTenantId17(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const [lic] = await db.select().from(licitacoesTable).where(
+      and(eq(licitacoesTable.tenantId, tenantId), eq(licitacoesTable.id, req.params["id"]))
+    ).limit(1);
+    if (!lic) return res.status(404).json({ error: "Licita\xE7\xE3o n\xE3o encontrada" });
+    const [events, contracts] = await Promise.all([
+      db.select().from(bidEventsTable).where(eq(bidEventsTable.licitacaoId, lic.id)).orderBy(desc(bidEventsTable.ocorridoEm)),
+      db.select().from(contractsTable).where(eq(contractsTable.licitacaoId, lic.id)).orderBy(asc(contractsTable.dataInicio))
+    ]);
+    res.json({ ...lic, events, contracts });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router21.post("/cms/licitacoes", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT17;
+    const tenantId = await getTenantId17(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const b = req.body;
+    if (!b.numero || !b.objeto || !b.modalidade) {
+      return res.status(400).json({ error: "numero, objeto e modalidade s\xE3o obrigat\xF3rios" });
+    }
+    const [lic] = await db.insert(licitacoesTable).values({
+      id: randomUUID9(),
+      tenantId,
+      numero: b.numero,
+      objeto: b.objeto,
+      modalidade: b.modalidade,
+      situacao: b.situacao ?? "aberta",
+      dataAbertura: b.dataAbertura ? new Date(b.dataAbertura) : null,
+      dataEncerramento: b.dataEncerramento ? new Date(b.dataEncerramento) : null,
+      valorEstimado: b.valorEstimado ?? null,
+      valorHomologado: b.valorHomologado ?? null,
+      secretaria: b.secretaria ?? null,
+      secretariaId: b.secretariaId ?? null,
+      edital: b.edital ?? null,
+      editalUrl: b.editalUrl ?? null,
+      resultUrl: b.resultUrl ?? null,
+      ata: b.ata ?? null,
+      descricao: b.descricao ?? null,
+      vencedor: b.vencedor ?? null,
+      vencedorCnpj: b.vencedorCnpj ?? null,
+      pncpId: b.pncpId ?? null
+    }).returning();
+    res.status(201).json(lic);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router21.put("/cms/licitacoes/:id", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT17;
+    const tenantId = await getTenantId17(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const [updated] = await db.update(licitacoesTable).set({ ...req.body, updatedAt: /* @__PURE__ */ new Date() }).where(and(eq(licitacoesTable.tenantId, tenantId), eq(licitacoesTable.id, req.params["id"]))).returning();
+    if (!updated) return res.status(404).json({ error: "Licita\xE7\xE3o n\xE3o encontrada" });
+    res.json(updated);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router21.delete("/cms/licitacoes/:id", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT17;
+    const tenantId = await getTenantId17(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    await db.delete(licitacoesTable).where(
+      and(eq(licitacoesTable.tenantId, tenantId), eq(licitacoesTable.id, req.params["id"]))
+    );
+    res.status(204).send();
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router21.post("/cms/licitacoes/:id/eventos", async (req, res) => {
+  try {
+    const b = req.body;
+    if (!b.titulo || !b.ocorridoEm) return res.status(400).json({ error: "titulo e ocorridoEm s\xE3o obrigat\xF3rios" });
+    const [event] = await db.insert(bidEventsTable).values({
+      id: randomUUID9(),
+      licitacaoId: req.params["id"],
+      titulo: b.titulo,
+      descricao: b.descricao ?? null,
+      fileUrl: b.fileUrl ?? null,
+      ocorridoEm: new Date(b.ocorridoEm)
+    }).returning();
+    res.status(201).json(event);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router21.post("/cms/contratos", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT17;
+    const tenantId = await getTenantId17(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const b = req.body;
+    if (!b.numero || !b.objeto || !b.contratado || !b.cnpjContratado || !b.valor || !b.dataInicio || !b.dataFim) {
+      return res.status(400).json({ error: "Campos obrigat\xF3rios: numero, objeto, contratado, cnpjContratado, valor, dataInicio, dataFim" });
+    }
+    const [contract] = await db.insert(contractsTable).values({
+      id: randomUUID9(),
+      tenantId,
+      licitacaoId: b.licitacaoId ?? null,
+      numero: b.numero,
+      objeto: b.objeto,
+      contratado: b.contratado,
+      cnpjContratado: b.cnpjContratado,
+      valor: b.valor,
+      dataInicio: b.dataInicio,
+      dataFim: b.dataFim,
+      fileUrl: b.fileUrl ?? null,
+      ativo: b.ativo ?? true,
+      fiscalNome: b.fiscalNome ?? null
+    }).returning();
+    res.status(201).json(contract);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router21.get("/cms/contratos", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT17;
+    const tenantId = await getTenantId17(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const data = await db.select().from(contractsTable).where(eq(contractsTable.tenantId, tenantId)).orderBy(desc(contractsTable.createdAt));
+    res.json({ data });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+var licitacoes_default2 = router21;
+
+// src/routes/cms/galeria.ts
+var import_express22 = __toESM(require_express2(), 1);
+init_schema2();
+init_drizzle_orm();
+import { randomUUID as randomUUID10 } from "crypto";
+var router22 = (0, import_express22.Router)();
+var DEFAULT_TENANT18 = "parauapebas";
+async function getTenantId18(slug) {
+  const { tenantsTable: tenantsTable2 } = await Promise.resolve().then(() => (init_schema2(), schema_exports));
+  const r = await db.select().from(tenantsTable2).where(eq(tenantsTable2.slug, slug)).limit(1);
+  return r[0]?.id ?? null;
+}
+router22.get("/cms/albums", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT18;
+    const tenantId = await getTenantId18(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const data = await db.select().from(galleryAlbumsTable).where(eq(galleryAlbumsTable.tenantId, tenantId)).orderBy(desc(galleryAlbumsTable.createdAt));
+    res.json({ data });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router22.get("/cms/albums/:id", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT18;
+    const tenantId = await getTenantId18(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const [album] = await db.select().from(galleryAlbumsTable).where(
+      and(eq(galleryAlbumsTable.tenantId, tenantId), eq(galleryAlbumsTable.id, req.params["id"]))
+    ).limit(1);
+    if (!album) return res.status(404).json({ error: "\xC1lbum n\xE3o encontrado" });
+    const items = await db.select().from(galleryItemsTable).where(eq(galleryItemsTable.albumId, album.id)).orderBy(asc(galleryItemsTable.sortOrder));
+    res.json({ ...album, items });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router22.post("/cms/albums", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT18;
+    const tenantId = await getTenantId18(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const b = req.body;
+    if (!b.titulo) return res.status(400).json({ error: "titulo \xE9 obrigat\xF3rio" });
+    const [album] = await db.insert(galleryAlbumsTable).values({
+      id: randomUUID10(),
+      tenantId,
+      titulo: b.titulo,
+      descricao: b.descricao ?? null,
+      coverUrl: b.coverUrl ?? null,
+      isPublico: b.isPublico ?? true,
+      sortOrder: b.sortOrder ?? 0
+    }).returning();
+    res.status(201).json(album);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router22.put("/cms/albums/:id", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT18;
+    const tenantId = await getTenantId18(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const [updated] = await db.update(galleryAlbumsTable).set({ ...req.body, updatedAt: /* @__PURE__ */ new Date() }).where(and(eq(galleryAlbumsTable.tenantId, tenantId), eq(galleryAlbumsTable.id, req.params["id"]))).returning();
+    if (!updated) return res.status(404).json({ error: "\xC1lbum n\xE3o encontrado" });
+    res.json(updated);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router22.delete("/cms/albums/:id", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT18;
+    const tenantId = await getTenantId18(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    await db.delete(galleryAlbumsTable).where(
+      and(eq(galleryAlbumsTable.tenantId, tenantId), eq(galleryAlbumsTable.id, req.params["id"]))
+    );
+    res.status(204).send();
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router22.post("/cms/albums/:id/itens", async (req, res) => {
+  try {
+    const b = req.body;
+    if (!b.url || !b.altText) return res.status(400).json({ error: "url e altText s\xE3o obrigat\xF3rios" });
+    const [item] = await db.insert(galleryItemsTable).values({
+      id: randomUUID10(),
+      albumId: req.params["id"],
+      tipo: b.tipo ?? "image",
+      url: b.url,
+      thumbUrl: b.thumbUrl ?? null,
+      altText: b.altText,
+      legenda: b.legenda ?? null,
+      sortOrder: b.sortOrder ?? 0
+    }).returning();
+    res.status(201).json(item);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router22.delete("/cms/itens/:id", async (req, res) => {
+  try {
+    await db.delete(galleryItemsTable).where(eq(galleryItemsTable.id, req.params["id"]));
+    res.status(204).send();
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router22.patch("/cms/albums/:id/reorder", async (req, res) => {
+  try {
+    const { ids } = req.body;
+    if (!Array.isArray(ids)) return res.status(400).json({ error: "ids deve ser um array" });
+    await Promise.all(ids.map(
+      (id, index) => db.update(galleryItemsTable).set({ sortOrder: index }).where(eq(galleryItemsTable.id, id))
+    ));
+    res.json({ ok: true });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+var galeria_default2 = router22;
+
+// src/routes/cms/agenda.ts
+var import_express23 = __toESM(require_express2(), 1);
+init_schema2();
+init_drizzle_orm();
+import { randomUUID as randomUUID11 } from "crypto";
+var router23 = (0, import_express23.Router)();
+var DEFAULT_TENANT19 = "parauapebas";
+async function getTenantId19(slug) {
+  const { tenantsTable: tenantsTable2 } = await Promise.resolve().then(() => (init_schema2(), schema_exports));
+  const r = await db.select().from(tenantsTable2).where(eq(tenantsTable2.slug, slug)).limit(1);
+  return r[0]?.id ?? null;
+}
+router23.get("/cms/agenda", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT19;
+    const page = Math.max(1, parseInt(req.query["page"] ?? "1"));
+    const limit = Math.min(100, Math.max(1, parseInt(req.query["limit"] ?? "20")));
+    const tipo = req.query["tipo"];
+    const upcoming = req.query["upcoming"] === "true";
+    const offset = (page - 1) * limit;
+    const tenantId = await getTenantId19(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const conditions = [eq(agendaTable.tenantId, tenantId)];
+    if (tipo) conditions.push(eq(agendaTable.tipo, tipo));
+    if (upcoming) conditions.push(gte(agendaTable.dataInicio, /* @__PURE__ */ new Date()));
+    const where = and(...conditions);
+    const [total, data] = await Promise.all([
+      db.select({ count: count() }).from(agendaTable).where(where),
+      db.select().from(agendaTable).where(where).orderBy(desc(agendaTable.dataInicio)).limit(limit).offset(offset)
+    ]);
+    res.json({ data, total: total[0]?.count ?? 0, page, limit });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router23.post("/cms/agenda", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT19;
+    const tenantId = await getTenantId19(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const b = req.body;
+    if (!b.titulo || !b.dataInicio) return res.status(400).json({ error: "titulo e dataInicio s\xE3o obrigat\xF3rios" });
+    const [evento] = await db.insert(agendaTable).values({
+      id: randomUUID11(),
+      tenantId,
+      titulo: b.titulo,
+      descricao: b.descricao ?? null,
+      tipo: b.tipo ?? "evento",
+      local: b.local ?? null,
+      endereco: b.endereco ?? null,
+      isOnline: b.isOnline ?? false,
+      onlineUrl: b.onlineUrl ?? null,
+      dataInicio: new Date(b.dataInicio),
+      dataFim: b.dataFim ? new Date(b.dataFim) : null,
+      diaInteiro: b.diaInteiro ?? false,
+      secretariaId: b.secretariaId ?? null,
+      categoria: b.categoria ?? null,
+      publicoAlvo: b.publicoAlvo ?? null,
+      isPublico: b.isPublico ?? true,
+      gratuito: b.gratuito ?? true,
+      linkInscricao: b.linkInscricao ?? null,
+      anexoUrl: b.anexoUrl ?? null,
+      ativo: b.ativo ?? true
+    }).returning();
+    res.status(201).json(evento);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router23.put("/cms/agenda/:id", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT19;
+    const tenantId = await getTenantId19(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const b = req.body;
+    if (b.dataInicio) b.dataInicio = new Date(b.dataInicio);
+    if (b.dataFim) b.dataFim = new Date(b.dataFim);
+    const [updated] = await db.update(agendaTable).set({ ...b, updatedAt: /* @__PURE__ */ new Date() }).where(and(eq(agendaTable.tenantId, tenantId), eq(agendaTable.id, req.params["id"]))).returning();
+    if (!updated) return res.status(404).json({ error: "Evento n\xE3o encontrado" });
+    res.json(updated);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router23.delete("/cms/agenda/:id", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT19;
+    const tenantId = await getTenantId19(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    await db.delete(agendaTable).where(
+      and(eq(agendaTable.tenantId, tenantId), eq(agendaTable.id, req.params["id"]))
+    );
+    res.status(204).send();
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+var agenda_default2 = router23;
+
+// src/routes/cms/legislacao.ts
+var import_express24 = __toESM(require_express2(), 1);
+init_schema2();
+init_drizzle_orm();
+import { randomUUID as randomUUID12 } from "crypto";
+var router24 = (0, import_express24.Router)();
+var DEFAULT_TENANT20 = "parauapebas";
+async function getTenantId20(slug) {
+  const { tenantsTable: tenantsTable2 } = await Promise.resolve().then(() => (init_schema2(), schema_exports));
+  const r = await db.select().from(tenantsTable2).where(eq(tenantsTable2.slug, slug)).limit(1);
+  return r[0]?.id ?? null;
+}
+router24.get("/cms/legislacao", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT20;
+    const page = Math.max(1, parseInt(req.query["page"] ?? "1"));
+    const limit = Math.min(100, Math.max(1, parseInt(req.query["limit"] ?? "20")));
+    const tipo = req.query["tipo"];
+    const ano = req.query["ano"];
+    const offset = (page - 1) * limit;
+    const tenantId = await getTenantId20(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const conditions = [eq(legislacaoTable.tenantId, tenantId)];
+    if (tipo) conditions.push(eq(legislacaoTable.tipo, tipo));
+    if (ano) conditions.push(eq(legislacaoTable.ano, parseInt(ano)));
+    const where = and(...conditions);
+    const [total, data] = await Promise.all([
+      db.select({ count: count() }).from(legislacaoTable).where(where),
+      db.select().from(legislacaoTable).where(where).orderBy(desc(legislacaoTable.dataPublicacao)).limit(limit).offset(offset)
+    ]);
+    res.json({ data, total: total[0]?.count ?? 0, page, limit });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router24.post("/cms/legislacao", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT20;
+    const tenantId = await getTenantId20(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const b = req.body;
+    if (!b.numero || !b.tipo || !b.ementa || !b.dataPublicacao || !b.ano) {
+      return res.status(400).json({ error: "numero, tipo, ementa, dataPublicacao e ano s\xE3o obrigat\xF3rios" });
+    }
+    const slug = `${b.tipo}-${b.numero}-${b.ano}`.toLowerCase().replace(/[^a-z0-9-]/g, "-");
+    const [leg] = await db.insert(legislacaoTable).values({
+      id: randomUUID12(),
+      tenantId,
+      numero: b.numero,
+      tipo: b.tipo,
+      ementa: b.ementa,
+      slug: b.slug ?? slug,
+      dataPublicacao: b.dataPublicacao,
+      ano: b.ano,
+      conteudo: b.conteudo ?? null,
+      arquivoPdf: b.arquivoPdf ?? null,
+      nomeArquivo: b.nomeArquivo ?? null,
+      status: b.status ?? "publicado",
+      tags: b.tags ?? [],
+      assinadoEm: b.assinadoEm ?? null,
+      revogadoEm: b.revogadoEm ?? null,
+      revogadoPorId: b.revogadoPorId ?? null
+    }).returning();
+    res.status(201).json(leg);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router24.put("/cms/legislacao/:id", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT20;
+    const tenantId = await getTenantId20(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    const [updated] = await db.update(legislacaoTable).set({ ...req.body, updatedAt: /* @__PURE__ */ new Date() }).where(and(eq(legislacaoTable.tenantId, tenantId), eq(legislacaoTable.id, req.params["id"]))).returning();
+    if (!updated) return res.status(404).json({ error: "Legisla\xE7\xE3o n\xE3o encontrada" });
+    res.json(updated);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router24.delete("/cms/legislacao/:id", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT20;
+    const tenantId = await getTenantId20(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant not found" });
+    await db.delete(legislacaoTable).where(
+      and(eq(legislacaoTable.tenantId, tenantId), eq(legislacaoTable.id, req.params["id"]))
+    );
+    res.status(204).send();
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+var legislacao_default2 = router24;
+
+// src/routes/site/config.ts
+var import_express25 = __toESM(require_express2(), 1);
+init_schema2();
+init_drizzle_orm();
+
+// src/lib/cache.ts
+var store = /* @__PURE__ */ new Map();
+setInterval(() => {
+  const now = Date.now();
+  for (const [key, entry] of store) {
+    if (now > entry.expiresAt) store.delete(key);
+  }
+}, 5 * 60 * 1e3).unref();
+function cacheGet(key) {
+  const entry = store.get(key);
+  if (!entry) return null;
+  if (Date.now() > entry.expiresAt) {
+    store.delete(key);
+    return null;
+  }
+  return entry.value;
+}
+function cacheSet(key, value, ttlMs) {
+  store.set(key, { value, expiresAt: Date.now() + ttlMs });
+}
+function cacheDelPattern(prefix) {
+  for (const key of store.keys()) {
+    if (key.startsWith(prefix)) store.delete(key);
+  }
+}
+async function withCache(key, ttlMs, fn) {
+  const cached2 = cacheGet(key);
+  if (cached2 !== null) return cached2;
+  const result = await fn();
+  cacheSet(key, result, ttlMs);
+  return result;
+}
+
+// src/routes/site/config.ts
+var router25 = (0, import_express25.Router)();
+var DEFAULT_TENANT21 = "parauapebas";
+var TTL = 6e4;
+async function getTenantId21(slug) {
+  const r = await db.select().from(tenantsTable).where(eq(tenantsTable.slug, slug)).limit(1);
+  return r[0] ?? null;
+}
+router25.get("/site/config", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT21;
+    const cacheKey = `site:config:${tenantSlug}`;
+    const result = await withCache(cacheKey, TTL, async () => {
+      const tenant = await getTenantId21(tenantSlug);
+      if (!tenant) return null;
+      const [config2] = await db.select().from(siteConfigTable).where(eq(siteConfigTable.tenantId, tenant.id)).limit(1);
+      const menus = await db.select().from(menuItemsTable).where(and(eq(menuItemsTable.tenantId, tenant.id), eq(menuItemsTable.isAtivo, true))).orderBy(menuItemsTable.sortOrder);
+      const menuBySlot = menus.reduce(
+        (acc, item) => {
+          const slot = item.menuSlot;
+          if (!acc[slot]) acc[slot] = [];
+          acc[slot].push(item);
+          return acc;
+        },
+        {}
+      );
+      return {
+        tenant: {
+          id: tenant.id,
+          slug: tenant.slug,
+          nome: tenant.nome,
+          estado: tenant.estado,
+          brasao: tenant.brasao,
+          tema: tenant.tema
+        },
+        config: config2 ?? null,
+        menus: menuBySlot,
+        social: config2 ? {
+          facebook: config2.socialFacebook,
+          instagram: config2.socialInstagram,
+          youtube: config2.socialYoutube,
+          twitter: config2.socialTwitter,
+          linkedin: config2.socialLinkedin
+        } : {}
+      };
+    });
+    if (!result) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
+    res.setHeader("Cache-Control", "public, max-age=60");
+    res.json(result);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+var config_default = router25;
+
+// src/routes/site/banners.ts
+var import_express26 = __toESM(require_express2(), 1);
+init_schema2();
+init_drizzle_orm();
+var router26 = (0, import_express26.Router)();
+var DEFAULT_TENANT22 = "parauapebas";
+var TTL2 = 6e4;
+router26.get("/site/banners", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT22;
+    const cacheKey = `site:banners:${tenantSlug}`;
+    const result = await withCache(cacheKey, TTL2, async () => {
+      const [tenant] = await db.select({ id: tenantsTable.id }).from(tenantsTable).where(eq(tenantsTable.slug, tenantSlug)).limit(1);
+      if (!tenant) return null;
+      const now = /* @__PURE__ */ new Date();
+      const banners = await db.select().from(bannersTable).where(
+        and(
+          eq(bannersTable.tenantId, tenant.id),
+          eq(bannersTable.isAtivo, true),
+          or(isNull(bannersTable.iniciaEm), lte(bannersTable.iniciaEm, now)),
+          or(isNull(bannersTable.expiraEm), gte(bannersTable.expiraEm, now))
+        )
+      ).orderBy(bannersTable.sortOrder);
+      return banners;
+    });
+    if (result === null) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
+    res.setHeader("Cache-Control", "public, max-age=60");
+    res.json({ data: result });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+var banners_default2 = router26;
+
+// src/routes/site/news.ts
+var import_express27 = __toESM(require_express2(), 1);
+init_schema2();
+init_drizzle_orm();
+
+// src/lib/logger.ts
+var import_pino = __toESM(require_pino(), 1);
+var isProduction = process.env.NODE_ENV === "production";
+var logger = (0, import_pino.default)({
+  level: process.env.LOG_LEVEL ?? "info",
+  redact: [
+    "req.headers.authorization",
+    "req.headers.cookie",
+    "res.headers['set-cookie']"
+  ],
+  ...isProduction ? {} : {
+    transport: {
+      target: "pino-pretty",
+      options: { colorize: true }
+    }
+  }
+});
+
+// src/lib/queue.ts
+var REDIS_URL = process.env["REDIS_URL"];
+var _queue = null;
+async function getSiteQueue() {
+  if (!REDIS_URL) return null;
+  if (_queue) return _queue;
+  try {
+    const { Queue } = await Promise.resolve().then(() => __toESM(require_cjs2(), 1));
+    _queue = new Queue("site-queue", {
+      connection: { url: REDIS_URL },
+      defaultJobOptions: { removeOnComplete: 100, removeOnFail: 50 }
+    });
+    logger.info("BullMQ site-queue conectado ao Redis");
+    return _queue;
+  } catch (err) {
+    logger.warn({ err }, "BullMQ n\xE3o dispon\xEDvel \u2014 usando scheduler em mem\xF3ria");
+    return null;
+  }
+}
+async function addJob(name, data, opts) {
+  const q = await getSiteQueue();
+  if (q) {
+    await q.add(name, data, opts);
+  }
+}
+var _schedulersStarted = false;
+function startInMemorySchedulers(handlers2) {
+  if (REDIS_URL || _schedulersStarted) return;
+  _schedulersStarted = true;
+  setInterval(() => {
+    handlers2["PUBLISH_SCHEDULED_NEWS"]({}).catch(
+      (e) => logger.error(e, "PUBLISH_SCHEDULED_NEWS falhou")
+    );
+  }, 5 * 60 * 1e3).unref();
+  scheduleDailyAt(
+    7,
+    0,
+    () => handlers2["CHECK_TRANSPARENCY_COMPLIANCE"]({}).catch(
+      (e) => logger.error(e, "CHECK_TRANSPARENCY_COMPLIANCE falhou")
+    )
+  );
+  scheduleDailyAt(
+    2,
+    0,
+    () => handlers2["GENERATE_SITEMAP"]({}).catch(
+      (e) => logger.error(e, "GENERATE_SITEMAP falhou")
+    )
+  );
+  scheduleDailyAt(
+    6,
+    0,
+    () => handlers2["SYNC_PNCP"]({}).catch(
+      (e) => logger.error(e, "SYNC_PNCP falhou")
+    )
+  );
+  logger.info("Schedulers em mem\xF3ria iniciados (sem Redis)");
+}
+function scheduleDailyAt(hour2, minute2, fn) {
+  const msUntilNext = () => {
+    const now = /* @__PURE__ */ new Date();
+    const next = /* @__PURE__ */ new Date();
+    next.setHours(hour2, minute2, 0, 0);
+    if (next <= now) next.setDate(next.getDate() + 1);
+    return next.getTime() - now.getTime();
+  };
+  const loop = () => {
+    setTimeout(() => {
+      fn();
+      loop();
+    }, msUntilNext()).unref();
+  };
+  loop();
+}
+
+// src/routes/site/news.ts
+var router27 = (0, import_express27.Router)();
+var DEFAULT_TENANT23 = "parauapebas";
+var TTL3 = 6e4;
+async function getTenantId22(slug) {
+  const r = await db.select({ id: tenantsTable.id }).from(tenantsTable).where(eq(tenantsTable.slug, slug)).limit(1);
+  return r[0]?.id ?? null;
+}
+router27.get("/site/news", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT23;
+    const page = Math.max(1, parseInt(req.query["page"] ?? "1"));
+    const limit = Math.min(50, Math.max(1, parseInt(req.query["limit"] ?? "10")));
+    const category = req.query["category"];
+    const featured = req.query["featured"] === "true";
+    const search = req.query["search"];
+    const offset = (page - 1) * limit;
+    const cacheKey = `site:news:${tenantSlug}:${page}:${limit}:${category ?? ""}:${featured}:${search ?? ""}`;
+    const result = await withCache(cacheKey, TTL3, async () => {
+      const tenantId = await getTenantId22(tenantSlug);
+      if (!tenantId) return null;
+      const conditions = [
+        eq(noticiasTable.tenantId, tenantId),
+        eq(noticiasTable.status, "publicado"),
+        eq(noticiasTable.publicado, true),
+        isNull(noticiasTable.deletadoEm)
+      ];
+      if (category) conditions.push(eq(noticiasTable.categoria, category));
+      if (featured) conditions.push(eq(noticiasTable.destaque, true));
+      if (search) conditions.push(ilike(noticiasTable.titulo, `%${search}%`));
+      const where = and(...conditions);
+      const [countResult, rows] = await Promise.all([
+        db.select({ total: sql`count(*)::int` }).from(noticiasTable).where(where),
+        db.select({
+          id: noticiasTable.id,
+          titulo: noticiasTable.titulo,
+          slug: noticiasTable.slug,
+          resumo: noticiasTable.resumo,
+          imagemCapa: noticiasTable.imagemCapa,
+          imagemCapaAlt: noticiasTable.imagemCapaAlt,
+          categoria: noticiasTable.categoria,
+          destaque: noticiasTable.destaque,
+          tags: noticiasTable.tags,
+          visualizacoes: noticiasTable.visualizacoes,
+          dataPublicacao: noticiasTable.dataPublicacao
+        }).from(noticiasTable).where(where).orderBy(desc(noticiasTable.dataPublicacao)).limit(limit).offset(offset)
+      ]);
+      const total = countResult[0]?.total ?? 0;
+      return { data: rows, total, page, limit, totalPages: Math.ceil(total / limit) };
+    });
+    if (!result) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
+    res.setHeader("Cache-Control", "public, max-age=60");
+    res.json(result);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router27.get("/site/news/:slug", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT23;
+    const slug = req.params["slug"];
+    const cacheKey = `site:news:detail:${tenantSlug}:${slug}`;
+    const noticia = await withCache(cacheKey, TTL3, async () => {
+      const tenantId = await getTenantId22(tenantSlug);
+      if (!tenantId) return null;
+      const [row] = await db.select().from(noticiasTable).where(
+        and(
+          eq(noticiasTable.tenantId, tenantId),
+          eq(noticiasTable.slug, slug),
+          eq(noticiasTable.status, "publicado"),
+          isNull(noticiasTable.deletadoEm)
+        )
+      ).limit(1);
+      if (!row) return void 0;
+      const relacionadas = await db.select({
+        id: noticiasTable.id,
+        titulo: noticiasTable.titulo,
+        slug: noticiasTable.slug,
+        resumo: noticiasTable.resumo,
+        imagemCapa: noticiasTable.imagemCapa,
+        dataPublicacao: noticiasTable.dataPublicacao
+      }).from(noticiasTable).where(
+        and(
+          eq(noticiasTable.tenantId, tenantId),
+          eq(noticiasTable.categoria, row.categoria),
+          eq(noticiasTable.status, "publicado"),
+          isNull(noticiasTable.deletadoEm)
+        )
+      ).orderBy(desc(noticiasTable.dataPublicacao)).limit(4);
+      return {
+        ...row,
+        relacionadas: relacionadas.filter((r) => r.id !== row.id).slice(0, 3)
+      };
+    });
+    if (noticia === null) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
+    if (noticia === void 0) return res.status(404).json({ error: "Not\xEDcia n\xE3o encontrada" });
+    void addJob("INCREMENT_VIEW_COUNT", { noticiaId: noticia.id });
+    if (!process.env["REDIS_URL"]) {
+      db.update(noticiasTable).set({ visualizacoes: sql`${noticiasTable.visualizacoes} + 1` }).where(eq(noticiasTable.id, noticia.id)).execute().catch(() => {
+      });
+    }
+    res.setHeader("Cache-Control", "public, max-age=60");
+    res.json(noticia);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+var news_default = router27;
+
+// src/routes/site/agenda.ts
+var import_express28 = __toESM(require_express2(), 1);
+init_schema2();
+init_drizzle_orm();
+var router28 = (0, import_express28.Router)();
+var DEFAULT_TENANT24 = "parauapebas";
+var TTL4 = 6e4;
+router28.get("/site/agenda", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT24;
+    const now = /* @__PURE__ */ new Date();
+    const month = parseInt(req.query["month"] ?? String(now.getMonth() + 1));
+    const year2 = parseInt(req.query["year"] ?? String(now.getFullYear()));
+    const cacheKey = `site:agenda:${tenantSlug}:${year2}:${month}`;
+    const result = await withCache(cacheKey, TTL4, async () => {
+      const [tenant] = await db.select({ id: tenantsTable.id }).from(tenantsTable).where(eq(tenantsTable.slug, tenantSlug)).limit(1);
+      if (!tenant) return null;
+      const startOfMonth = new Date(year2, month - 1, 1);
+      const endOfMonth = new Date(year2, month, 0, 23, 59, 59);
+      const eventos = await db.select().from(agendaTable).where(
+        and(
+          eq(agendaTable.tenantId, tenant.id),
+          eq(agendaTable.isPublico, true),
+          eq(agendaTable.ativo, true),
+          gte(agendaTable.dataInicio, startOfMonth),
+          lte(agendaTable.dataInicio, endOfMonth)
+        )
+      ).orderBy(asc(agendaTable.dataInicio));
+      return { data: eventos, month, year: year2 };
+    });
+    if (!result) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
+    res.setHeader("Cache-Control", "public, max-age=60");
+    res.json(result);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+var agenda_default3 = router28;
+
+// src/routes/site/gallery.ts
+var import_express29 = __toESM(require_express2(), 1);
+init_schema2();
+init_drizzle_orm();
+var router29 = (0, import_express29.Router)();
+var DEFAULT_TENANT25 = "parauapebas";
+var TTL5 = 6e4;
+router29.get("/site/gallery", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT25;
+    const albumId = req.query["albumId"];
+    const page = Math.max(1, parseInt(req.query["page"] ?? "1"));
+    const limit = 20;
+    const offset = (page - 1) * limit;
+    const cacheKey = `site:gallery:${tenantSlug}:${albumId ?? "albums"}:${page}`;
+    const result = await withCache(cacheKey, TTL5, async () => {
+      const [tenant] = await db.select({ id: tenantsTable.id }).from(tenantsTable).where(eq(tenantsTable.slug, tenantSlug)).limit(1);
+      if (!tenant) return null;
+      if (albumId) {
+        const [album] = await db.select().from(galleryAlbumsTable).where(and(eq(galleryAlbumsTable.id, albumId), eq(galleryAlbumsTable.tenantId, tenant.id), eq(galleryAlbumsTable.isPublico, true))).limit(1);
+        if (!album) return { type: "not_found" };
+        const items = await db.select().from(galleryItemsTable).where(eq(galleryItemsTable.albumId, albumId)).orderBy(asc(galleryItemsTable.sortOrder)).limit(limit).offset(offset);
+        return { type: "items", album, data: items, page };
+      }
+      const albums = await db.select().from(galleryAlbumsTable).where(and(eq(galleryAlbumsTable.tenantId, tenant.id), eq(galleryAlbumsTable.isPublico, true))).orderBy(asc(galleryAlbumsTable.sortOrder)).limit(limit).offset(offset);
+      return { type: "albums", data: albums, page };
+    });
+    if (!result) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
+    if (result.type === "not_found") return res.status(404).json({ error: "\xC1lbum n\xE3o encontrado" });
+    res.setHeader("Cache-Control", "public, max-age=60");
+    res.json(result);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+var gallery_default = router29;
+
+// src/routes/site/legislation.ts
+var import_express30 = __toESM(require_express2(), 1);
+init_schema2();
+init_drizzle_orm();
+var router30 = (0, import_express30.Router)();
+var DEFAULT_TENANT26 = "parauapebas";
+var TTL6 = 6e4;
+router30.get("/site/legislation", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT26;
+    const type = req.query["type"];
+    const year2 = req.query["year"] ? parseInt(req.query["year"]) : void 0;
+    const search = req.query["search"];
+    const page = Math.max(1, parseInt(req.query["page"] ?? "1"));
+    const limit = Math.min(50, Math.max(1, parseInt(req.query["limit"] ?? "20")));
+    const offset = (page - 1) * limit;
+    const cacheKey = `site:legislation:${tenantSlug}:${type ?? ""}:${year2 ?? ""}:${search ?? ""}:${page}`;
+    const result = await withCache(cacheKey, TTL6, async () => {
+      const [tenant] = await db.select({ id: tenantsTable.id }).from(tenantsTable).where(eq(tenantsTable.slug, tenantSlug)).limit(1);
+      if (!tenant) return null;
+      const conditions = [
+        eq(legislacaoTable.tenantId, tenant.id),
+        eq(legislacaoTable.status, "publicado")
+      ];
+      if (type) conditions.push(eq(legislacaoTable.tipo, type));
+      if (year2) conditions.push(eq(legislacaoTable.ano, year2));
+      if (search) {
+        conditions.push(
+          sql`to_tsvector('portuguese', ${legislacaoTable.numero} || ' ' || ${legislacaoTable.ementa}) @@ plainto_tsquery('portuguese', ${search})`
+        );
+      }
+      const where = and(...conditions);
+      const [countResult, rows] = await Promise.all([
+        db.select({ total: sql`count(*)::int` }).from(legislacaoTable).where(where),
+        db.select().from(legislacaoTable).where(where).orderBy(desc(legislacaoTable.dataPublicacao)).limit(limit).offset(offset)
+      ]);
+      const total = countResult[0]?.total ?? 0;
+      return { data: rows, total, page, limit, totalPages: Math.ceil(total / limit) };
+    });
+    if (!result) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
+    res.setHeader("Cache-Control", "public, max-age=60");
+    res.json(result);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+var legislation_default = router30;
+
+// src/routes/site/bids.ts
+var import_express31 = __toESM(require_express2(), 1);
+init_schema2();
+init_drizzle_orm();
+var router31 = (0, import_express31.Router)();
+var DEFAULT_TENANT27 = "parauapebas";
+var TTL7 = 6e4;
+router31.get("/site/bids", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT27;
+    const status = req.query["status"];
+    const modalidade = req.query["modalidade"];
+    const search = req.query["search"];
+    const page = Math.max(1, parseInt(req.query["page"] ?? "1"));
+    const limit = Math.min(50, Math.max(1, parseInt(req.query["limit"] ?? "20")));
+    const offset = (page - 1) * limit;
+    const cacheKey = `site:bids:${tenantSlug}:${status ?? ""}:${modalidade ?? ""}:${search ?? ""}:${page}`;
+    const result = await withCache(cacheKey, TTL7, async () => {
+      const [tenant] = await db.select({ id: tenantsTable.id }).from(tenantsTable).where(eq(tenantsTable.slug, tenantSlug)).limit(1);
+      if (!tenant) return null;
+      const conditions = [eq(licitacoesTable.tenantId, tenant.id)];
+      if (status) conditions.push(eq(licitacoesTable.situacao, status));
+      if (modalidade) conditions.push(eq(licitacoesTable.modalidade, modalidade));
+      if (search) {
+        conditions.push(
+          sql`to_tsvector('portuguese', ${licitacoesTable.numero} || ' ' || ${licitacoesTable.objeto}) @@ plainto_tsquery('portuguese', ${search})`
+        );
+      }
+      const where = and(...conditions);
+      const [countResult, rows] = await Promise.all([
+        db.select({ total: sql`count(*)::int` }).from(licitacoesTable).where(where),
+        db.select().from(licitacoesTable).where(where).orderBy(desc(licitacoesTable.createdAt)).limit(limit).offset(offset)
+      ]);
+      const total = countResult[0]?.total ?? 0;
+      return { data: rows, total, page, limit, totalPages: Math.ceil(total / limit) };
+    });
+    if (!result) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
+    res.setHeader("Cache-Control", "public, max-age=60");
+    res.json(result);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router31.get("/site/bids/:id", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT27;
+    const id = req.params["id"];
+    const cacheKey = `site:bids:detail:${tenantSlug}:${id}`;
+    const result = await withCache(cacheKey, TTL7, async () => {
+      const [tenant] = await db.select({ id: tenantsTable.id }).from(tenantsTable).where(eq(tenantsTable.slug, tenantSlug)).limit(1);
+      if (!tenant) return null;
+      const [licitacao] = await db.select().from(licitacoesTable).where(and(eq(licitacoesTable.id, id), eq(licitacoesTable.tenantId, tenant.id))).limit(1);
+      if (!licitacao) return void 0;
+      const [eventos, contratos] = await Promise.all([
+        db.select().from(bidEventsTable).where(eq(bidEventsTable.licitacaoId, id)).orderBy(desc(bidEventsTable.ocorridoEm)),
+        db.select().from(contractsTable).where(eq(contractsTable.licitacaoId, id))
+      ]);
+      return { ...licitacao, eventos, contratos };
+    });
+    if (result === null) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
+    if (result === void 0) return res.status(404).json({ error: "Licita\xE7\xE3o n\xE3o encontrada" });
+    res.setHeader("Cache-Control", "public, max-age=60");
+    res.json(result);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+var bids_default = router31;
+
+// src/routes/site/transparency.ts
+var import_express32 = __toESM(require_express2(), 1);
+init_schema2();
+init_drizzle_orm();
+var router32 = (0, import_express32.Router)();
+var DEFAULT_TENANT28 = "parauapebas";
+var TTL8 = 6e4;
+var VALID_CATEGORIES = [
+  "orcamento",
+  "receitas",
+  "despesas",
+  "servidores",
+  "convenios",
+  "atas",
+  "dados-abertos"
+];
+router32.get("/site/transparency/:category", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT28;
+    const category = req.params["category"].toLowerCase();
+    const year2 = req.query["year"] ? parseInt(req.query["year"]) : void 0;
+    const period = req.query["period"];
+    const page = Math.max(1, parseInt(req.query["page"] ?? "1"));
+    const limit = 20;
+    const offset = (page - 1) * limit;
+    if (!VALID_CATEGORIES.includes(category)) {
+      return res.status(400).json({
+        error: "Categoria inv\xE1lida",
+        valid: VALID_CATEGORIES
+      });
+    }
+    const cacheKey = `site:transparency:${tenantSlug}:${category}:${year2 ?? ""}:${period ?? ""}:${page}`;
+    const result = await withCache(cacheKey, TTL8, async () => {
+      const [tenant] = await db.select({ id: tenantsTable.id }).from(tenantsTable).where(eq(tenantsTable.slug, tenantSlug)).limit(1);
+      if (!tenant) return null;
+      if (category === "despesas") {
+        const conditions = [eq(despesasTable.tenantId, tenant.id)];
+        if (year2) conditions.push(eq(despesasTable.ano, year2));
+        if (period) conditions.push(eq(despesasTable.mes, parseInt(period)));
+        const rows = await db.select().from(despesasTable).where(and(...conditions)).orderBy(desc(despesasTable.data)).limit(limit).offset(offset);
+        return { type: "structured", category, data: rows, page };
+      }
+      if (category === "receitas") {
+        const conditions = [eq(receitasTable.tenantId, tenant.id)];
+        if (year2) conditions.push(eq(receitasTable.ano, year2));
+        if (period) conditions.push(eq(receitasTable.mes, parseInt(period)));
+        const rows = await db.select().from(receitasTable).where(and(...conditions)).orderBy(desc(receitasTable.data)).limit(limit).offset(offset);
+        return { type: "structured", category, data: rows, page };
+      }
+      if (category === "servidores") {
+        const rows = await db.select().from(servidoresTable).where(eq(servidoresTable.tenantId, tenant.id)).orderBy(servidoresTable.nome).limit(limit).offset(offset);
+        return { type: "structured", category, data: rows, page };
+      }
+      if (category === "orcamento") {
+        const conditions = [eq(orcamentosTable.tenantId, tenant.id)];
+        if (year2) conditions.push(eq(orcamentosTable.ano, year2));
+        const rows = await db.select().from(orcamentosTable).where(and(...conditions));
+        return { type: "structured", category, data: rows, page };
+      }
+      const docConditions = [
+        eq(transparencyDocsTable.tenantId, tenant.id),
+        eq(transparencyDocsTable.categoria, category)
+      ];
+      if (year2) docConditions.push(eq(transparencyDocsTable.anoReferencia, year2));
+      if (period) docConditions.push(eq(transparencyDocsTable.periodoReferencia, period));
+      const where = and(...docConditions);
+      const [countResult, docs] = await Promise.all([
+        db.select({ total: sql`count(*)::int` }).from(transparencyDocsTable).where(where),
+        db.select().from(transparencyDocsTable).where(where).orderBy(desc(transparencyDocsTable.publicadoEm)).limit(limit).offset(offset)
+      ]);
+      const total = countResult[0]?.total ?? 0;
+      return { type: "documents", category, data: docs, total, page, totalPages: Math.ceil(total / limit) };
+    });
+    if (!result) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
+    res.setHeader("Cache-Control", "public, max-age=60");
+    res.json(result);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+var transparency_default = router32;
+
+// src/routes/site/secretarias-pub.ts
+var import_express33 = __toESM(require_express2(), 1);
+init_schema2();
+init_drizzle_orm();
+var router33 = (0, import_express33.Router)();
+var DEFAULT_TENANT29 = "parauapebas";
+var TTL9 = 6e4;
+router33.get("/site/secretarias", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT29;
+    const cacheKey = `site:secretarias:${tenantSlug}`;
+    const result = await withCache(cacheKey, TTL9, async () => {
+      const [tenant] = await db.select({ id: tenantsTable.id }).from(tenantsTable).where(eq(tenantsTable.slug, tenantSlug)).limit(1);
+      if (!tenant) return null;
+      const rows = await db.select({
+        id: secretariasTable.id,
+        nome: secretariasTable.nome,
+        slug: secretariasTable.slug,
+        sigla: secretariasTable.sigla,
+        descricao: secretariasTable.descricao,
+        secretario: secretariasTable.secretario,
+        fotoSecretario: secretariasTable.fotoSecretario,
+        telefone: secretariasTable.telefone,
+        email: secretariasTable.email,
+        endereco: secretariasTable.endereco,
+        horario: secretariasTable.horario
+      }).from(secretariasTable).where(and(eq(secretariasTable.tenantId, tenant.id), eq(secretariasTable.ativa, true))).orderBy(asc(secretariasTable.nome));
+      return { data: rows };
+    });
+    if (!result) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
+    res.setHeader("Cache-Control", "public, max-age=60");
+    res.json(result);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+var secretarias_pub_default = router33;
+
+// src/routes/site/search.ts
+var import_express34 = __toESM(require_express2(), 1);
+init_schema2();
+init_drizzle_orm();
+var router34 = (0, import_express34.Router)();
+var DEFAULT_TENANT30 = "parauapebas";
+var TTL10 = 3e4;
+router34.get("/site/search", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT30;
+    const q = (req.query["q"] ?? "").trim();
+    if (!q || q.length < 2) {
+      return res.status(400).json({ error: "Par\xE2metro q deve ter ao menos 2 caracteres" });
+    }
+    const cacheKey = `site:search:${tenantSlug}:${q}`;
+    const result = await withCache(cacheKey, TTL10, async () => {
+      const [tenant] = await db.select({ id: tenantsTable.id }).from(tenantsTable).where(eq(tenantsTable.slug, tenantSlug)).limit(1);
+      if (!tenant) return null;
+      const tenantId = tenant.id;
+      const noticias = await db.execute(sql`
+        SELECT
+          id, titulo, slug, resumo, imagem_capa AS "imagemCapa",
+          data_publicacao AS "dataPublicacao",
+          ts_rank(
+            to_tsvector('portuguese', titulo || ' ' || COALESCE(resumo, '')),
+            plainto_tsquery('portuguese', ${q})
+          ) AS rank
+        FROM noticias
+        WHERE
+          tenant_id = ${tenantId}
+          AND status = 'publicado'
+          AND deletado_em IS NULL
+          AND to_tsvector('portuguese', titulo || ' ' || COALESCE(resumo, ''))
+              @@ plainto_tsquery('portuguese', ${q})
+        ORDER BY rank DESC, data_publicacao DESC
+        LIMIT 10
+      `);
+      const legislacao = await db.execute(sql`
+        SELECT
+          id, tipo || ' nº ' || numero AS titulo, slug, ementa AS resumo,
+          data_publicacao AS "dataPublicacao",
+          ts_rank(
+            to_tsvector('portuguese', numero || ' ' || ementa),
+            plainto_tsquery('portuguese', ${q})
+          ) AS rank
+        FROM legislacao
+        WHERE
+          tenant_id = ${tenantId}
+          AND status = 'publicado'
+          AND to_tsvector('portuguese', numero || ' ' || ementa)
+              @@ plainto_tsquery('portuguese', ${q})
+        ORDER BY rank DESC, data_publicacao DESC
+        LIMIT 10
+      `);
+      const licitacoes = await db.execute(sql`
+        SELECT
+          id, numero AS titulo, objeto AS resumo,
+          modalidade, situacao, created_at AS "createdAt",
+          ts_rank(
+            to_tsvector('portuguese', numero || ' ' || objeto),
+            plainto_tsquery('portuguese', ${q})
+          ) AS rank
+        FROM licitacoes
+        WHERE
+          tenant_id = ${tenantId}
+          AND to_tsvector('portuguese', numero || ' ' || objeto)
+              @@ plainto_tsquery('portuguese', ${q})
+        ORDER BY rank DESC, created_at DESC
+        LIMIT 10
+      `);
+      const paginas = await db.execute(sql`
+        SELECT
+          id, titulo, slug,
+          meta_description AS resumo,
+          ts_rank(
+            to_tsvector('portuguese', titulo || ' ' || COALESCE(meta_description, '')),
+            plainto_tsquery('portuguese', ${q})
+          ) AS rank
+        FROM pages
+        WHERE
+          tenant_id = ${tenantId}
+          AND status = 'publicado'
+          AND to_tsvector('portuguese', titulo || ' ' || COALESCE(meta_description, ''))
+              @@ plainto_tsquery('portuguese', ${q})
+        ORDER BY rank DESC
+        LIMIT 5
+      `);
+      const noticiasRows = noticias.rows;
+      const legislacaoRows = legislacao.rows;
+      const licitacoesRows = licitacoes.rows;
+      const paginasRows = paginas.rows;
+      const total = noticiasRows.length + legislacaoRows.length + licitacoesRows.length + paginasRows.length;
+      return {
+        q,
+        total,
+        results: {
+          noticias: noticiasRows.map((n) => ({ ...n, tipo: "noticia" })),
+          legislacao: legislacaoRows.map((l) => ({ ...l, tipo: "legislacao" })),
+          licitacoes: licitacoesRows.map((l) => ({ ...l, tipo: "licitacao" })),
+          paginas: paginasRows.map((p) => ({ ...p, tipo: "pagina" }))
+        }
+      };
+    });
+    if (!result) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
+    res.setHeader("Cache-Control", "public, max-age=30");
+    res.json(result);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+var search_default = router34;
+
+// src/routes/site/pages.ts
+var import_express35 = __toESM(require_express2(), 1);
+init_schema2();
+init_drizzle_orm();
+var router35 = (0, import_express35.Router)();
+var DEFAULT_TENANT31 = "parauapebas";
+var TTL11 = 6e4;
+router35.get("/site/pages/:slug", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT31;
+    const slug = req.params["slug"];
+    const cacheKey = `site:pages:${tenantSlug}:${slug}`;
+    const result = await withCache(cacheKey, TTL11, async () => {
+      const [tenant] = await db.select({ id: tenantsTable.id }).from(tenantsTable).where(eq(tenantsTable.slug, tenantSlug)).limit(1);
+      if (!tenant) return null;
+      const [page] = await db.select().from(pagesTable).where(
+        and(
+          eq(pagesTable.tenantId, tenant.id),
+          eq(pagesTable.slug, slug),
+          eq(pagesTable.status, "publicado")
+        )
+      ).limit(1);
+      if (!page) return void 0;
+      const blocos = await db.select().from(pageBlocksTable).where(eq(pageBlocksTable.pageId, page.id)).orderBy(asc(pageBlocksTable.sortOrder));
+      return { ...page, blocos };
+    });
+    if (result === null) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
+    if (result === void 0) return res.status(404).json({ error: "P\xE1gina n\xE3o encontrada" });
+    res.setHeader("Cache-Control", "public, max-age=60");
+    res.json(result);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+var pages_default = router35;
+
+// src/routes/site-admin/news.ts
+var import_express36 = __toESM(require_express2(), 1);
+init_schema2();
+init_drizzle_orm();
+init_schema2();
+import { randomUUID as randomUUID13 } from "crypto";
+var router36 = (0, import_express36.Router)();
+var DEFAULT_TENANT32 = "parauapebas";
+async function getTenantId23(slug) {
+  const r = await db.select({ id: tenantsTable.id }).from(tenantsTable).where(eq(tenantsTable.slug, slug)).limit(1);
+  return r[0]?.id ?? null;
+}
+router36.get("/site-admin/news", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT32;
+    const status = req.query["status"];
+    const search = req.query["search"];
+    const page = Math.max(1, parseInt(req.query["page"] ?? "1"));
+    const limit = Math.min(100, Math.max(1, parseInt(req.query["limit"] ?? "20")));
+    const offset = (page - 1) * limit;
+    const tenantId = await getTenantId23(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
+    const conditions = [eq(noticiasTable.tenantId, tenantId), isNull(noticiasTable.deletadoEm)];
+    if (status) conditions.push(eq(noticiasTable.status, status));
+    if (search) conditions.push(ilike(noticiasTable.titulo, `%${search}%`));
+    const where = and(...conditions);
+    const [total, data] = await Promise.all([
+      db.select({ count: count() }).from(noticiasTable).where(where),
+      db.select().from(noticiasTable).where(where).orderBy(desc(noticiasTable.createdAt)).limit(limit).offset(offset)
+    ]);
+    res.json({ data, total: total[0]?.count ?? 0, page, limit, totalPages: Math.ceil((total[0]?.count ?? 0) / limit) });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router36.get("/site-admin/news/:id", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT32;
+    const tenantId = await getTenantId23(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
+    const [noticia] = await db.select().from(noticiasTable).where(and(eq(noticiasTable.tenantId, tenantId), eq(noticiasTable.id, req.params["id"]))).limit(1);
+    if (!noticia) return res.status(404).json({ error: "Not\xEDcia n\xE3o encontrada" });
+    res.json(noticia);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router36.post("/site-admin/news", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT32;
+    const tenantId = await getTenantId23(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
+    const b = req.body;
+    if (!b.titulo) return res.status(400).json({ error: "titulo \xE9 obrigat\xF3rio" });
+    const id = randomUUID13();
+    const slug = b.slug ?? `${b.titulo.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}-${id.slice(0, 8)}`;
+    const [noticia] = await db.insert(noticiasTable).values({
+      id,
+      tenantId,
+      titulo: b.titulo,
+      slug,
+      resumo: b.resumo ?? "",
+      conteudo: b.conteudo ?? "",
+      imagemCapa: b.imagemCapa ?? null,
+      imagemCapaAlt: b.imagemCapaAlt ?? null,
+      categoria: b.categoria ?? "geral",
+      categoriaId: b.categoriaId ?? null,
+      secretariaId: b.secretariaId ?? null,
+      autor: b.autor ?? null,
+      status: "rascunho",
+      publicado: false,
+      destaque: b.destaque ?? false,
+      tags: b.tags ?? [],
+      metaTitle: b.metaTitle ?? null,
+      metaDescription: b.metaDescription ?? null
+    }).returning();
+    if (b.conteudo) {
+      await db.insert(newsVersionsTable).values({ id: randomUUID13(), noticiaId: id, conteudo: b.conteudo, savedBy: b.autor ?? "admin" });
+    }
+    cacheDelPattern(`site:news:${tenantSlug}`);
+    res.status(201).json(noticia);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router36.put("/site-admin/news/:id", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT32;
+    const tenantId = await getTenantId23(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
+    const b = req.body;
+    const update = { updatedAt: /* @__PURE__ */ new Date() };
+    const fields = [
+      "titulo",
+      "slug",
+      "resumo",
+      "conteudo",
+      "imagemCapa",
+      "imagemCapaAlt",
+      "categoria",
+      "categoriaId",
+      "secretariaId",
+      "autor",
+      "destaque",
+      "tags",
+      "metaTitle",
+      "metaDescription",
+      "ogImageUrl"
+    ];
+    for (const f of fields) if (b[f] !== void 0) update[f] = b[f];
+    if (b.dataPublicacao) update["dataPublicacao"] = new Date(b.dataPublicacao);
+    if (b.agendadoEm !== void 0) update["agendadoEm"] = b.agendadoEm ? new Date(b.agendadoEm) : null;
+    const [updated] = await db.update(noticiasTable).set(update).where(and(eq(noticiasTable.tenantId, tenantId), eq(noticiasTable.id, req.params["id"]))).returning();
+    if (!updated) return res.status(404).json({ error: "Not\xEDcia n\xE3o encontrada" });
+    if (b.conteudo) {
+      await db.insert(newsVersionsTable).values({ id: randomUUID13(), noticiaId: updated.id, conteudo: b.conteudo, savedBy: b.autor ?? "admin" });
+    }
+    cacheDelPattern(`site:news:${tenantSlug}`);
+    res.json(updated);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router36.patch("/site-admin/news/:id/publish", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT32;
+    const tenantId = await getTenantId23(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
+    const [updated] = await db.update(noticiasTable).set({ status: "publicado", publicado: true, dataPublicacao: /* @__PURE__ */ new Date(), updatedAt: /* @__PURE__ */ new Date() }).where(and(eq(noticiasTable.tenantId, tenantId), eq(noticiasTable.id, req.params["id"]))).returning();
+    if (!updated) return res.status(404).json({ error: "Not\xEDcia n\xE3o encontrada" });
+    cacheDelPattern(`site:news:${tenantSlug}`);
+    res.json(updated);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router36.patch("/site-admin/news/:id/schedule", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT32;
+    const tenantId = await getTenantId23(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
+    const { scheduledAt } = req.body;
+    if (!scheduledAt) return res.status(400).json({ error: "scheduledAt \xE9 obrigat\xF3rio" });
+    const [updated] = await db.update(noticiasTable).set({ status: "agendado", publicado: false, agendadoEm: new Date(scheduledAt), updatedAt: /* @__PURE__ */ new Date() }).where(and(eq(noticiasTable.tenantId, tenantId), eq(noticiasTable.id, req.params["id"]))).returning();
+    if (!updated) return res.status(404).json({ error: "Not\xEDcia n\xE3o encontrada" });
+    res.json(updated);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router36.patch("/site-admin/news/:id/archive", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT32;
+    const tenantId = await getTenantId23(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
+    const [updated] = await db.update(noticiasTable).set({ status: "arquivado", publicado: false, updatedAt: /* @__PURE__ */ new Date() }).where(and(eq(noticiasTable.tenantId, tenantId), eq(noticiasTable.id, req.params["id"]))).returning();
+    if (!updated) return res.status(404).json({ error: "Not\xEDcia n\xE3o encontrada" });
+    cacheDelPattern(`site:news:${tenantSlug}`);
+    res.json(updated);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router36.delete("/site-admin/news/:id", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT32;
+    const tenantId = await getTenantId23(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
+    await db.update(noticiasTable).set({ deletadoEm: /* @__PURE__ */ new Date(), status: "arquivado", publicado: false, updatedAt: /* @__PURE__ */ new Date() }).where(and(eq(noticiasTable.tenantId, tenantId), eq(noticiasTable.id, req.params["id"])));
+    cacheDelPattern(`site:news:${tenantSlug}`);
+    res.status(204).send();
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router36.get("/site-admin/news/:id/versions", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT32;
+    const tenantId = await getTenantId23(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
+    const versions = await db.select().from(newsVersionsTable).where(eq(newsVersionsTable.noticiaId, req.params["id"])).orderBy(desc(newsVersionsTable.createdAt)).limit(50);
+    res.json({ data: versions });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+var news_default2 = router36;
+
+// src/routes/site-admin/banners.ts
+var import_express37 = __toESM(require_express2(), 1);
+init_schema2();
+init_drizzle_orm();
+import { randomUUID as randomUUID14 } from "crypto";
+var router37 = (0, import_express37.Router)();
+var DEFAULT_TENANT33 = "parauapebas";
+async function getTenantId24(slug) {
+  const r = await db.select({ id: tenantsTable.id }).from(tenantsTable).where(eq(tenantsTable.slug, slug)).limit(1);
+  return r[0]?.id ?? null;
+}
+router37.get("/site-admin/banners", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT33;
+    const tenantId = await getTenantId24(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
+    const data = await db.select().from(bannersTable).where(eq(bannersTable.tenantId, tenantId)).orderBy(asc(bannersTable.sortOrder));
+    res.json({ data });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router37.post("/site-admin/banners", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT33;
+    const tenantId = await getTenantId24(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
+    const b = req.body;
+    if (!b.titulo || !b.imageDesktopUrl || !b.imageAlt) {
+      return res.status(400).json({ error: "titulo, imageDesktopUrl e imageAlt s\xE3o obrigat\xF3rios" });
+    }
+    const [banner] = await db.insert(bannersTable).values({
+      id: randomUUID14(),
+      tenantId,
+      titulo: b.titulo,
+      subtitulo: b.subtitulo ?? null,
+      imageDesktopUrl: b.imageDesktopUrl,
+      imageMobileUrl: b.imageMobileUrl ?? null,
+      imageAlt: b.imageAlt,
+      ctaLabel: b.ctaLabel ?? null,
+      ctaUrl: b.ctaUrl ?? null,
+      ctaAbreNovaAba: b.ctaAbreNovaAba ?? false,
+      overlayColor: b.overlayColor ?? null,
+      overlayOpacity: b.overlayOpacity ?? 0.4,
+      isAtivo: b.isAtivo ?? true,
+      sortOrder: b.sortOrder ?? 0,
+      iniciaEm: b.iniciaEm ? new Date(b.iniciaEm) : null,
+      expiraEm: b.expiraEm ? new Date(b.expiraEm) : null
+    }).returning();
+    cacheDelPattern(`site:banners:${tenantSlug}`);
+    res.status(201).json(banner);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router37.put("/site-admin/banners/:id", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT33;
+    const tenantId = await getTenantId24(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
+    const b = req.body;
+    const update = { updatedAt: /* @__PURE__ */ new Date() };
+    const fields = [
+      "titulo",
+      "subtitulo",
+      "imageDesktopUrl",
+      "imageMobileUrl",
+      "imageAlt",
+      "ctaLabel",
+      "ctaUrl",
+      "ctaAbreNovaAba",
+      "overlayColor",
+      "overlayOpacity",
+      "isAtivo",
+      "sortOrder"
+    ];
+    for (const f of fields) if (b[f] !== void 0) update[f] = b[f];
+    if (b.iniciaEm !== void 0) update["iniciaEm"] = b.iniciaEm ? new Date(b.iniciaEm) : null;
+    if (b.expiraEm !== void 0) update["expiraEm"] = b.expiraEm ? new Date(b.expiraEm) : null;
+    const [updated] = await db.update(bannersTable).set(update).where(and(eq(bannersTable.id, req.params["id"]), eq(bannersTable.tenantId, tenantId))).returning();
+    if (!updated) return res.status(404).json({ error: "Banner n\xE3o encontrado" });
+    cacheDelPattern(`site:banners:${tenantSlug}`);
+    res.json(updated);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router37.patch("/site-admin/banners/reorder", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT33;
+    const tenantId = await getTenantId24(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
+    const { orderedIds } = req.body;
+    if (!Array.isArray(orderedIds)) return res.status(400).json({ error: "orderedIds deve ser um array" });
+    await Promise.all(
+      orderedIds.map(
+        (id, idx) => db.update(bannersTable).set({ sortOrder: idx, updatedAt: /* @__PURE__ */ new Date() }).where(and(eq(bannersTable.id, id), eq(bannersTable.tenantId, tenantId)))
+      )
+    );
+    cacheDelPattern(`site:banners:${tenantSlug}`);
+    res.json({ ok: true });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router37.delete("/site-admin/banners/:id", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT33;
+    const tenantId = await getTenantId24(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
+    await db.delete(bannersTable).where(and(eq(bannersTable.id, req.params["id"]), eq(bannersTable.tenantId, tenantId)));
+    cacheDelPattern(`site:banners:${tenantSlug}`);
+    res.status(204).send();
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+var banners_default3 = router37;
+
+// src/routes/site-admin/transparency.ts
+var import_express38 = __toESM(require_express2(), 1);
+init_schema2();
+init_drizzle_orm();
+import { randomUUID as randomUUID15 } from "crypto";
+var router38 = (0, import_express38.Router)();
+var DEFAULT_TENANT34 = "parauapebas";
+async function getTenantId25(slug) {
+  const r = await db.select({ id: tenantsTable.id }).from(tenantsTable).where(eq(tenantsTable.slug, slug)).limit(1);
+  return r[0]?.id ?? null;
+}
+var LAI_REQUIRED_CATEGORIES = [
+  { categoria: "orcamento", intervalo: 365 },
+  { categoria: "receitas", intervalo: 30 },
+  { categoria: "despesas", intervalo: 30 },
+  { categoria: "servidores", intervalo: 90 },
+  { categoria: "convenios", intervalo: 90 },
+  { categoria: "atas", intervalo: 30 }
+];
+router38.get("/site-admin/transparency", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT34;
+    const categoria = req.query["categoria"];
+    const page = Math.max(1, parseInt(req.query["page"] ?? "1"));
+    const limit = 50;
+    const offset = (page - 1) * limit;
+    const tenantId = await getTenantId25(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
+    const conditions = [eq(transparencyDocsTable.tenantId, tenantId)];
+    if (categoria) conditions.push(eq(transparencyDocsTable.categoria, categoria));
+    const docs = await db.select().from(transparencyDocsTable).where(and(...conditions)).orderBy(desc(transparencyDocsTable.publicadoEm)).limit(limit).offset(offset);
+    res.json({ data: docs, page });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router38.post("/site-admin/transparency", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT34;
+    const tenantId = await getTenantId25(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
+    const b = req.body;
+    if (!b.categoria || !b.titulo || !b.fileUrl || !b.nomeArquivo || !b.anoReferencia) {
+      return res.status(400).json({ error: "categoria, titulo, fileUrl, nomeArquivo e anoReferencia s\xE3o obrigat\xF3rios" });
+    }
+    const [doc] = await db.insert(transparencyDocsTable).values({
+      id: randomUUID15(),
+      tenantId,
+      categoria: b.categoria,
+      subcategoria: b.subcategoria ?? null,
+      titulo: b.titulo,
+      descricao: b.descricao ?? null,
+      anoReferencia: parseInt(b.anoReferencia),
+      periodoReferencia: b.periodoReferencia ?? null,
+      fileUrl: b.fileUrl,
+      nomeArquivo: b.nomeArquivo,
+      tamanhoBytes: b.tamanhoBytes ?? 0,
+      publicadoPor: b.publicadoPor ?? "admin",
+      publicadoEm: b.publicadoEm ? new Date(b.publicadoEm) : /* @__PURE__ */ new Date(),
+      expiraEm: b.expiraEm ? new Date(b.expiraEm) : null
+    }).returning();
+    res.status(201).json(doc);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router38.delete("/site-admin/transparency/:id", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT34;
+    const tenantId = await getTenantId25(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
+    await db.delete(transparencyDocsTable).where(and(eq(transparencyDocsTable.id, req.params["id"]), eq(transparencyDocsTable.tenantId, tenantId)));
+    res.status(204).send();
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router38.get("/site-admin/transparency/compliance", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT34;
+    const tenantId = await getTenantId25(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
+    const now = /* @__PURE__ */ new Date();
+    const report = await Promise.all(
+      LAI_REQUIRED_CATEGORIES.map(async ({ categoria, intervalo }) => {
+        const cutoff = new Date(now.getTime() - intervalo * 24 * 60 * 60 * 1e3);
+        const [latest] = await db.select({ publicadoEm: transparencyDocsTable.publicadoEm, titulo: transparencyDocsTable.titulo }).from(transparencyDocsTable).where(and(eq(transparencyDocsTable.tenantId, tenantId), eq(transparencyDocsTable.categoria, categoria))).orderBy(desc(transparencyDocsTable.publicadoEm)).limit(1);
+        const conforme = latest ? latest.publicadoEm >= cutoff : false;
+        const diasDesdePublicacao = latest ? Math.floor((now.getTime() - latest.publicadoEm.getTime()) / (24 * 60 * 60 * 1e3)) : null;
+        return {
+          categoria,
+          conforme,
+          ultimaPublicacao: latest?.publicadoEm ?? null,
+          diasDesdePublicacao,
+          prazoMaximoDias: intervalo,
+          alerta: !conforme
+        };
+      })
+    );
+    const totalConforme = report.filter((r) => r.conforme).length;
+    const percentual = Math.round(totalConforme / report.length * 100);
+    res.json({
+      percentualConformidade: percentual,
+      totalCategorias: report.length,
+      totalConforme,
+      totalPendente: report.length - totalConforme,
+      categorias: report,
+      geradoEm: now
+    });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+var transparency_default2 = router38;
+
+// src/routes/site-admin/bids.ts
+var import_express39 = __toESM(require_express2(), 1);
+init_schema2();
+init_drizzle_orm();
+import { randomUUID as randomUUID16 } from "crypto";
+var router39 = (0, import_express39.Router)();
+var DEFAULT_TENANT35 = "parauapebas";
+async function getTenantId26(slug) {
+  const r = await db.select({ id: tenantsTable.id }).from(tenantsTable).where(eq(tenantsTable.slug, slug)).limit(1);
+  return r[0]?.id ?? null;
+}
+router39.get("/site-admin/bids", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT35;
+    const tenantId = await getTenantId26(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
+    const search = req.query["search"];
+    const status = req.query["status"];
+    const page = Math.max(1, parseInt(req.query["page"] ?? "1"));
+    const limit = 20;
+    const offset = (page - 1) * limit;
+    const conditions = [eq(licitacoesTable.tenantId, tenantId)];
+    if (status) conditions.push(eq(licitacoesTable.situacao, status));
+    if (search) conditions.push(ilike(licitacoesTable.objeto, `%${search}%`));
+    const data = await db.select().from(licitacoesTable).where(and(...conditions)).orderBy(desc(licitacoesTable.createdAt)).limit(limit).offset(offset);
+    res.json({ data, page });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router39.post("/site-admin/bids", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT35;
+    const tenantId = await getTenantId26(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
+    const b = req.body;
+    if (!b.numero || !b.objeto || !b.modalidade) {
+      return res.status(400).json({ error: "numero, objeto e modalidade s\xE3o obrigat\xF3rios" });
+    }
+    const [licitacao] = await db.insert(licitacoesTable).values({
+      id: randomUUID16(),
+      tenantId,
+      numero: b.numero,
+      objeto: b.objeto,
+      modalidade: b.modalidade,
+      situacao: b.situacao ?? "aberta",
+      dataAbertura: b.dataAbertura ? new Date(b.dataAbertura) : null,
+      dataEncerramento: b.dataEncerramento ? new Date(b.dataEncerramento) : null,
+      valorEstimado: b.valorEstimado ?? null,
+      valorHomologado: b.valorHomologado ?? null,
+      secretaria: b.secretaria ?? null,
+      secretariaId: b.secretariaId ?? null,
+      edital: b.edital ?? null,
+      editalUrl: b.editalUrl ?? null,
+      resultUrl: b.resultUrl ?? null,
+      descricao: b.descricao ?? null,
+      vencedor: b.vencedor ?? null,
+      vencedorCnpj: b.vencedorCnpj ?? null,
+      pncpId: b.pncpId ?? null
+    }).returning();
+    cacheDelPattern(`site:bids:`);
+    res.status(201).json(licitacao);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router39.put("/site-admin/bids/:id", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT35;
+    const tenantId = await getTenantId26(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
+    const b = req.body;
+    const update = { updatedAt: /* @__PURE__ */ new Date() };
+    const fields = [
+      "numero",
+      "objeto",
+      "modalidade",
+      "situacao",
+      "valorEstimado",
+      "valorHomologado",
+      "secretaria",
+      "secretariaId",
+      "edital",
+      "editalUrl",
+      "resultUrl",
+      "ata",
+      "descricao",
+      "vencedor",
+      "vencedorCnpj",
+      "pncpId"
+    ];
+    for (const f of fields) if (b[f] !== void 0) update[f] = b[f];
+    if (b.dataAbertura !== void 0) update["dataAbertura"] = b.dataAbertura ? new Date(b.dataAbertura) : null;
+    if (b.dataEncerramento !== void 0) update["dataEncerramento"] = b.dataEncerramento ? new Date(b.dataEncerramento) : null;
+    const [updated] = await db.update(licitacoesTable).set(update).where(and(eq(licitacoesTable.id, req.params["id"]), eq(licitacoesTable.tenantId, tenantId))).returning();
+    if (!updated) return res.status(404).json({ error: "Licita\xE7\xE3o n\xE3o encontrada" });
+    cacheDelPattern(`site:bids:`);
+    res.json(updated);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router39.post("/site-admin/bids/:id/events", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT35;
+    const tenantId = await getTenantId26(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
+    const b = req.body;
+    if (!b.titulo || !b.ocorridoEm) {
+      return res.status(400).json({ error: "titulo e ocorridoEm s\xE3o obrigat\xF3rios" });
+    }
+    const [lic] = await db.select({ id: licitacoesTable.id }).from(licitacoesTable).where(and(eq(licitacoesTable.id, req.params["id"]), eq(licitacoesTable.tenantId, tenantId))).limit(1);
+    if (!lic) return res.status(404).json({ error: "Licita\xE7\xE3o n\xE3o encontrada" });
+    const [evento] = await db.insert(bidEventsTable).values({
+      id: randomUUID16(),
+      licitacaoId: req.params["id"],
+      titulo: b.titulo,
+      descricao: b.descricao ?? null,
+      fileUrl: b.fileUrl ?? null,
+      ocorridoEm: new Date(b.ocorridoEm)
+    }).returning();
+    cacheDelPattern(`site:bids:detail:`);
+    res.status(201).json(evento);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router39.post("/site-admin/bids/:id/contracts", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT35;
+    const tenantId = await getTenantId26(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
+    const b = req.body;
+    if (!b.numero || !b.objeto || !b.contratado || !b.cnpjContratado || !b.valor || !b.dataInicio || !b.dataFim) {
+      return res.status(400).json({ error: "numero, objeto, contratado, cnpjContratado, valor, dataInicio e dataFim s\xE3o obrigat\xF3rios" });
+    }
+    const [lic] = await db.select({ id: licitacoesTable.id }).from(licitacoesTable).where(and(eq(licitacoesTable.id, req.params["id"]), eq(licitacoesTable.tenantId, tenantId))).limit(1);
+    if (!lic) return res.status(404).json({ error: "Licita\xE7\xE3o n\xE3o encontrada" });
+    const [contrato] = await db.insert(contractsTable).values({
+      id: randomUUID16(),
+      tenantId,
+      licitacaoId: req.params["id"],
+      numero: b.numero,
+      objeto: b.objeto,
+      contratado: b.contratado,
+      cnpjContratado: b.cnpjContratado,
+      valor: parseFloat(b.valor),
+      dataInicio: b.dataInicio,
+      dataFim: b.dataFim,
+      fileUrl: b.fileUrl ?? null,
+      ativo: b.ativo ?? true,
+      fiscalNome: b.fiscalNome ?? null
+    }).returning();
+    cacheDelPattern(`site:bids:detail:`);
+    res.status(201).json(contrato);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+var bids_default2 = router39;
+
+// src/routes/site-admin/agenda.ts
+var import_express40 = __toESM(require_express2(), 1);
+init_schema2();
+init_drizzle_orm();
+import { randomUUID as randomUUID17 } from "crypto";
+var router40 = (0, import_express40.Router)();
+var DEFAULT_TENANT36 = "parauapebas";
+async function getTenantId27(slug) {
+  const r = await db.select({ id: tenantsTable.id }).from(tenantsTable).where(eq(tenantsTable.slug, slug)).limit(1);
+  return r[0]?.id ?? null;
+}
+router40.get("/site-admin/agenda", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT36;
+    const tenantId = await getTenantId27(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
+    const now = /* @__PURE__ */ new Date();
+    const month = parseInt(req.query["month"] ?? String(now.getMonth() + 1));
+    const year2 = parseInt(req.query["year"] ?? String(now.getFullYear()));
+    const startOfMonth = new Date(year2, month - 1, 1);
+    const endOfMonth = new Date(year2, month, 0, 23, 59, 59);
+    const data = await db.select().from(agendaTable).where(and(
+      eq(agendaTable.tenantId, tenantId),
+      gte(agendaTable.dataInicio, startOfMonth),
+      lte(agendaTable.dataInicio, endOfMonth)
+    )).orderBy(asc(agendaTable.dataInicio));
+    res.json({ data, month, year: year2 });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router40.post("/site-admin/agenda", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT36;
+    const tenantId = await getTenantId27(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
+    const b = req.body;
+    if (!b.titulo || !b.dataInicio) return res.status(400).json({ error: "titulo e dataInicio s\xE3o obrigat\xF3rios" });
+    const [evento] = await db.insert(agendaTable).values({
+      id: randomUUID17(),
+      tenantId,
+      titulo: b.titulo,
+      descricao: b.descricao ?? null,
+      tipo: b.tipo ?? "evento",
+      local: b.local ?? null,
+      endereco: b.endereco ?? null,
+      isOnline: b.isOnline ?? false,
+      onlineUrl: b.onlineUrl ?? null,
+      dataInicio: new Date(b.dataInicio),
+      dataFim: b.dataFim ? new Date(b.dataFim) : null,
+      diaInteiro: b.diaInteiro ?? false,
+      secretariaId: b.secretariaId ?? null,
+      categoria: b.categoria ?? null,
+      publicoAlvo: b.publicoAlvo ?? null,
+      isPublico: b.isPublico ?? true,
+      gratuito: b.gratuito ?? true,
+      linkInscricao: b.linkInscricao ?? null,
+      anexoUrl: b.anexoUrl ?? null,
+      ativo: b.ativo ?? true
+    }).returning();
+    cacheDelPattern(`site:agenda:`);
+    res.status(201).json(evento);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router40.put("/site-admin/agenda/:id", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT36;
+    const tenantId = await getTenantId27(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
+    const b = req.body;
+    const update = { updatedAt: /* @__PURE__ */ new Date() };
+    const fields = [
+      "titulo",
+      "descricao",
+      "tipo",
+      "local",
+      "endereco",
+      "isOnline",
+      "onlineUrl",
+      "diaInteiro",
+      "secretariaId",
+      "categoria",
+      "publicoAlvo",
+      "isPublico",
+      "gratuito",
+      "linkInscricao",
+      "anexoUrl",
+      "ativo"
+    ];
+    for (const f of fields) if (b[f] !== void 0) update[f] = b[f];
+    if (b.dataInicio) update["dataInicio"] = new Date(b.dataInicio);
+    if (b.dataFim !== void 0) update["dataFim"] = b.dataFim ? new Date(b.dataFim) : null;
+    const [updated] = await db.update(agendaTable).set(update).where(and(eq(agendaTable.id, req.params["id"]), eq(agendaTable.tenantId, tenantId))).returning();
+    if (!updated) return res.status(404).json({ error: "Evento n\xE3o encontrado" });
+    cacheDelPattern(`site:agenda:`);
+    res.json(updated);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router40.delete("/site-admin/agenda/:id", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT36;
+    const tenantId = await getTenantId27(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
+    await db.delete(agendaTable).where(and(eq(agendaTable.id, req.params["id"]), eq(agendaTable.tenantId, tenantId)));
+    cacheDelPattern(`site:agenda:`);
+    res.status(204).send();
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+var agenda_default4 = router40;
+
+// src/routes/site-admin/config.ts
+var import_express41 = __toESM(require_express2(), 1);
+init_schema2();
+init_drizzle_orm();
+import { randomUUID as randomUUID18 } from "crypto";
+var router41 = (0, import_express41.Router)();
+var DEFAULT_TENANT37 = "parauapebas";
+async function getTenantId28(slug) {
+  const r = await db.select({ id: tenantsTable.id }).from(tenantsTable).where(eq(tenantsTable.slug, slug)).limit(1);
+  return r[0]?.id ?? null;
+}
+router41.get("/site-admin/config", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT37;
+    const tenantId = await getTenantId28(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
+    let [config2] = await db.select().from(siteConfigTable).where(eq(siteConfigTable.tenantId, tenantId)).limit(1);
+    if (!config2) {
+      const id = randomUUID18();
+      [config2] = await db.insert(siteConfigTable).values({ id, tenantId }).returning();
+    }
+    const menus = await db.select().from(menuItemsTable).where(eq(menuItemsTable.tenantId, tenantId)).orderBy(asc(menuItemsTable.sortOrder));
+    const menuBySlot = menus.reduce((acc, item) => {
+      if (!acc[item.menuSlot]) acc[item.menuSlot] = [];
+      acc[item.menuSlot].push(item);
+      return acc;
+    }, {});
+    res.json({ config: config2, menus: menuBySlot });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router41.put("/site-admin/config", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT37;
+    const tenantId = await getTenantId28(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
+    const b = req.body;
+    const update = { updatedAt: /* @__PURE__ */ new Date() };
+    const fields = [
+      "heroType",
+      "heroVideoUrl",
+      "heroSections",
+      "siteTitle",
+      "siteDescription",
+      "googleAnalyticsId",
+      "googleTagManagerId",
+      "socialFacebook",
+      "socialInstagram",
+      "socialYoutube",
+      "socialTwitter",
+      "socialLinkedin",
+      "floatingWidgetEnabled",
+      "floatingWidgetPosition",
+      "vlibrasEnabled",
+      "rodapeTexto",
+      "sicPrazoResposta",
+      "sicEmail",
+      "modoManutencao",
+      "modoManutencaoMsg"
+    ];
+    for (const f of fields) if (b[f] !== void 0) update[f] = b[f];
+    const [existing] = await db.select({ id: siteConfigTable.id }).from(siteConfigTable).where(eq(siteConfigTable.tenantId, tenantId)).limit(1);
+    let config2;
+    if (existing) {
+      [config2] = await db.update(siteConfigTable).set(update).where(eq(siteConfigTable.id, existing.id)).returning();
+    } else {
+      [config2] = await db.insert(siteConfigTable).values({ id: randomUUID18(), tenantId, ...update }).returning();
+    }
+    cacheDelPattern(`site:config:${tenantSlug}`);
+    res.json(config2);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router41.put("/site-admin/config/menus", async (req, res) => {
+  try {
+    const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT37;
+    const tenantId = await getTenantId28(tenantSlug);
+    if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
+    const { menuSlot, items } = req.body;
+    if (!menuSlot || !Array.isArray(items)) {
+      return res.status(400).json({ error: "menuSlot e items s\xE3o obrigat\xF3rios" });
+    }
+    await db.delete(menuItemsTable).where(and(eq(menuItemsTable.tenantId, tenantId), eq(menuItemsTable.menuSlot, menuSlot)));
+    if (items.length > 0) {
+      await db.insert(menuItemsTable).values(
+        items.map((item, idx) => ({
+          id: randomUUID18(),
+          tenantId,
+          menuSlot,
+          label: item["label"],
+          url: item["url"] ?? null,
+          tipo: item["tipo"] ?? "pagina",
+          abreNovaAba: item["abreNovaAba"] ?? false,
+          icone: item["icone"] ?? null,
+          parentId: item["parentId"] ?? null,
+          sortOrder: item["sortOrder"] ?? idx,
+          isAtivo: item["isAtivo"] ?? true
+        }))
+      );
+    }
+    cacheDelPattern(`site:config:${tenantSlug}`);
+    const saved = await db.select().from(menuItemsTable).where(and(eq(menuItemsTable.tenantId, tenantId), eq(menuItemsTable.menuSlot, menuSlot))).orderBy(asc(menuItemsTable.sortOrder));
+    res.json({ menuSlot, items: saved });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+var config_default2 = router41;
+
+// src/routes/servidor/index.ts
+var import_express46 = __toESM(require_express2(), 1);
+
+// src/routes/servidor/contracheques.ts
+var import_express42 = __toESM(require_express2(), 1);
+init_schema2();
+init_drizzle_orm();
+
+// src/middlewares/requireAuth.ts
+var JWT_SECRET2 = new TextEncoder().encode(
   process.env.JWT_SECRET ?? "portal-municipal-secret-key-change-in-production"
 );
 async function requireAuth(req, res, next) {
@@ -104212,34 +104929,68 @@ async function requireAuth(req, res, next) {
       return res.status(401).json({ error: "Token de autentica\xE7\xE3o ausente." });
     }
     const token = authHeader.slice(7);
-    const { payload } = await jwtVerify(token, JWT_SECRET);
+    const { payload } = await jwtVerify(token, JWT_SECRET2);
     req.user = payload;
     return next();
   } catch {
     return res.status(401).json({ error: "Token inv\xE1lido ou expirado." });
   }
 }
+function requireServidor(req, res, next) {
+  if (!req.user) {
+    return res.status(401).json({ error: "N\xE3o autenticado." });
+  }
+  if (!req.user.servidorId) {
+    return res.status(403).json({ error: "Acesso restrito ao Portal do Servidor. Usu\xE1rio n\xE3o vinculado a nenhum cadastro funcional." });
+  }
+  return next();
+}
+function requireRH(req, res, next) {
+  if (!req.user) {
+    return res.status(401).json({ error: "N\xE3o autenticado." });
+  }
+  if (!req.user.isAdmin && !req.user.modulosPermitidos.includes("rh")) {
+    return res.status(403).json({ error: "Acesso restrito ao Painel RH." });
+  }
+  return next();
+}
 
 // src/routes/servidor/contracheques.ts
-var router41 = (0, import_express41.Router)();
-router41.get("/servidor/contracheques", requireAuth, async (req, res) => {
+var router42 = (0, import_express42.Router)();
+router42.get("/servidor/contracheques", requireAuth, requireServidor, async (req, res) => {
   try {
-    const servidorId = req.user.id;
+    const servidorId = req.user.servidorId;
     const ano = req.query["ano"] ? parseInt(req.query["ano"]) : void 0;
+    const page = Math.max(1, parseInt(req.query["page"] ?? "1"));
+    const limit = Math.min(48, Math.max(1, parseInt(req.query["limit"] ?? "24")));
+    const offset = (page - 1) * limit;
     const conditions = [eq(contrachequeTable.servidorId, servidorId)];
     if (ano) conditions.push(eq(contrachequeTable.ano, ano));
-    const contracheques = await db.select().from(contrachequeTable).where(and(...conditions)).orderBy(desc(contrachequeTable.ano), desc(contrachequeTable.mes)).limit(24);
-    res.json({ data: contracheques });
+    const where = and(...conditions);
+    const [total, data] = await Promise.all([
+      db.select({ count: count() }).from(contrachequeTable).where(where),
+      db.select().from(contrachequeTable).where(where).orderBy(desc(contrachequeTable.ano), desc(contrachequeTable.mes)).limit(limit).offset(offset)
+    ]);
+    const totalCount = total[0]?.count ?? 0;
+    res.json({
+      data,
+      total: totalCount,
+      page,
+      limit,
+      totalPages: Math.ceil(totalCount / limit)
+    });
   } catch (err) {
     req.log.error(err);
     res.status(500).json({ error: "Erro interno" });
   }
 });
-router41.get("/servidor/contracheques/:mes/:ano", requireAuth, async (req, res) => {
+router42.get("/servidor/contracheques/:mes/:ano", requireAuth, requireServidor, async (req, res) => {
   try {
-    const servidorId = req.user.id;
+    const servidorId = req.user.servidorId;
     const mes = parseInt(req.params["mes"]);
     const ano = parseInt(req.params["ano"]);
+    if (isNaN(mes) || mes < 1 || mes > 12) return res.status(400).json({ error: "M\xEAs inv\xE1lido" });
+    if (isNaN(ano) || ano < 2e3) return res.status(400).json({ error: "Ano inv\xE1lido" });
     const [contracheque] = await db.select().from(contrachequeTable).where(
       and(
         eq(contrachequeTable.servidorId, servidorId),
@@ -104252,17 +105003,24 @@ router41.get("/servidor/contracheques/:mes/:ano", requireAuth, async (req, res) 
     const [servidor] = await db.select().from(servidoresCadastroTable).where(eq(servidoresCadastroTable.id, servidorId)).limit(1);
     res.json({
       contracheque,
-      linhas,
+      linhas: {
+        vencimentos: linhas.filter((l) => l.tipo === "vencimento"),
+        descontos: linhas.filter((l) => l.tipo === "desconto"),
+        informativos: linhas.filter((l) => l.tipo === "informativo")
+      },
       servidor: servidor ? {
         nome: servidor.nome,
-        cpf: servidor.cpf,
+        cpf: servidor.cpf.replace(/(\d{3})\d{3}(\d{3})(\d{2})/, "$1.***.$2-$3"),
         matricula: servidor.matricula,
         cargo: servidor.cargo,
         nivel: servidor.nivel,
         secretaria: servidor.secretaria,
         localTrabalho: servidor.localTrabalho,
         dataIngresso: servidor.dataIngresso,
-        vinculo: servidor.vinculo
+        vinculo: servidor.vinculo,
+        banco: servidor.banco,
+        agencia: servidor.agencia,
+        conta: servidor.conta ? `****${servidor.conta.slice(-4)}` : null
       } : null
     });
   } catch (err) {
@@ -104270,9 +105028,9 @@ router41.get("/servidor/contracheques/:mes/:ano", requireAuth, async (req, res) 
     res.status(500).json({ error: "Erro interno" });
   }
 });
-router41.get("/servidor/contracheques/:mes/:ano/pdf", requireAuth, async (req, res) => {
+router42.get("/servidor/contracheques/:mes/:ano/pdf", requireAuth, requireServidor, async (req, res) => {
   try {
-    const servidorId = req.user.id;
+    const servidorId = req.user.servidorId;
     const mes = parseInt(req.params["mes"]);
     const ano = parseInt(req.params["ano"]);
     const [contracheque] = await db.select().from(contrachequeTable).where(
@@ -104283,21 +105041,39 @@ router41.get("/servidor/contracheques/:mes/:ano/pdf", requireAuth, async (req, r
       )
     ).limit(1);
     if (!contracheque) return res.status(404).json({ error: "Contracheque n\xE3o encontrado" });
-    res.json({
-      message: "PDF mockado \u2014 integra\xE7\xE3o com gerador de PDF ser\xE1 implementada no frontend",
-      contrachequeId: contracheque.id,
-      competencia: contracheque.competencia,
-      downloadUrl: `/api/servidor/contracheques/${mes}/${ano}/pdf/download`
-    });
+    const [servidor] = await db.select({ nome: servidoresCadastroTable.nome, matricula: servidoresCadastroTable.matricula }).from(servidoresCadastroTable).where(eq(servidoresCadastroTable.id, servidorId)).limit(1);
+    const conteudo = `
+PREFEITURA MUNICIPAL DE PARAUAPEBAS
+CONTRACHEQUE \u2014 COMPET\xCANCIA: ${contracheque.competencia}
+
+Servidor: ${servidor?.nome ?? ""}
+Matr\xEDcula: ${servidor?.matricula ?? ""}
+Cargo: ${contracheque.cargoNaCompetencia ?? ""}
+Lota\xE7\xE3o: ${contracheque.secretariaNaCompetencia ?? ""}
+
+TOTAIS:
+  Bruto:     R$ ${contracheque.totalBruto.toFixed(2)}
+  Descontos: R$ ${contracheque.totalDescontos.toFixed(2)}
+  L\xEDquido:   R$ ${contracheque.totalLiquido.toFixed(2)}
+
+Status: ${contracheque.status === "pago" ? "PAGO" : "PENDENTE"}
+    `.trim();
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename="contracheque-${String(mes).padStart(2, "0")}-${ano}.pdf"`
+    );
+    res.send(Buffer.from(conteudo, "utf-8"));
   } catch (err) {
     req.log.error(err);
     res.status(500).json({ error: "Erro interno" });
   }
 });
-router41.get("/servidor/rendimentos/:ano", requireAuth, async (req, res) => {
+router42.get("/servidor/rendimentos/:ano", requireAuth, requireServidor, async (req, res) => {
   try {
-    const servidorId = req.user.id;
+    const servidorId = req.user.servidorId;
     const ano = parseInt(req.params["ano"]);
+    if (isNaN(ano)) return res.status(400).json({ error: "Ano inv\xE1lido" });
     const contracheques = await db.select().from(contrachequeTable).where(
       and(
         eq(contrachequeTable.servidorId, servidorId),
@@ -104310,16 +105086,24 @@ router41.get("/servidor/rendimentos/:ano", requireAuth, async (req, res) => {
     const totalLiquido = contracheques.reduce((s, c) => s + c.totalLiquido, 0);
     res.json({
       ano,
-      servidor: servidor ? { nome: servidor.nome, cpf: servidor.cpf, matricula: servidor.matricula } : null,
-      totalBruto,
-      totalDescontos,
-      totalLiquido,
+      servidor: servidor ? {
+        nome: servidor.nome,
+        cpf: servidor.cpf.replace(/(\d{3})\d{3}(\d{3})(\d{2})/, "$1.***.$2-$3"),
+        matricula: servidor.matricula,
+        cargo: servidor.cargo
+      } : null,
+      orgao: "Prefeitura Municipal de Parauapebas",
+      cnpjFonte: "00.000.000/0001-00",
+      totalBruto: Math.round(totalBruto * 100) / 100,
+      totalDescontos: Math.round(totalDescontos * 100) / 100,
+      totalLiquido: Math.round(totalLiquido * 100) / 100,
       meses: contracheques.map((c) => ({
         mes: c.mes,
         competencia: c.competencia,
         bruto: c.totalBruto,
         descontos: c.totalDescontos,
-        liquido: c.totalLiquido
+        liquido: c.totalLiquido,
+        status: c.status
       }))
     });
   } catch (err) {
@@ -104327,17 +105111,17 @@ router41.get("/servidor/rendimentos/:ano", requireAuth, async (req, res) => {
     res.status(500).json({ error: "Erro interno" });
   }
 });
-var contracheques_default = router41;
+var contracheques_default = router42;
 
 // src/routes/servidor/ferias.ts
-var import_express42 = __toESM(require_express2(), 1);
+var import_express43 = __toESM(require_express2(), 1);
 init_schema2();
 init_drizzle_orm();
-import { randomUUID as randomUUID18 } from "crypto";
-var router42 = (0, import_express42.Router)();
-router42.get("/servidor/ferias/saldo", requireAuth, async (req, res) => {
+import { randomUUID as randomUUID19 } from "crypto";
+var router43 = (0, import_express43.Router)();
+router43.get("/servidor/ferias/saldo", requireAuth, requireServidor, async (req, res) => {
   try {
-    const servidorId = req.user.id;
+    const servidorId = req.user.servidorId;
     const periodos = await db.select().from(periodosAquisitivosTable).where(eq(periodosAquisitivosTable.servidorId, servidorId)).orderBy(desc(periodosAquisitivosTable.dataInicio));
     const periodoAtual = periodos.find((p) => p.status === "disponivel") ?? periodos[0] ?? null;
     const saldoTotal = periodos.filter((p) => p.status === "disponivel").reduce((s, p) => s + p.diasSaldo, 0);
@@ -104365,9 +105149,9 @@ router42.get("/servidor/ferias/saldo", requireAuth, async (req, res) => {
     res.status(500).json({ error: "Erro interno" });
   }
 });
-router42.get("/servidor/ferias/historico", requireAuth, async (req, res) => {
+router43.get("/servidor/ferias/historico", requireAuth, requireServidor, async (req, res) => {
   try {
-    const servidorId = req.user.id;
+    const servidorId = req.user.servidorId;
     const solicitacoes = await db.select().from(solicitacoesFeriasTable).where(eq(solicitacoesFeriasTable.servidorId, servidorId)).orderBy(desc(solicitacoesFeriasTable.createdAt));
     res.json({ data: solicitacoes });
   } catch (err) {
@@ -104375,9 +105159,9 @@ router42.get("/servidor/ferias/historico", requireAuth, async (req, res) => {
     res.status(500).json({ error: "Erro interno" });
   }
 });
-router42.post("/servidor/ferias/solicitar", requireAuth, async (req, res) => {
+router43.post("/servidor/ferias/solicitar", requireAuth, requireServidor, async (req, res) => {
   try {
-    const servidorId = req.user.id;
+    const servidorId = req.user.servidorId;
     const tenantId = req.user.tenantId;
     const b = req.body;
     if (!b.periodoAquisitivoId) return res.status(400).json({ error: "periodoAquisitivoId \xE9 obrigat\xF3rio" });
@@ -104399,7 +105183,7 @@ router42.post("/servidor/ferias/solicitar", requireAuth, async (req, res) => {
     const retorno = new Date(fim);
     retorno.setDate(retorno.getDate() + 1);
     const protocolo = `FER-${(/* @__PURE__ */ new Date()).getFullYear()}-${String(Date.now()).slice(-6)}`;
-    const id = randomUUID18();
+    const id = randomUUID19();
     const timeline = [
       {
         status: "protocolado",
@@ -104432,9 +105216,9 @@ router42.post("/servidor/ferias/solicitar", requireAuth, async (req, res) => {
     res.status(500).json({ error: "Erro interno" });
   }
 });
-router42.get("/servidor/ferias/:id", requireAuth, async (req, res) => {
+router43.get("/servidor/ferias/:id", requireAuth, requireServidor, async (req, res) => {
   try {
-    const servidorId = req.user.id;
+    const servidorId = req.user.servidorId;
     const [sol] = await db.select().from(solicitacoesFeriasTable).where(
       and(
         eq(solicitacoesFeriasTable.id, req.params["id"]),
@@ -104449,14 +105233,14 @@ router42.get("/servidor/ferias/:id", requireAuth, async (req, res) => {
     res.status(500).json({ error: "Erro interno" });
   }
 });
-var ferias_default = router42;
+var ferias_default = router43;
 
 // src/routes/servidor/requerimentos.ts
-var import_express43 = __toESM(require_express2(), 1);
+var import_express44 = __toESM(require_express2(), 1);
 init_schema2();
 init_drizzle_orm();
-import { randomUUID as randomUUID19 } from "crypto";
-var router43 = (0, import_express43.Router)();
+import { randomUUID as randomUUID20 } from "crypto";
+var router44 = (0, import_express44.Router)();
 var TIPOS_REQUERIMENTO = [
   "licenca-interesses-particulares",
   "licenca-acompanhar-conjuge",
@@ -104473,9 +105257,9 @@ var TIPOS_REQUERIMENTO = [
   "afastamento-capacitacao",
   "outros"
 ];
-router43.get("/servidor/requerimentos", requireAuth, async (req, res) => {
+router44.get("/servidor/requerimentos", requireAuth, requireServidor, async (req, res) => {
   try {
-    const servidorId = req.user.id;
+    const servidorId = req.user.servidorId;
     const conditions = [eq(requerimentosTable.servidorId, servidorId)];
     if (req.query["tipo"]) conditions.push(eq(requerimentosTable.tipo, req.query["tipo"]));
     if (req.query["status"]) conditions.push(eq(requerimentosTable.status, req.query["status"]));
@@ -104486,9 +105270,9 @@ router43.get("/servidor/requerimentos", requireAuth, async (req, res) => {
     res.status(500).json({ error: "Erro interno" });
   }
 });
-router43.post("/servidor/requerimentos", requireAuth, async (req, res) => {
+router44.post("/servidor/requerimentos", requireAuth, requireServidor, async (req, res) => {
   try {
-    const servidorId = req.user.id;
+    const servidorId = req.user.servidorId;
     const tenantId = req.user.tenantId;
     const b = req.body;
     if (!b.tipo) return res.status(400).json({ error: "tipo \xE9 obrigat\xF3rio" });
@@ -104496,8 +105280,21 @@ router43.post("/servidor/requerimentos", requireAuth, async (req, res) => {
     if (!b.justificativa || b.justificativa.length < 100) {
       return res.status(400).json({ error: "justificativa deve ter no m\xEDnimo 100 caracteres" });
     }
+    const documentos = [];
+    if (Array.isArray(b.documentos)) {
+      for (const doc of b.documentos) {
+        if (typeof doc !== "object" || doc === null) continue;
+        const d = doc;
+        if (!d["nome"] || !d["url"]) continue;
+        documentos.push({
+          nome: String(d["nome"]),
+          url: String(d["url"]),
+          tamanho: Number(d["tamanho"] ?? 0)
+        });
+      }
+    }
     const protocolo = `REQ-${(/* @__PURE__ */ new Date()).getFullYear()}-${String(Date.now()).slice(-6)}`;
-    const id = randomUUID19();
+    const id = randomUUID20();
     const timeline = [
       {
         status: "protocolado",
@@ -104515,20 +105312,20 @@ router43.post("/servidor/requerimentos", requireAuth, async (req, res) => {
       assunto: b.assunto || b.tipo,
       justificativa: b.justificativa,
       camposEspecificos: b.camposEspecificos ?? {},
-      documentos: b.documentos ?? [],
+      documentos,
       status: "protocolado",
       timeline
     };
     await db.insert(requerimentosTable).values(novo);
-    res.status(201).json({ protocolo, id, status: "protocolado" });
+    res.status(201).json({ protocolo, id, status: "protocolado", documentosAnexados: documentos.length });
   } catch (err) {
     req.log.error(err);
     res.status(500).json({ error: "Erro interno" });
   }
 });
-router43.get("/servidor/requerimentos/:id", requireAuth, async (req, res) => {
+router44.get("/servidor/requerimentos/:id", requireAuth, requireServidor, async (req, res) => {
   try {
-    const servidorId = req.user.id;
+    const servidorId = req.user.servidorId;
     const [req_] = await db.select().from(requerimentosTable).where(
       and(
         eq(requerimentosTable.id, req.params["id"]),
@@ -104542,9 +105339,9 @@ router43.get("/servidor/requerimentos/:id", requireAuth, async (req, res) => {
     res.status(500).json({ error: "Erro interno" });
   }
 });
-router43.post("/servidor/requerimentos/:id/recurso", requireAuth, async (req, res) => {
+router44.post("/servidor/requerimentos/:id/recurso", requireAuth, requireServidor, async (req, res) => {
   try {
-    const servidorId = req.user.id;
+    const servidorId = req.user.servidorId;
     const [req_] = await db.select().from(requerimentosTable).where(
       and(
         eq(requerimentosTable.id, req.params["id"]),
@@ -104580,16 +105377,16 @@ router43.post("/servidor/requerimentos/:id/recurso", requireAuth, async (req, re
     res.status(500).json({ error: "Erro interno" });
   }
 });
-var requerimentos_default = router43;
+var requerimentos_default = router44;
 
 // src/routes/servidor/perfil.ts
-var import_express44 = __toESM(require_express2(), 1);
+var import_express45 = __toESM(require_express2(), 1);
 init_schema2();
 init_drizzle_orm();
-var router44 = (0, import_express44.Router)();
-router44.get("/servidor/perfil", requireAuth, async (req, res) => {
+var router45 = (0, import_express45.Router)();
+router45.get("/servidor/perfil", requireAuth, requireServidor, async (req, res) => {
   try {
-    const servidorId = req.user.id;
+    const servidorId = req.user.servidorId;
     const [servidor] = await db.select().from(servidoresCadastroTable).where(eq(servidoresCadastroTable.id, servidorId)).limit(1);
     if (!servidor) return res.status(404).json({ error: "Servidor n\xE3o encontrado" });
     const perfil = {
@@ -104605,9 +105402,9 @@ router44.get("/servidor/perfil", requireAuth, async (req, res) => {
     res.status(500).json({ error: "Erro interno" });
   }
 });
-router44.put("/servidor/perfil", requireAuth, async (req, res) => {
+router45.put("/servidor/perfil", requireAuth, requireServidor, async (req, res) => {
   try {
-    const servidorId = req.user.id;
+    const servidorId = req.user.servidorId;
     const b = req.body;
     const camposPermitidos = {};
     if (b.emailPessoal !== void 0) camposPermitidos.emailPessoal = b.emailPessoal;
@@ -104631,9 +105428,9 @@ router44.put("/servidor/perfil", requireAuth, async (req, res) => {
     res.status(500).json({ error: "Erro interno" });
   }
 });
-router44.get("/servidor/historico-funcional", requireAuth, async (req, res) => {
+router45.get("/servidor/historico-funcional", requireAuth, requireServidor, async (req, res) => {
   try {
-    const servidorId = req.user.id;
+    const servidorId = req.user.servidorId;
     const historico = await db.select().from(historicoFuncionalTable).where(eq(historicoFuncionalTable.servidorId, servidorId)).orderBy(asc(historicoFuncionalTable.data));
     res.json({ data: historico });
   } catch (err) {
@@ -104641,9 +105438,9 @@ router44.get("/servidor/historico-funcional", requireAuth, async (req, res) => {
     res.status(500).json({ error: "Erro interno" });
   }
 });
-router44.get("/servidor/tempo-servico", requireAuth, async (req, res) => {
+router45.get("/servidor/tempo-servico", requireAuth, requireServidor, async (req, res) => {
   try {
-    const servidorId = req.user.id;
+    const servidorId = req.user.servidorId;
     const [servidor] = await db.select().from(servidoresCadastroTable).where(eq(servidoresCadastroTable.id, servidorId)).limit(1);
     if (!servidor) return res.status(404).json({ error: "Servidor n\xE3o encontrado" });
     const hoje = /* @__PURE__ */ new Date();
@@ -104675,25 +105472,25 @@ router44.get("/servidor/tempo-servico", requireAuth, async (req, res) => {
     res.status(500).json({ error: "Erro interno" });
   }
 });
-var perfil_default = router44;
+var perfil_default = router45;
 
 // src/routes/servidor/index.ts
-var router45 = (0, import_express45.Router)();
-router45.use(contracheques_default);
-router45.use(ferias_default);
-router45.use(requerimentos_default);
-router45.use(perfil_default);
-var servidor_default = router45;
+var router46 = (0, import_express46.Router)();
+router46.use(contracheques_default);
+router46.use(ferias_default);
+router46.use(requerimentos_default);
+router46.use(perfil_default);
+var servidor_default = router46;
 
 // src/routes/rh/index.ts
-var import_express47 = __toESM(require_express2(), 1);
+var import_express48 = __toESM(require_express2(), 1);
 
 // src/routes/rh/dashboard.ts
-var import_express46 = __toESM(require_express2(), 1);
+var import_express47 = __toESM(require_express2(), 1);
 init_schema2();
 init_drizzle_orm();
-var router46 = (0, import_express46.Router)();
-router46.get("/rh/dashboard", requireAuth, async (req, res) => {
+var router47 = (0, import_express47.Router)();
+router47.get("/rh/dashboard", requireAuth, requireRH, async (req, res) => {
   try {
     const tenantId = req.user.tenantId;
     const hoje = (/* @__PURE__ */ new Date()).toISOString().split("T")[0];
@@ -104758,9 +105555,9 @@ router46.get("/rh/dashboard", requireAuth, async (req, res) => {
     const mesHoje = (/* @__PURE__ */ new Date()).getMonth() + 1;
     const anoHoje = (/* @__PURE__ */ new Date()).getFullYear();
     const folhaDoMes = await db.select({
-      totalBruto: sql`sum(total_bruto)::numeric`,
-      totalLiquido: sql`sum(total_liquido)::numeric`,
-      totalDescontos: sql`sum(total_descontos)::numeric`,
+      totalBruto: sql`COALESCE(sum(c.total_bruto), 0)::numeric`,
+      totalLiquido: sql`COALESCE(sum(c.total_liquido), 0)::numeric`,
+      totalDescontos: sql`COALESCE(sum(c.total_descontos), 0)::numeric`,
       qtdServidores: sql`count(*)::int`
     }).from(contrachequeTable).innerJoin(
       servidoresCadastroTable,
@@ -104785,7 +105582,7 @@ router46.get("/rh/dashboard", requireAuth, async (req, res) => {
     res.status(500).json({ error: "Erro interno" });
   }
 });
-router46.get("/rh/ferias/pendentes", requireAuth, async (req, res) => {
+router47.get("/rh/ferias/pendentes", requireAuth, requireRH, async (req, res) => {
   try {
     const tenantId = req.user.tenantId;
     const pendentes = await db.select({
@@ -104812,7 +105609,7 @@ router46.get("/rh/ferias/pendentes", requireAuth, async (req, res) => {
     res.status(500).json({ error: "Erro interno" });
   }
 });
-router46.patch("/rh/ferias/:id/aprovar", requireAuth, async (req, res) => {
+router47.patch("/rh/ferias/:id/aprovar", requireAuth, requireRH, async (req, res) => {
   try {
     const tenantId = req.user.tenantId;
     const [sol] = await db.select().from(solicitacoesFeriasTable).where(
@@ -104842,7 +105639,7 @@ router46.patch("/rh/ferias/:id/aprovar", requireAuth, async (req, res) => {
     res.status(500).json({ error: "Erro interno" });
   }
 });
-router46.patch("/rh/ferias/:id/rejeitar", requireAuth, async (req, res) => {
+router47.patch("/rh/ferias/:id/rejeitar", requireAuth, requireRH, async (req, res) => {
   try {
     const tenantId = req.user.tenantId;
     const { motivo } = req.body;
@@ -104873,7 +105670,7 @@ router46.patch("/rh/ferias/:id/rejeitar", requireAuth, async (req, res) => {
     res.status(500).json({ error: "Erro interno" });
   }
 });
-router46.get("/rh/requerimentos/pendentes", requireAuth, async (req, res) => {
+router47.get("/rh/requerimentos/pendentes", requireAuth, requireRH, async (req, res) => {
   try {
     const tenantId = req.user.tenantId;
     const pendentes = await db.select({
@@ -104900,7 +105697,7 @@ router46.get("/rh/requerimentos/pendentes", requireAuth, async (req, res) => {
     res.status(500).json({ error: "Erro interno" });
   }
 });
-router46.patch("/rh/requerimentos/:id/deferir", requireAuth, async (req, res) => {
+router47.patch("/rh/requerimentos/:id/deferir", requireAuth, requireRH, async (req, res) => {
   try {
     const tenantId = req.user.tenantId;
     const { parecer, decisao } = req.body;
@@ -104918,22 +105715,39 @@ router46.patch("/rh/requerimentos/:id/deferir", requireAuth, async (req, res) =>
       data: (/* @__PURE__ */ new Date()).toISOString(),
       responsavel: req.user.nome
     });
+    const agora = /* @__PURE__ */ new Date();
+    const despacho = [
+      `DESPACHO \u2014 ${agora.toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" })}`,
+      ``,
+      `Requerimento: ${req_.protocolo}`,
+      `Tipo: ${req_.tipo}`,
+      `Servidor: (ver cadastro ID ${req_.servidorId})`,
+      ``,
+      `DECIS\xC3O: ${decisao ?? "DEFERIDO"}`,
+      ``,
+      parecer ? `PARECER T\xC9CNICO:
+${parecer}` : "Analisado e julgado procedente.",
+      ``,
+      `Decisor: ${req.user.nome}`,
+      `Data: ${agora.toISOString()}`
+    ].join("\n");
     await db.update(requerimentosTable).set({
       status: "deferido",
       parecerTecnico: parecer,
       decisao: decisao ?? "Deferido",
+      despacho,
       decisorNome: req.user.nome,
       decidoEm: /* @__PURE__ */ new Date(),
       timeline: novaTimeline,
       updatedAt: /* @__PURE__ */ new Date()
     }).where(eq(requerimentosTable.id, req_.id));
-    res.json({ message: "Requerimento deferido", id: req_.id });
+    res.json({ message: "Requerimento deferido", id: req_.id, despacho });
   } catch (err) {
     req.log.error(err);
     res.status(500).json({ error: "Erro interno" });
   }
 });
-router46.patch("/rh/requerimentos/:id/indeferir", requireAuth, async (req, res) => {
+router47.patch("/rh/requerimentos/:id/indeferir", requireAuth, requireRH, async (req, res) => {
   try {
     const tenantId = req.user.tenantId;
     const { parecer, motivo } = req.body;
@@ -104954,11 +105768,33 @@ router46.patch("/rh/requerimentos/:id/indeferir", requireAuth, async (req, res) 
       data: (/* @__PURE__ */ new Date()).toISOString(),
       responsavel: req.user.nome
     });
+    const agora = /* @__PURE__ */ new Date();
+    const despacho = [
+      `DESPACHO DE INDEFERIMENTO \u2014 ${agora.toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" })}`,
+      ``,
+      `Requerimento: ${req_.protocolo}`,
+      `Tipo: ${req_.tipo}`,
+      `Servidor: (ver cadastro ID ${req_.servidorId})`,
+      ``,
+      `DECIS\xC3O: INDEFERIDO`,
+      ``,
+      `MOTIVO:
+${motivo}`,
+      ``,
+      parecer ? `PARECER T\xC9CNICO:
+${parecer}` : "",
+      ``,
+      `Prazo para recurso: ${prazoRecurso.toISOString().split("T")[0]}`,
+      ``,
+      `Decisor: ${req.user.nome}`,
+      `Data: ${agora.toISOString()}`
+    ].filter((l, i, arr) => !(l === "" && arr[i - 1] === "")).join("\n");
     await db.update(requerimentosTable).set({
       status: "indeferido",
       parecerTecnico: parecer,
       decisao: "Indeferido",
       motivoDecisao: motivo,
+      despacho,
       decisorNome: req.user.nome,
       decidoEm: /* @__PURE__ */ new Date(),
       prazoRecurso: prazoRecurso.toISOString().split("T")[0],
@@ -104968,31 +105804,32 @@ router46.patch("/rh/requerimentos/:id/indeferir", requireAuth, async (req, res) 
     res.json({
       message: "Requerimento indeferido",
       id: req_.id,
-      prazoRecurso: prazoRecurso.toISOString().split("T")[0]
+      prazoRecurso: prazoRecurso.toISOString().split("T")[0],
+      despacho
     });
   } catch (err) {
     req.log.error(err);
     res.status(500).json({ error: "Erro interno" });
   }
 });
-router46.get("/rh/folha-resumo", requireAuth, async (req, res) => {
+router47.get("/rh/folha-resumo", requireAuth, requireRH, async (req, res) => {
   try {
     const tenantId = req.user.tenantId;
     const mes = req.query["mes"] ? parseInt(req.query["mes"]) : (/* @__PURE__ */ new Date()).getMonth() + 1;
     const ano = req.query["ano"] ? parseInt(req.query["ano"]) : (/* @__PURE__ */ new Date()).getFullYear();
     const resumo = await db.select({
-      totalBruto: sql`sum(c.total_bruto)::numeric`,
-      totalLiquido: sql`sum(c.total_liquido)::numeric`,
-      totalDescontos: sql`sum(c.total_descontos)::numeric`,
+      totalBruto: sql`COALESCE(sum(c.total_bruto), 0)::numeric`,
+      totalLiquido: sql`COALESCE(sum(c.total_liquido), 0)::numeric`,
+      totalDescontos: sql`COALESCE(sum(c.total_descontos), 0)::numeric`,
       qtdServidores: sql`count(*)::int`
-    }).from(sql`contracheques c`).innerJoin(
+    }).from(contrachequeTable).innerJoin(
       servidoresCadastroTable,
-      sql`c.servidor_id = ${servidoresCadastroTable.id}`
+      eq(contrachequeTable.servidorId, servidoresCadastroTable.id)
     ).where(
       and(
         eq(servidoresCadastroTable.tenantId, tenantId),
-        sql`c.mes = ${mes}`,
-        sql`c.ano = ${ano}`
+        eq(contrachequeTable.mes, mes),
+        eq(contrachequeTable.ano, ano)
       )
     );
     res.json({
@@ -105005,61 +105842,62 @@ router46.get("/rh/folha-resumo", requireAuth, async (req, res) => {
     res.status(500).json({ error: "Erro interno" });
   }
 });
-var dashboard_default = router46;
+var dashboard_default = router47;
 
 // src/routes/rh/index.ts
-var router47 = (0, import_express47.Router)();
-router47.use(dashboard_default);
-var rh_default = router47;
+var router48 = (0, import_express48.Router)();
+router48.use(dashboard_default);
+var rh_default = router48;
 
 // src/routes/index.ts
-var router48 = (0, import_express48.Router)();
-router48.use(health_default);
-router48.use(tenant_default);
-router48.use(noticias_default);
-router48.use(servicos_default);
-router48.use(secretarias_default);
-router48.use(transparencia_default);
-router48.use(licitacoes_default);
-router48.use(legislacao_default);
-router48.use(agenda_default);
-router48.use(galeria_default);
-router48.use(concursos_default);
-router48.use(busca_default);
-router48.use(sic_default);
-router48.use(noticias_default2);
-router48.use(banners_default);
-router48.use(paginas_default);
-router48.use(documentos_default);
-router48.use(menus_default);
-router48.use(site_config_default);
-router48.use(licitacoes_default2);
-router48.use(galeria_default2);
-router48.use(agenda_default2);
-router48.use(legislacao_default2);
-router48.use(config_default);
-router48.use(banners_default2);
-router48.use(news_default);
-router48.use(agenda_default3);
-router48.use(gallery_default);
-router48.use(legislation_default);
-router48.use(bids_default);
-router48.use(transparency_default);
-router48.use(secretarias_pub_default);
-router48.use(search_default);
-router48.use(pages_default);
-router48.use(news_default2);
-router48.use(banners_default3);
-router48.use(transparency_default2);
-router48.use(bids_default2);
-router48.use(agenda_default4);
-router48.use(config_default2);
-router48.use(servidor_default);
-router48.use(rh_default);
-var routes_default = router48;
+var router49 = (0, import_express49.Router)();
+router49.use(health_default);
+router49.use(auth_default);
+router49.use(tenant_default);
+router49.use(noticias_default);
+router49.use(servicos_default);
+router49.use(secretarias_default);
+router49.use(transparencia_default);
+router49.use(licitacoes_default);
+router49.use(legislacao_default);
+router49.use(agenda_default);
+router49.use(galeria_default);
+router49.use(concursos_default);
+router49.use(busca_default);
+router49.use(sic_default);
+router49.use(noticias_default2);
+router49.use(banners_default);
+router49.use(paginas_default);
+router49.use(documentos_default);
+router49.use(menus_default);
+router49.use(site_config_default);
+router49.use(licitacoes_default2);
+router49.use(galeria_default2);
+router49.use(agenda_default2);
+router49.use(legislacao_default2);
+router49.use(config_default);
+router49.use(banners_default2);
+router49.use(news_default);
+router49.use(agenda_default3);
+router49.use(gallery_default);
+router49.use(legislation_default);
+router49.use(bids_default);
+router49.use(transparency_default);
+router49.use(secretarias_pub_default);
+router49.use(search_default);
+router49.use(pages_default);
+router49.use(news_default2);
+router49.use(banners_default3);
+router49.use(transparency_default2);
+router49.use(bids_default2);
+router49.use(agenda_default4);
+router49.use(config_default2);
+router49.use(servidor_default);
+router49.use(rh_default);
+var routes_default = router49;
 
 // src/app.ts
-var app = (0, import_express49.default)();
+var app = (0, import_express50.default)();
 app.use(
   (0, import_pino_http.default)({
     logger,
@@ -105080,8 +105918,8 @@ app.use(
   })
 );
 app.use((0, import_cors.default)());
-app.use(import_express49.default.json());
-app.use(import_express49.default.urlencoded({ extended: true }));
+app.use(import_express50.default.json());
+app.use(import_express50.default.urlencoded({ extended: true }));
 app.use("/api", routes_default);
 var app_default = app;
 

@@ -28,7 +28,7 @@ function verifyPassword(password: string, stored: string): boolean {
   return verify === hash;
 }
 
-async function signAccess(user: { id: string; tenantId: string; email: string; nome: string; isAdmin: boolean; modulosPermitidos: string[] }) {
+async function signAccess(user: { id: string; tenantId: string; email: string; nome: string; isAdmin: boolean; modulosPermitidos: string[]; servidorId?: string | null }) {
   return new SignJWT({
     id: user.id,
     tenantId: user.tenantId,
@@ -36,6 +36,7 @@ async function signAccess(user: { id: string; tenantId: string; email: string; n
     nome: user.nome,
     isAdmin: user.isAdmin,
     modulosPermitidos: user.modulosPermitidos,
+    servidorId: user.servidorId ?? null,
   })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()

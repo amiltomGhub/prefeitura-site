@@ -3,7 +3,7 @@ import { db } from "@workspace/db";
 import { requerimentosTable } from "@workspace/db/schema";
 import { eq, and, desc } from "drizzle-orm";
 import { randomUUID } from "crypto";
-import { requireAuth, type AuthRequest } from "../../middlewares/requireAuth";
+import { requireAuth, requireServidor, type AuthRequest } from "../../middlewares/requireAuth";
 
 const router: IRouter = Router();
 
@@ -25,9 +25,9 @@ const TIPOS_REQUERIMENTO = [
 ] as const;
 
 // GET /api/servidor/requerimentos?tipo=&status=&page=1&limit=20
-router.get("/servidor/requerimentos", requireAuth, async (req: AuthRequest, res) => {
+router.get("/servidor/requerimentos", requireAuth, requireServidor, async (req: AuthRequest, res) => {
   try {
-    const servidorId = req.user!.id;
+    const servidorId = req.user!.servidorId!;
     const conditions = [eq(requerimentosTable.servidorId, servidorId)];
     if (req.query["tipo"]) conditions.push(eq(requerimentosTable.tipo, req.query["tipo"] as string));
     if (req.query["status"]) conditions.push(eq(requerimentosTable.status, req.query["status"] as string));
@@ -49,12 +49,11 @@ router.get("/servidor/requerimentos", requireAuth, async (req: AuthRequest, res)
 // POST /api/servidor/requerimentos
 // Body (JSON): { tipo, assunto?, justificativa (min 100 chars), camposEspecificos?, documentos? }
 // documentos: array de { nome, url, tamanho } — arquivos já enviados via upload prévio (multipart)
-// ou enviados como base64 em { nome, conteudoBase64, mimeType } para integração futura.
 // O upload real de arquivos deve ser feito antes desta chamada usando uma rota de upload dedicada
 // (e.g. POST /api/upload), que retorna a URL pública do arquivo para compor o array documentos.
-router.post("/servidor/requerimentos", requireAuth, async (req: AuthRequest, res) => {
+router.post("/servidor/requerimentos", requireAuth, requireServidor, async (req: AuthRequest, res) => {
   try {
-    const servidorId = req.user!.id;
+    const servidorId = req.user!.servidorId!;
     const tenantId = req.user!.tenantId;
     const b = req.body;
 
@@ -64,7 +63,6 @@ router.post("/servidor/requerimentos", requireAuth, async (req: AuthRequest, res
       return res.status(400).json({ error: "justificativa deve ter no mínimo 100 caracteres" });
     }
 
-    // Validar estrutura dos documentos (se fornecidos)
     const documentos: Array<{ nome: string; url: string; tamanho: number }> = [];
     if (Array.isArray(b.documentos)) {
       for (const doc of b.documentos as unknown[]) {
@@ -115,9 +113,9 @@ router.post("/servidor/requerimentos", requireAuth, async (req: AuthRequest, res
 });
 
 // GET /api/servidor/requerimentos/:id
-router.get("/servidor/requerimentos/:id", requireAuth, async (req: AuthRequest, res) => {
+router.get("/servidor/requerimentos/:id", requireAuth, requireServidor, async (req: AuthRequest, res) => {
   try {
-    const servidorId = req.user!.id;
+    const servidorId = req.user!.servidorId!;
 
     const [req_] = await db
       .select()
@@ -140,9 +138,9 @@ router.get("/servidor/requerimentos/:id", requireAuth, async (req: AuthRequest, 
 });
 
 // POST /api/servidor/requerimentos/:id/recurso
-router.post("/servidor/requerimentos/:id/recurso", requireAuth, async (req: AuthRequest, res) => {
+router.post("/servidor/requerimentos/:id/recurso", requireAuth, requireServidor, async (req: AuthRequest, res) => {
   try {
-    const servidorId = req.user!.id;
+    const servidorId = req.user!.servidorId!;
 
     const [req_] = await db
       .select()
