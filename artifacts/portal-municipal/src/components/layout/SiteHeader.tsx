@@ -2,8 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Search, Menu, X, UserCircle, Phone, Mail, ChevronDown,
-  MessageSquare, Headphones, Globe, Smartphone
+  Search, Menu, X, UserCircle, MessageSquare, Headphones, Globe, Smartphone
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useGetTenantConfig } from "@workspace/api-client-react";
@@ -17,17 +16,14 @@ export function SiteHeader() {
   const [location] = useLocation();
   const { data: tenant } = useGetTenantConfig({ tenant: "parauapebas" });
 
-  // Sticky behavior: hide identity bar on scroll
   useEffect(() => {
     const handler = () => setIsScrolled(window.scrollY > 80);
     window.addEventListener("scroll", handler, { passive: true });
     return () => window.removeEventListener("scroll", handler);
   }, []);
 
-  // Close mobile menu on route change
   useEffect(() => { setIsMobileMenuOpen(false); }, [location]);
 
-  // "/" shortcut to open search
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.key === "/" && !["INPUT","TEXTAREA","SELECT"].includes((e.target as HTMLElement).tagName)) {
@@ -55,6 +51,13 @@ export function SiteHeader() {
     { label: "Ouvidoria", href: "/ouvidoria" },
   ];
 
+  const quickLinks = [
+    { label: "Ouvidoria", href: "/ouvidoria", icon: MessageSquare, color: "hover:text-primary hover:bg-primary/8" },
+    { label: "SIC / e-SIC", href: "/transparencia/sic", icon: Headphones, color: "hover:text-primary hover:bg-primary/8" },
+    { label: "Serviços Online", href: "/servicos", icon: Globe, color: "hover:text-primary hover:bg-primary/8" },
+    { label: "WhatsApp", href: "https://wa.me/5594999999999", icon: Smartphone, color: "hover:text-green-700 hover:bg-green-50", external: true },
+  ];
+
   return (
     <>
       <header className={cn("sticky top-9 z-40 w-full bg-background transition-shadow duration-300", isScrolled ? "shadow-lg" : "shadow-sm border-b border-border")}>
@@ -67,90 +70,87 @@ export function SiteHeader() {
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.25, ease: "easeInOut" }}
-              className="overflow-hidden border-b border-border"
+              className="overflow-hidden border-b border-border/60"
             >
               <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex items-center justify-between py-3 gap-4">
+                <div className="flex items-center justify-between py-4 gap-6">
 
-                  {/* Logo + Nome */}
+                  {/* ── Logo + Nome ── */}
                   <Link
                     href="/"
-                    className="flex items-center gap-3 group focus:outline-none focus:ring-4 focus:ring-primary/20 rounded-xl p-1 -ml-1 flex-shrink-0"
+                    className="flex items-center gap-4 group focus:outline-none focus:ring-4 focus:ring-primary/20 rounded-2xl p-1 -ml-1 flex-shrink-0"
                     aria-label={`Ir para a página inicial — ${tenant?.nome ?? "Prefeitura Municipal"}`}
                   >
-                    <div className="w-14 h-14 flex-shrink-0 rounded-full bg-primary/5 border border-primary/10 flex items-center justify-center overflow-hidden">
-                      <img
-                        src={tenant?.brasao ?? `${import.meta.env.BASE_URL}images/brasao.png`}
-                        alt={`Brasão de ${tenant?.nome ?? "Município"}`}
-                        className="w-full h-full object-contain p-1"
-                        width={56}
-                        height={56}
-                      />
+                    {/* Brasão — maior, com sombra e borda gov.br */}
+                    <div className="relative flex-shrink-0">
+                      <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary/5 to-primary/10 border-2 border-primary/15 flex items-center justify-center overflow-hidden shadow-sm group-hover:shadow-md group-hover:border-primary/30 transition-all duration-200">
+                        <img
+                          src={tenant?.brasao ?? `${import.meta.env.BASE_URL}images/brasao.png`}
+                          alt={`Brasão de ${tenant?.nome ?? "Município"}`}
+                          className="w-full h-full object-contain p-1.5"
+                          width={80}
+                          height={80}
+                        />
+                      </div>
+                      {/* Faixa verde decorativa na borda (padrão gov.br) */}
+                      <span className="absolute -bottom-0.5 left-0 right-0 h-1 bg-secondary rounded-b-2xl" aria-hidden="true" />
                     </div>
-                    <div className="flex flex-col leading-tight">
-                      <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest">
+
+                    {/* Texto identificador */}
+                    <div className="flex flex-col justify-center leading-tight">
+                      <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.18em]">
                         Prefeitura Municipal de
                       </span>
-                      <span className="text-xl sm:text-2xl font-black text-foreground group-hover:text-primary transition-colors">
-                        {tenant?.nome ?? "Parauapebas"}
+                      <span className="text-[22px] sm:text-2xl font-black text-foreground group-hover:text-primary transition-colors leading-none mt-0.5">
+                        {(tenant?.nome ?? "Parauapebas").replace("Prefeitura Municipal de ", "")}
                       </span>
-                      <span className="text-[11px] text-muted-foreground font-medium">
+                      <span className="text-[11px] text-muted-foreground font-medium mt-1 flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-secondary inline-block" aria-hidden="true" />
                         {tenant?.estado ?? "Pará"} · Gestão 2025–2028
                       </span>
                     </div>
                   </Link>
 
-                  {/* Centro: Links rápidos */}
-                  <div className="hidden xl:flex items-center gap-6 text-xs font-medium text-muted-foreground">
-                    <a
-                      href="/ouvidoria"
-                      className="flex items-center gap-1.5 hover:text-primary transition-colors focus:outline-none focus:underline"
-                    >
-                      <MessageSquare className="w-3.5 h-3.5" aria-hidden="true" />
-                      Ouvidoria
-                    </a>
-                    <a
-                      href="/transparencia/sic"
-                      className="flex items-center gap-1.5 hover:text-primary transition-colors focus:outline-none focus:underline"
-                    >
-                      <Headphones className="w-3.5 h-3.5" aria-hidden="true" />
-                      SIC / e-SIC
-                    </a>
-                    <a
-                      href="/servicos"
-                      className="flex items-center gap-1.5 hover:text-primary transition-colors focus:outline-none focus:underline"
-                    >
-                      <Globe className="w-3.5 h-3.5" aria-hidden="true" />
-                      Serviços Online
-                    </a>
-                    <a
-                      href="https://wa.me/5594999999999"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-1.5 hover:text-green-600 transition-colors focus:outline-none focus:underline"
-                    >
-                      <Smartphone className="w-3.5 h-3.5" aria-hidden="true" />
-                      WhatsApp
-                    </a>
-                  </div>
+                  {/* ── Links Rápidos ── */}
+                  <nav
+                    aria-label="Links de acesso rápido"
+                    className="hidden xl:flex items-center gap-1"
+                  >
+                    {quickLinks.map((link, i) => (
+                      <a
+                        key={link.label}
+                        href={link.href}
+                        {...(link.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                        className={cn(
+                          "flex flex-col items-center gap-1 px-3.5 py-2 rounded-xl text-muted-foreground transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-primary/40",
+                          link.color
+                        )}
+                      >
+                        <link.icon className="w-[18px] h-[18px] flex-shrink-0" aria-hidden="true" />
+                        <span className="text-[11px] font-semibold whitespace-nowrap leading-none">
+                          {link.label}
+                        </span>
+                      </a>
+                    ))}
+                  </nav>
 
-                  {/* Direita: busca + área cidadão */}
+                  {/* ── Busca + Área do Cidadão ── */}
                   <div className="hidden lg:flex items-center gap-3 flex-shrink-0">
                     <button
                       id="site-search"
                       onClick={() => setIsSearchOpen(true)}
-                      className="flex items-center gap-2 w-56 xl:w-72 px-4 py-2.5 border-2 border-border rounded-xl bg-muted/40 text-muted-foreground text-sm hover:border-primary/40 hover:bg-muted transition-all focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10"
+                      className="flex items-center gap-2 w-52 xl:w-64 px-4 py-2.5 border-2 border-border rounded-xl bg-muted/40 text-muted-foreground text-sm hover:border-primary/40 hover:bg-muted transition-all focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10"
                       aria-label="Abrir busca no portal (tecla /)"
                       aria-haspopup="dialog"
                     >
                       <Search className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
-                      <span className="flex-1 text-left">Buscar no portal...</span>
-                      <kbd className="hidden xl:inline font-mono text-[11px] border border-border rounded px-1.5 py-0.5 bg-background ml-1">/</kbd>
+                      <span className="flex-1 text-left text-[13px]">Buscar no portal...</span>
+                      <kbd className="hidden xl:inline font-mono text-[10px] border border-border rounded px-1.5 py-0.5 bg-background ml-1">/</kbd>
                     </button>
 
                     <a
                       href="/cidadao"
-                      className="flex items-center gap-2 px-4 py-2.5 bg-primary text-primary-foreground rounded-xl text-sm font-bold hover:bg-primary/90 transition-colors focus:outline-none focus:ring-4 focus:ring-primary/30 whitespace-nowrap"
+                      className="flex items-center gap-2 px-4 py-2.5 bg-primary text-primary-foreground rounded-xl text-sm font-bold hover:bg-primary/90 transition-colors focus:outline-none focus:ring-4 focus:ring-primary/30 whitespace-nowrap shadow-sm"
                     >
                       <UserCircle className="w-4 h-4" aria-hidden="true" />
                       Área do Cidadão
@@ -192,7 +192,7 @@ export function SiteHeader() {
           <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
             <MegaMenu onSearchOpen={() => setIsSearchOpen(true)} />
 
-            {/* Compact logo when scrolled */}
+            {/* Logo compacto no scroll */}
             <AnimatePresence initial={false}>
               {isScrolled && (
                 <motion.div
@@ -205,11 +205,11 @@ export function SiteHeader() {
                   <img
                     src={tenant?.brasao ?? `${import.meta.env.BASE_URL}images/brasao.png`}
                     alt=""
-                    className="w-8 h-8 rounded-full bg-white/20 object-contain p-0.5"
+                    className="w-8 h-8 rounded-lg bg-white/20 object-contain p-0.5"
                     aria-hidden="true"
                   />
                   <span className="text-sm font-bold text-white hidden xl:inline truncate max-w-[200px]">
-                    {tenant?.nome ?? "Parauapebas"}
+                    {(tenant?.nome ?? "Parauapebas").replace("Prefeitura Municipal de ", "")}
                   </span>
                   <button
                     onClick={() => setIsSearchOpen(true)}
@@ -249,7 +249,6 @@ export function SiteHeader() {
               transition={{ type: "spring", damping: 30, stiffness: 300 }}
               className="fixed top-0 right-0 h-full w-[min(320px,90vw)] bg-background shadow-2xl z-50 lg:hidden flex flex-col"
             >
-              {/* Sheet header */}
               <div className="flex items-center justify-between px-5 py-4 border-b border-border bg-primary text-white">
                 <span className="font-bold text-base">Menu</span>
                 <button
@@ -260,8 +259,6 @@ export function SiteHeader() {
                   <X className="w-5 h-5" aria-hidden="true" />
                 </button>
               </div>
-
-              {/* Nav Links */}
               <div className="flex-1 overflow-y-auto py-3">
                 <ul role="list" className="space-y-0.5 px-3">
                   {mobileNavItems.map((item) => {
@@ -272,9 +269,7 @@ export function SiteHeader() {
                           href={item.href}
                           className={cn(
                             "block px-4 py-3 rounded-xl text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary",
-                            active
-                              ? "bg-primary/10 text-primary font-semibold"
-                              : "text-foreground hover:bg-muted"
+                            active ? "bg-primary/10 text-primary font-semibold" : "text-foreground hover:bg-muted"
                           )}
                           aria-current={active ? "page" : undefined}
                         >
@@ -285,8 +280,6 @@ export function SiteHeader() {
                   })}
                 </ul>
               </div>
-
-              {/* Sheet footer */}
               <div className="border-t border-border p-4 space-y-3">
                 <a
                   href="/cidadao"
@@ -308,7 +301,6 @@ export function SiteHeader() {
         )}
       </AnimatePresence>
 
-      {/* Search Modal */}
       <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
     </>
   );
