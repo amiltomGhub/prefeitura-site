@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict uTsEEA3HMWIyHgOtBWlTHU8fJoX2JWqhRl1TVK8DhDugWsUHDHht0iIAq9miPIY
+\restrict W9gmUcBqbPL0Do8eLvnRVIkiiQhJYowvUugcFqgPspPrFoe2uZStOPdckJ2Zyd9
 
 -- Dumped from database version 16.10
 -- Dumped by pg_dump version 16.10
@@ -100,6 +100,22 @@ CREATE TABLE public.bid_events (
 ALTER TABLE public.bid_events OWNER TO postgres;
 
 --
+-- Name: chat_sessions; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.chat_sessions (
+    id text NOT NULL,
+    tenant_id text NOT NULL,
+    session_token text NOT NULL,
+    total_mensagens integer DEFAULT 0 NOT NULL,
+    created_at timestamp without time zone DEFAULT now() NOT NULL,
+    last_activity_at timestamp without time zone DEFAULT now() NOT NULL
+);
+
+
+ALTER TABLE public.chat_sessions OWNER TO postgres;
+
+--
 -- Name: concursos; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -124,6 +140,48 @@ CREATE TABLE public.concursos (
 
 
 ALTER TABLE public.concursos OWNER TO postgres;
+
+--
+-- Name: contracheque_linhas; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.contracheque_linhas (
+    id text NOT NULL,
+    contracheque_id text NOT NULL,
+    tipo text NOT NULL,
+    codigo text NOT NULL,
+    descricao text NOT NULL,
+    referencia text,
+    valor real DEFAULT 0 NOT NULL,
+    sort_order integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE public.contracheque_linhas OWNER TO postgres;
+
+--
+-- Name: contracheques; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.contracheques (
+    id text NOT NULL,
+    tenant_id text NOT NULL,
+    servidor_id text NOT NULL,
+    mes integer NOT NULL,
+    ano integer NOT NULL,
+    competencia text NOT NULL,
+    total_bruto real DEFAULT 0 NOT NULL,
+    total_descontos real DEFAULT 0 NOT NULL,
+    total_liquido real DEFAULT 0 NOT NULL,
+    status text DEFAULT 'pago'::text NOT NULL,
+    cargo_na_competencia text,
+    secretaria_na_competencia text,
+    nivel_na_competencia text,
+    created_at timestamp without time zone DEFAULT now() NOT NULL
+);
+
+
+ALTER TABLE public.contracheques OWNER TO postgres;
 
 --
 -- Name: contracts; Type: TABLE; Schema: public; Owner: postgres
@@ -172,6 +230,32 @@ CREATE TABLE public.despesas (
 
 
 ALTER TABLE public.despesas OWNER TO postgres;
+
+--
+-- Name: fale_conosco_config; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.fale_conosco_config (
+    id text NOT NULL,
+    tenant_id text NOT NULL,
+    habilitado boolean DEFAULT true NOT NULL,
+    nome_assistente text DEFAULT 'Assistente Municipal'::text NOT NULL,
+    saudacao text DEFAULT 'Olá! Como posso ajudar você hoje?'::text NOT NULL,
+    system_prompt text DEFAULT 'Você é um assistente virtual da Prefeitura Municipal. Responda de forma objetiva, cordial e em português brasileiro. Ajude os cidadãos com informações sobre serviços, transparência, ouvidoria e demais assuntos municipais. Não forneça informações que não sejam de sua competência.'::text NOT NULL,
+    modelo_ia text DEFAULT 'gpt-4o-mini'::text NOT NULL,
+    temperatura text DEFAULT '0.7'::text NOT NULL,
+    max_tokens integer DEFAULT 500 NOT NULL,
+    avatar_url text,
+    cor_botao text DEFAULT '#1351B4'::text NOT NULL,
+    tema_widget text DEFAULT 'light'::text NOT NULL,
+    canais_ativos jsonb DEFAULT '{"sic": true, "ouvidoria": true}'::jsonb NOT NULL,
+    topicos_proibidos text[] DEFAULT '{"política partidária",candidatos,eleições}'::text[] NOT NULL,
+    mensagem_offline text DEFAULT 'Nosso atendimento está temporariamente indisponível. Por favor, tente novamente mais tarde.'::text NOT NULL,
+    updated_at timestamp without time zone DEFAULT now() NOT NULL
+);
+
+
+ALTER TABLE public.fale_conosco_config OWNER TO postgres;
 
 --
 -- Name: galeria; Type: TABLE; Schema: public; Owner: postgres
@@ -255,6 +339,28 @@ CREATE TABLE public.gestores (
 ALTER TABLE public.gestores OWNER TO postgres;
 
 --
+-- Name: historico_funcional; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.historico_funcional (
+    id text NOT NULL,
+    servidor_id text NOT NULL,
+    data date NOT NULL,
+    tipo text NOT NULL,
+    descricao text NOT NULL,
+    portaria text,
+    portaria_url text,
+    despacho text,
+    secretaria_destino text,
+    cargo_apos text,
+    observacoes text,
+    created_at timestamp without time zone DEFAULT now() NOT NULL
+);
+
+
+ALTER TABLE public.historico_funcional OWNER TO postgres;
+
+--
 -- Name: legislacao; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -316,6 +422,39 @@ CREATE TABLE public.licitacoes (
 
 
 ALTER TABLE public.licitacoes OWNER TO postgres;
+
+--
+-- Name: manifestacoes; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.manifestacoes (
+    id text NOT NULL,
+    tenant_id text NOT NULL,
+    protocolo text NOT NULL,
+    tipo text DEFAULT 'reclamacao'::text NOT NULL,
+    status text DEFAULT 'aberta'::text NOT NULL,
+    prioridade text DEFAULT 'normal'::text NOT NULL,
+    nome_cidadao text,
+    email_cidadao text,
+    telefone_cidadao text,
+    cpf_cidadao text,
+    is_anonimo boolean DEFAULT false NOT NULL,
+    assunto text NOT NULL,
+    descricao text NOT NULL,
+    secretaria_id text,
+    categoria_id text,
+    prazo timestamp without time zone,
+    resolvida_em timestamp without time zone,
+    atribuida_a_em timestamp without time zone,
+    lgpd_consent boolean DEFAULT false NOT NULL,
+    origem text DEFAULT 'portal'::text NOT NULL,
+    noticias_relacionadas text[] DEFAULT '{}'::text[],
+    created_at timestamp without time zone DEFAULT now() NOT NULL,
+    updated_at timestamp without time zone DEFAULT now() NOT NULL
+);
+
+
+ALTER TABLE public.manifestacoes OWNER TO postgres;
 
 --
 -- Name: menu_items; Type: TABLE; Schema: public; Owner: postgres
@@ -451,6 +590,26 @@ CREATE TABLE public.orcamentos (
 ALTER TABLE public.orcamentos OWNER TO postgres;
 
 --
+-- Name: ouvidoria_estatisticas; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.ouvidoria_estatisticas (
+    id text NOT NULL,
+    tenant_id text NOT NULL,
+    periodo text NOT NULL,
+    total_manifestacoes integer DEFAULT 0 NOT NULL,
+    resolvidas integer DEFAULT 0 NOT NULL,
+    em_andamento integer DEFAULT 0 NOT NULL,
+    no_prazo integer DEFAULT 0 NOT NULL,
+    fora_prazo integer DEFAULT 0 NOT NULL,
+    por_tipo jsonb DEFAULT '{}'::jsonb,
+    created_at timestamp without time zone DEFAULT now() NOT NULL
+);
+
+
+ALTER TABLE public.ouvidoria_estatisticas OWNER TO postgres;
+
+--
 -- Name: page_blocks; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -489,6 +648,27 @@ CREATE TABLE public.pages (
 ALTER TABLE public.pages OWNER TO postgres;
 
 --
+-- Name: periodos_aquisitivos; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.periodos_aquisitivos (
+    id text NOT NULL,
+    servidor_id text NOT NULL,
+    data_inicio date NOT NULL,
+    data_fim date NOT NULL,
+    dias_direito integer DEFAULT 30 NOT NULL,
+    dias_gozados integer DEFAULT 0 NOT NULL,
+    dias_vendidos integer DEFAULT 0 NOT NULL,
+    dias_saldo integer DEFAULT 30 NOT NULL,
+    prazo_limite date,
+    status text DEFAULT 'disponivel'::text NOT NULL,
+    created_at timestamp without time zone DEFAULT now() NOT NULL
+);
+
+
+ALTER TABLE public.periodos_aquisitivos OWNER TO postgres;
+
+--
 -- Name: receitas; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -507,6 +687,52 @@ CREATE TABLE public.receitas (
 
 
 ALTER TABLE public.receitas OWNER TO postgres;
+
+--
+-- Name: refresh_tokens; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.refresh_tokens (
+    id text NOT NULL,
+    usuario_id text NOT NULL,
+    token text NOT NULL,
+    expires_at timestamp without time zone NOT NULL,
+    created_at timestamp without time zone DEFAULT now() NOT NULL
+);
+
+
+ALTER TABLE public.refresh_tokens OWNER TO postgres;
+
+--
+-- Name: requerimentos; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.requerimentos (
+    id text NOT NULL,
+    tenant_id text NOT NULL,
+    servidor_id text NOT NULL,
+    protocolo text NOT NULL,
+    tipo text NOT NULL,
+    assunto text NOT NULL,
+    justificativa text NOT NULL,
+    campos_especificos jsonb DEFAULT '{}'::jsonb NOT NULL,
+    documentos jsonb DEFAULT '[]'::jsonb NOT NULL,
+    status text DEFAULT 'protocolado'::text NOT NULL,
+    timeline jsonb DEFAULT '[]'::jsonb NOT NULL,
+    parecer_tecnico text,
+    decisao text,
+    motivo_decisao text,
+    decisor_nome text,
+    decidido_em timestamp without time zone,
+    prazo_recurso date,
+    recurso_apresentado boolean DEFAULT false NOT NULL,
+    created_at timestamp without time zone DEFAULT now() NOT NULL,
+    updated_at timestamp without time zone DEFAULT now() NOT NULL,
+    despacho text
+);
+
+
+ALTER TABLE public.requerimentos OWNER TO postgres;
 
 --
 -- Name: secretarias; Type: TABLE; Schema: public; Owner: postgres
@@ -581,6 +807,79 @@ CREATE TABLE public.servidores (
 ALTER TABLE public.servidores OWNER TO postgres;
 
 --
+-- Name: servidores_cadastro; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.servidores_cadastro (
+    id text NOT NULL,
+    tenant_id text NOT NULL,
+    nome text NOT NULL,
+    cpf text NOT NULL,
+    matricula text NOT NULL,
+    email text NOT NULL,
+    email_pessoal text,
+    telefone text,
+    data_nascimento date,
+    cargo text NOT NULL,
+    codigo_cargo text,
+    nivel text,
+    referencia text,
+    vinculo text DEFAULT 'estatutario'::text NOT NULL,
+    status text DEFAULT 'ativo'::text NOT NULL,
+    data_ingresso date NOT NULL,
+    data_concurso date,
+    concurso_origem text,
+    secretaria text NOT NULL,
+    local_trabalho text,
+    banco text,
+    agencia text,
+    conta text,
+    tipo_conta text DEFAULT 'corrente'::text,
+    endereco text,
+    numero text,
+    complemento text,
+    bairro text,
+    cidade text,
+    estado text,
+    cep text,
+    salario_base real DEFAULT 0 NOT NULL,
+    dependentes jsonb DEFAULT '[]'::jsonb NOT NULL,
+    created_at timestamp without time zone DEFAULT now() NOT NULL,
+    updated_at timestamp without time zone DEFAULT now() NOT NULL
+);
+
+
+ALTER TABLE public.servidores_cadastro OWNER TO postgres;
+
+--
+-- Name: sic_pedidos; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.sic_pedidos (
+    id text NOT NULL,
+    tenant_id text NOT NULL,
+    protocolo text NOT NULL,
+    nome text NOT NULL,
+    cpf text NOT NULL,
+    email text NOT NULL,
+    telefone text,
+    tipo_solicitacao text NOT NULL,
+    orgao text NOT NULL,
+    descricao text NOT NULL,
+    formata_resposta text DEFAULT 'email'::text NOT NULL,
+    status text DEFAULT 'aberto'::text NOT NULL,
+    resposta text,
+    prazo timestamp without time zone NOT NULL,
+    respondido_em timestamp without time zone,
+    lgpd_consent boolean DEFAULT true NOT NULL,
+    created_at timestamp without time zone DEFAULT now() NOT NULL,
+    updated_at timestamp without time zone DEFAULT now() NOT NULL
+);
+
+
+ALTER TABLE public.sic_pedidos OWNER TO postgres;
+
+--
 -- Name: site_config; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -612,6 +911,36 @@ CREATE TABLE public.site_config (
 
 
 ALTER TABLE public.site_config OWNER TO postgres;
+
+--
+-- Name: solicitacoes_ferias; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.solicitacoes_ferias (
+    id text NOT NULL,
+    tenant_id text NOT NULL,
+    servidor_id text NOT NULL,
+    periodo_aquisitivo_id text NOT NULL,
+    protocolo text NOT NULL,
+    data_inicio date NOT NULL,
+    data_fim date NOT NULL,
+    data_retorno date NOT NULL,
+    qtd_dias integer NOT NULL,
+    parcelamento integer DEFAULT 1 NOT NULL,
+    adiantamento_13 boolean DEFAULT false NOT NULL,
+    abono_pecuniario boolean DEFAULT false NOT NULL,
+    dias_abono integer DEFAULT 0 NOT NULL,
+    status text DEFAULT 'aguardando_chefia'::text NOT NULL,
+    timeline jsonb DEFAULT '[]'::jsonb NOT NULL,
+    aprovado_por text,
+    aprovado_em timestamp without time zone,
+    motivo_rejeicao text,
+    created_at timestamp without time zone DEFAULT now() NOT NULL,
+    updated_at timestamp without time zone DEFAULT now() NOT NULL
+);
+
+
+ALTER TABLE public.solicitacoes_ferias OWNER TO postgres;
 
 --
 -- Name: tenants; Type: TABLE; Schema: public; Owner: postgres
@@ -666,6 +995,31 @@ CREATE TABLE public.transparency_docs (
 ALTER TABLE public.transparency_docs OWNER TO postgres;
 
 --
+-- Name: usuarios; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.usuarios (
+    id text NOT NULL,
+    tenant_id text NOT NULL,
+    nome text NOT NULL,
+    email text NOT NULL,
+    senha_hash text NOT NULL,
+    cargo text,
+    avatar text,
+    modulos_permitidos text[] DEFAULT '{site}'::text[] NOT NULL,
+    permissoes jsonb DEFAULT '{}'::jsonb NOT NULL,
+    is_admin boolean DEFAULT false NOT NULL,
+    is_ativo boolean DEFAULT true NOT NULL,
+    ultimo_acesso timestamp without time zone,
+    created_at timestamp without time zone DEFAULT now() NOT NULL,
+    updated_at timestamp without time zone DEFAULT now() NOT NULL,
+    servidor_id text
+);
+
+
+ALTER TABLE public.usuarios OWNER TO postgres;
+
+--
 -- Name: agenda agenda_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -690,11 +1044,43 @@ ALTER TABLE ONLY public.bid_events
 
 
 --
+-- Name: chat_sessions chat_sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.chat_sessions
+    ADD CONSTRAINT chat_sessions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: chat_sessions chat_sessions_session_token_unique; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.chat_sessions
+    ADD CONSTRAINT chat_sessions_session_token_unique UNIQUE (session_token);
+
+
+--
 -- Name: concursos concursos_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.concursos
     ADD CONSTRAINT concursos_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: contracheque_linhas contracheque_linhas_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.contracheque_linhas
+    ADD CONSTRAINT contracheque_linhas_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: contracheques contracheques_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.contracheques
+    ADD CONSTRAINT contracheques_pkey PRIMARY KEY (id);
 
 
 --
@@ -711,6 +1097,22 @@ ALTER TABLE ONLY public.contracts
 
 ALTER TABLE ONLY public.despesas
     ADD CONSTRAINT despesas_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: fale_conosco_config fale_conosco_config_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.fale_conosco_config
+    ADD CONSTRAINT fale_conosco_config_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: fale_conosco_config fale_conosco_config_tenant_id_unique; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.fale_conosco_config
+    ADD CONSTRAINT fale_conosco_config_tenant_id_unique UNIQUE (tenant_id);
 
 
 --
@@ -746,6 +1148,14 @@ ALTER TABLE ONLY public.gestores
 
 
 --
+-- Name: historico_funcional historico_funcional_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.historico_funcional
+    ADD CONSTRAINT historico_funcional_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: legislacao legislacao_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -759,6 +1169,22 @@ ALTER TABLE ONLY public.legislacao
 
 ALTER TABLE ONLY public.licitacoes
     ADD CONSTRAINT licitacoes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: manifestacoes manifestacoes_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.manifestacoes
+    ADD CONSTRAINT manifestacoes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: manifestacoes manifestacoes_protocolo_unique; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.manifestacoes
+    ADD CONSTRAINT manifestacoes_protocolo_unique UNIQUE (protocolo);
 
 
 --
@@ -810,6 +1236,14 @@ ALTER TABLE ONLY public.orcamentos
 
 
 --
+-- Name: ouvidoria_estatisticas ouvidoria_estatisticas_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.ouvidoria_estatisticas
+    ADD CONSTRAINT ouvidoria_estatisticas_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: page_blocks page_blocks_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -826,11 +1260,43 @@ ALTER TABLE ONLY public.pages
 
 
 --
+-- Name: periodos_aquisitivos periodos_aquisitivos_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.periodos_aquisitivos
+    ADD CONSTRAINT periodos_aquisitivos_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: receitas receitas_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.receitas
     ADD CONSTRAINT receitas_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: refresh_tokens refresh_tokens_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.refresh_tokens
+    ADD CONSTRAINT refresh_tokens_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: refresh_tokens refresh_tokens_token_unique; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.refresh_tokens
+    ADD CONSTRAINT refresh_tokens_token_unique UNIQUE (token);
+
+
+--
+-- Name: requerimentos requerimentos_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.requerimentos
+    ADD CONSTRAINT requerimentos_pkey PRIMARY KEY (id);
 
 
 --
@@ -850,11 +1316,35 @@ ALTER TABLE ONLY public.servicos
 
 
 --
+-- Name: servidores_cadastro servidores_cadastro_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.servidores_cadastro
+    ADD CONSTRAINT servidores_cadastro_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: servidores servidores_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.servidores
     ADD CONSTRAINT servidores_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: sic_pedidos sic_pedidos_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.sic_pedidos
+    ADD CONSTRAINT sic_pedidos_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: sic_pedidos sic_pedidos_protocolo_unique; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.sic_pedidos
+    ADD CONSTRAINT sic_pedidos_protocolo_unique UNIQUE (protocolo);
 
 
 --
@@ -871,6 +1361,14 @@ ALTER TABLE ONLY public.site_config
 
 ALTER TABLE ONLY public.site_config
     ADD CONSTRAINT site_config_tenant_id_unique UNIQUE (tenant_id);
+
+
+--
+-- Name: solicitacoes_ferias solicitacoes_ferias_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.solicitacoes_ferias
+    ADD CONSTRAINT solicitacoes_ferias_pkey PRIMARY KEY (id);
 
 
 --
@@ -898,31 +1396,19 @@ ALTER TABLE ONLY public.transparency_docs
 
 
 --
--- Name: idx_legislacao_fts; Type: INDEX; Schema: public; Owner: postgres
+-- Name: usuarios usuarios_email_unique; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
-CREATE INDEX idx_legislacao_fts ON public.legislacao USING gin (to_tsvector('portuguese'::regconfig, ((numero || ' '::text) || ementa)));
-
-
---
--- Name: idx_licitacoes_fts; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX idx_licitacoes_fts ON public.licitacoes USING gin (to_tsvector('portuguese'::regconfig, ((numero || ' '::text) || objeto)));
+ALTER TABLE ONLY public.usuarios
+    ADD CONSTRAINT usuarios_email_unique UNIQUE (email);
 
 
 --
--- Name: idx_noticias_fts; Type: INDEX; Schema: public; Owner: postgres
+-- Name: usuarios usuarios_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
-CREATE INDEX idx_noticias_fts ON public.noticias USING gin (to_tsvector('portuguese'::regconfig, ((((titulo || ' '::text) || COALESCE(resumo, ''::text)) || ' '::text) || COALESCE(conteudo, ''::text))));
-
-
---
--- Name: idx_pages_fts; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX idx_pages_fts ON public.pages USING gin (to_tsvector('portuguese'::regconfig, ((titulo || ' '::text) || COALESCE(meta_description, ''::text))));
+ALTER TABLE ONLY public.usuarios
+    ADD CONSTRAINT usuarios_pkey PRIMARY KEY (id);
 
 
 --
@@ -958,11 +1444,43 @@ ALTER TABLE ONLY public.bid_events
 
 
 --
+-- Name: chat_sessions chat_sessions_tenant_id_tenants_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.chat_sessions
+    ADD CONSTRAINT chat_sessions_tenant_id_tenants_id_fk FOREIGN KEY (tenant_id) REFERENCES public.tenants(id) ON DELETE CASCADE;
+
+
+--
 -- Name: concursos concursos_tenant_id_tenants_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.concursos
     ADD CONSTRAINT concursos_tenant_id_tenants_id_fk FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: contracheque_linhas contracheque_linhas_contracheque_id_contracheques_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.contracheque_linhas
+    ADD CONSTRAINT contracheque_linhas_contracheque_id_contracheques_id_fk FOREIGN KEY (contracheque_id) REFERENCES public.contracheques(id) ON DELETE CASCADE;
+
+
+--
+-- Name: contracheques contracheques_servidor_id_servidores_cadastro_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.contracheques
+    ADD CONSTRAINT contracheques_servidor_id_servidores_cadastro_id_fk FOREIGN KEY (servidor_id) REFERENCES public.servidores_cadastro(id);
+
+
+--
+-- Name: contracheques contracheques_tenant_id_tenants_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.contracheques
+    ADD CONSTRAINT contracheques_tenant_id_tenants_id_fk FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
 
 
 --
@@ -987,6 +1505,14 @@ ALTER TABLE ONLY public.contracts
 
 ALTER TABLE ONLY public.despesas
     ADD CONSTRAINT despesas_tenant_id_tenants_id_fk FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: fale_conosco_config fale_conosco_config_tenant_id_tenants_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.fale_conosco_config
+    ADD CONSTRAINT fale_conosco_config_tenant_id_tenants_id_fk FOREIGN KEY (tenant_id) REFERENCES public.tenants(id) ON DELETE CASCADE;
 
 
 --
@@ -1022,6 +1548,14 @@ ALTER TABLE ONLY public.gestores
 
 
 --
+-- Name: historico_funcional historico_funcional_servidor_id_servidores_cadastro_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.historico_funcional
+    ADD CONSTRAINT historico_funcional_servidor_id_servidores_cadastro_id_fk FOREIGN KEY (servidor_id) REFERENCES public.servidores_cadastro(id);
+
+
+--
 -- Name: legislacao legislacao_tenant_id_tenants_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1043,6 +1577,22 @@ ALTER TABLE ONLY public.licitacoes
 
 ALTER TABLE ONLY public.licitacoes
     ADD CONSTRAINT licitacoes_tenant_id_tenants_id_fk FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: manifestacoes manifestacoes_secretaria_id_secretarias_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.manifestacoes
+    ADD CONSTRAINT manifestacoes_secretaria_id_secretarias_id_fk FOREIGN KEY (secretaria_id) REFERENCES public.secretarias(id);
+
+
+--
+-- Name: manifestacoes manifestacoes_tenant_id_tenants_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.manifestacoes
+    ADD CONSTRAINT manifestacoes_tenant_id_tenants_id_fk FOREIGN KEY (tenant_id) REFERENCES public.tenants(id) ON DELETE CASCADE;
 
 
 --
@@ -1110,6 +1660,14 @@ ALTER TABLE ONLY public.orcamentos
 
 
 --
+-- Name: ouvidoria_estatisticas ouvidoria_estatisticas_tenant_id_tenants_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.ouvidoria_estatisticas
+    ADD CONSTRAINT ouvidoria_estatisticas_tenant_id_tenants_id_fk FOREIGN KEY (tenant_id) REFERENCES public.tenants(id) ON DELETE CASCADE;
+
+
+--
 -- Name: page_blocks page_blocks_page_id_pages_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1126,11 +1684,43 @@ ALTER TABLE ONLY public.pages
 
 
 --
+-- Name: periodos_aquisitivos periodos_aquisitivos_servidor_id_servidores_cadastro_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.periodos_aquisitivos
+    ADD CONSTRAINT periodos_aquisitivos_servidor_id_servidores_cadastro_id_fk FOREIGN KEY (servidor_id) REFERENCES public.servidores_cadastro(id);
+
+
+--
 -- Name: receitas receitas_tenant_id_tenants_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.receitas
     ADD CONSTRAINT receitas_tenant_id_tenants_id_fk FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: refresh_tokens refresh_tokens_usuario_id_usuarios_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.refresh_tokens
+    ADD CONSTRAINT refresh_tokens_usuario_id_usuarios_id_fk FOREIGN KEY (usuario_id) REFERENCES public.usuarios(id) ON DELETE CASCADE;
+
+
+--
+-- Name: requerimentos requerimentos_servidor_id_servidores_cadastro_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.requerimentos
+    ADD CONSTRAINT requerimentos_servidor_id_servidores_cadastro_id_fk FOREIGN KEY (servidor_id) REFERENCES public.servidores_cadastro(id);
+
+
+--
+-- Name: requerimentos requerimentos_tenant_id_tenants_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.requerimentos
+    ADD CONSTRAINT requerimentos_tenant_id_tenants_id_fk FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
 
 
 --
@@ -1150,11 +1740,27 @@ ALTER TABLE ONLY public.servicos
 
 
 --
+-- Name: servidores_cadastro servidores_cadastro_tenant_id_tenants_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.servidores_cadastro
+    ADD CONSTRAINT servidores_cadastro_tenant_id_tenants_id_fk FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
 -- Name: servidores servidores_tenant_id_tenants_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.servidores
     ADD CONSTRAINT servidores_tenant_id_tenants_id_fk FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: sic_pedidos sic_pedidos_tenant_id_tenants_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.sic_pedidos
+    ADD CONSTRAINT sic_pedidos_tenant_id_tenants_id_fk FOREIGN KEY (tenant_id) REFERENCES public.tenants(id) ON DELETE CASCADE;
 
 
 --
@@ -1166,6 +1772,30 @@ ALTER TABLE ONLY public.site_config
 
 
 --
+-- Name: solicitacoes_ferias solicitacoes_ferias_periodo_aquisitivo_id_periodos_aquisitivos_; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.solicitacoes_ferias
+    ADD CONSTRAINT solicitacoes_ferias_periodo_aquisitivo_id_periodos_aquisitivos_ FOREIGN KEY (periodo_aquisitivo_id) REFERENCES public.periodos_aquisitivos(id);
+
+
+--
+-- Name: solicitacoes_ferias solicitacoes_ferias_servidor_id_servidores_cadastro_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.solicitacoes_ferias
+    ADD CONSTRAINT solicitacoes_ferias_servidor_id_servidores_cadastro_id_fk FOREIGN KEY (servidor_id) REFERENCES public.servidores_cadastro(id);
+
+
+--
+-- Name: solicitacoes_ferias solicitacoes_ferias_tenant_id_tenants_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.solicitacoes_ferias
+    ADD CONSTRAINT solicitacoes_ferias_tenant_id_tenants_id_fk FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
 -- Name: transparency_docs transparency_docs_tenant_id_tenants_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1174,8 +1804,16 @@ ALTER TABLE ONLY public.transparency_docs
 
 
 --
+-- Name: usuarios usuarios_tenant_id_tenants_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.usuarios
+    ADD CONSTRAINT usuarios_tenant_id_tenants_id_fk FOREIGN KEY (tenant_id) REFERENCES public.tenants(id) ON DELETE CASCADE;
+
+
+--
 -- PostgreSQL database dump complete
 --
 
-\unrestrict uTsEEA3HMWIyHgOtBWlTHU8fJoX2JWqhRl1TVK8DhDugWsUHDHht0iIAq9miPIY
+\unrestrict W9gmUcBqbPL0Do8eLvnRVIkiiQhJYowvUugcFqgPspPrFoe2uZStOPdckJ2Zyd9
 
