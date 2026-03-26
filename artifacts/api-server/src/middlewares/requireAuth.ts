@@ -1,0 +1,46 @@
+import { type Request, type Response, type NextFunction } from "express";
+import { jwtVerify } from "jose";
+
+const JWT_SECRET = new TextEncoder().encode(
+  process.env.JWT_SECRET ?? "portal-municipal-secret-key-change-in-production"
+);
+
+export interface AuthUser {
+  id: string;
+  tenantId: string;
+  email: string;
+  nome: string;
+  isAdmin: boolean;
+  modulosPermitidos: string[];
+}
+
+export interface AuthRequest extends Request {
+  user?: AuthUser;
+}
+
+export async function requireAuth(req: AuthRequest, res: Response, next: NextFunction) {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader?.startsWith("Bearer ")) {
+      return res.status(401).json({ error: "Token de autenticação ausente." });
+    }
+    const token = authHeader.slice(7);
+    const { payload } = await jwtVerify(token, JWT_SECRET);
+    req.user = payload as unknown as AuthUser;
+    return next();
+  } catch {
+    return res.status(401).json({ error: "Token inválido ou expirado." });
+  }
+}
+
+export async function requireModule(modulo: string) {
+  return (req: AuthRequest, res: Response, next: NextFunction) => {
+    if (!req.user) {
+      return res.status(401).json({ error: "Não autenticado." });
+    }
+    if (!req.user.isAdmin && !req.user.modulosPermitidos.includes(modulo)) {
+      return res.status(403).json({ error: `Sem permissão para o módulo: ${modulo}` });
+    }
+    return next();
+  };
+}

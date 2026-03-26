@@ -9,3 +9,6 @@ export * from "./agenda";
 export * from "./galeria";
 export * from "./concursos";
 export * from "./site";
+export * from "./auth";
+export * from "./ouvidoria";
+export * from "./faleconosco";
