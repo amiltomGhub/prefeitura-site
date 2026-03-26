@@ -35,7 +35,7 @@ interface ServidorLayoutProps {
 }
 
 export function ServidorLayout({ children, title, subtitle }: ServidorLayoutProps) {
-  const { servidor, logout } = useServidor();
+  const { servidor, setRole, logout } = useServidor();
   const [location] = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -90,6 +90,15 @@ export function ServidorLayout({ children, title, subtitle }: ServidorLayoutProp
               <p className="text-sm font-medium text-gray-900 truncate">{servidor.nome.split(" ").slice(0, 2).join(" ")}</p>
               <p className="text-xs text-gray-500 truncate">Mat. {servidor.matricula}</p>
             </div>
+          </div>
+          <div className="flex items-center gap-2 mb-2">
+            <button
+              onClick={() => setRole(servidor.isRH ? "servidor" : "rh")}
+              className="flex-1 text-xs text-center py-1 px-2 rounded border border-gray-200 text-gray-500 hover:bg-gray-100 hover:text-gray-800 transition-colors"
+              title="Alternar perfil para testes"
+            >
+              {servidor.isRH ? "Mudar para Servidor" : "Mudar para RH"}
+            </button>
           </div>
           <button
             onClick={logout}
