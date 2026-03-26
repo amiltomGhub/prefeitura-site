@@ -7,6 +7,38 @@ Portal público principal do município, integrado ao Módulo 1 (Ouvidoria) via 
 
 ## Implementação — Status Atual
 
+### ✅ Portal do Servidor — Backend (DB + API) (COMPLETO)
+
+**Schemas Drizzle (`lib/db/src/schema/servidor.ts`):**
+- `servidores_cadastro` — cadastro funcional completo com dados pessoais, bancários, cargo, lotação, dependentes IRRF
+- `contracheques` — por mês/ano com totais bruto/descontos/líquido e snapshot do cargo na competência
+- `contracheque_linhas` — detalhamento linha a linha (vencimentos, descontos, informativos)
+- `periodos_aquisitivos` — controle de saldo, dias gozados/vendidos, prazo limite
+- `solicitacoes_ferias` — workflow completo com timeline JSON (aguardando_chefia → em_analise_rh → aprovado/rejeitado)
+- `requerimentos` — 14 tipos + campos dinâmicos + documentos + tramitação + prazo de recurso
+- `historico_funcional` — eventos da vida funcional com portaria/despacho
+
+**Seed realista (`lib/db/src/seed-servidor.ts`):**
+- 3 servidores: Ana Paula (Analista TI), Carlos Eduardo (Assistente ADM), Fernanda Lima (Professora)
+- 24 contracheques por servidor (72 total) com linhas de vencimentos, INSS, IRRF, previdência
+- Períodos aquisitivos em diferentes estados (disponível, esgotado, vencido)
+- Solicitações de férias: aprovada, aguardando aprovação, rejeitada
+- Requerimentos: deferido, em análise, indeferido
+
+**Rotas REST `/api/servidor/*` (protegidas por JWT):**
+- `GET/GET /servidor/contracheques` + detalhe por mês/ano + download PDF (mockado) + rendimentos IRRF anual
+- `GET /servidor/ferias/saldo` (saldo + progresso aquisitivo + alerta prazo vencido)
+- `GET /servidor/ferias/historico` + `POST /servidor/ferias/solicitar` (com validação de saldo) + `GET /servidor/ferias/:id`
+- `GET /servidor/requerimentos` (filtros tipo/status) + `POST /servidor/requerimentos` (validação 100 chars) + `GET/:id` + `POST/:id/recurso`
+- `GET /servidor/perfil` (dados mascarados: CPF e conta) + `PUT /servidor/perfil` (apenas campos pessoais editáveis)
+- `GET /servidor/historico-funcional` + `GET /servidor/tempo-servico` (com projeção de aposentadoria)
+
+**Rotas REST `/api/rh/*` (protegidas por JWT):**
+- `GET /rh/dashboard` — KPIs: servidores por secretaria, férias vencidas urgentes, requerimentos pendentes, aniversariantes, folha do mês
+- `GET /rh/ferias/pendentes` + `PATCH /rh/ferias/:id/aprovar` + `PATCH /rh/ferias/:id/rejeitar`
+- `GET /rh/requerimentos/pendentes` + `PATCH /rh/requerimentos/:id/deferir` + `PATCH /rh/requerimentos/:id/indeferir` (gera prazo de recurso de 15 dias)
+- `GET /rh/folha-resumo` (totais bruto/líquido/descontos por mês/ano)
+
 ### ✅ Parte VII — Endpoints Site Institucional + BullMQ + Busca Fulltext (COMPLETO)
 
 **Rotas Públicas `/api/site/*` (11 endpoints, cache 60s em memória):**

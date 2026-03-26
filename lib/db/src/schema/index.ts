@@ -12,3 +12,4 @@ export * from "./site";
 export * from "./auth";
 export * from "./ouvidoria";
 export * from "./faleconosco";
+export * from "./servidor";

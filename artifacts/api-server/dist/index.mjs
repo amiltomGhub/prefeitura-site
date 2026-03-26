@@ -711,7 +711,7 @@ var require_depd = __commonJS({
       }
       return false;
     }
-    function convertDataDescriptorToAccessor(obj, prop, message) {
+    function convertDataDescriptorToAccessor(obj, prop, message2) {
       var descriptor = Object.getOwnPropertyDescriptor(obj, prop);
       var value = descriptor.value;
       descriptor.get = function getter() {
@@ -751,8 +751,8 @@ var require_depd = __commonJS({
       var stack = getStack();
       var site = callSiteLocation(stack[1]);
       var file2 = site[0];
-      function deprecate(message) {
-        log.call(deprecate, message);
+      function deprecate(message2) {
+        log.call(deprecate, message2);
       }
       deprecate._file = file2;
       deprecate._ignored = isignored(namespace);
@@ -781,7 +781,7 @@ var require_depd = __commonJS({
       var str = process.env.TRACE_DEPRECATION || "";
       return containsNamespace(str, namespace);
     }
-    function log(message, site) {
+    function log(message2, site) {
       var haslisteners = eehaslisteners(process, "deprecation");
       if (!haslisteners && this._ignored) {
         return;
@@ -820,7 +820,7 @@ var require_depd = __commonJS({
         return;
       }
       this._warned[key] = true;
-      var msg = message;
+      var msg = message2;
       if (!msg) {
         msg = callSite === depSite || !callSite.name ? defaultMessage(depSite) : defaultMessage(callSite);
       }
@@ -906,7 +906,7 @@ var require_depd = __commonJS({
     function prepareObjectStackTrace(obj, stack) {
       return stack;
     }
-    function wrapfunction(fn, message) {
+    function wrapfunction(fn, message2) {
       if (typeof fn !== "function") {
         throw new TypeError("argument fn must be a function");
       }
@@ -921,10 +921,10 @@ var require_depd = __commonJS({
         "message",
         "site",
         '"use strict"\nreturn function (' + args + ") {log.call(deprecate, message, site)\nreturn fn.apply(this, arguments)\n}"
-      )(fn, log, this, message, site);
+      )(fn, log, this, message2, site);
       return deprecatedfn;
     }
-    function wrapproperty(obj, prop, message) {
+    function wrapproperty(obj, prop, message2) {
       if (!obj || typeof obj !== "object" && typeof obj !== "function") {
         throw new TypeError("argument obj must be object");
       }
@@ -940,25 +940,25 @@ var require_depd = __commonJS({
       var site = callSiteLocation(stack[1]);
       site.name = prop;
       if ("value" in descriptor) {
-        descriptor = convertDataDescriptorToAccessor(obj, prop, message);
+        descriptor = convertDataDescriptorToAccessor(obj, prop, message2);
       }
       var get = descriptor.get;
       var set2 = descriptor.set;
       if (typeof get === "function") {
         descriptor.get = function getter() {
-          log.call(deprecate, message, site);
+          log.call(deprecate, message2, site);
           return get.apply(this, arguments);
         };
       }
       if (typeof set2 === "function") {
         descriptor.set = function setter() {
-          log.call(deprecate, message, site);
+          log.call(deprecate, message2, site);
           return set2.apply(this, arguments);
         };
       }
       Object.defineProperty(obj, prop, descriptor);
     }
-    function DeprecationError(namespace, message, stack) {
+    function DeprecationError(namespace, message2, stack) {
       var error40 = new Error();
       var stackString;
       Object.defineProperty(error40, "constructor", {
@@ -967,7 +967,7 @@ var require_depd = __commonJS({
       Object.defineProperty(error40, "message", {
         configurable: true,
         enumerable: false,
-        value: message,
+        value: message2,
         writable: true
       });
       Object.defineProperty(error40, "name", {
@@ -1122,9 +1122,9 @@ var require_statuses = __commonJS({
     function createMessageToStatusCodeMap(codes2) {
       var map2 = {};
       Object.keys(codes2).forEach(function forEachCode(code) {
-        var message = codes2[code];
+        var message2 = codes2[code];
         var status2 = Number(code);
-        map2[message.toLowerCase()] = status2;
+        map2[message2.toLowerCase()] = status2;
       });
       return map2;
     }
@@ -1133,10 +1133,10 @@ var require_statuses = __commonJS({
         return Number(code);
       });
     }
-    function getStatusCode(message) {
-      var msg = message.toLowerCase();
+    function getStatusCode(message2) {
+      var msg = message2.toLowerCase();
       if (!Object.prototype.hasOwnProperty.call(status.code, msg)) {
-        throw new Error('invalid status message: "' + message + '"');
+        throw new Error('invalid status message: "' + message2 + '"');
       }
       return status.code[msg];
     }
@@ -1289,8 +1289,8 @@ var require_http_errors = __commonJS({
     }
     function createClientErrorConstructor(HttpError, name, code) {
       var className = toClassName(name);
-      function ClientError(message) {
-        var msg = message != null ? message : statuses.message[code];
+      function ClientError(message2) {
+        var msg = message2 != null ? message2 : statuses.message[code];
         var err = new Error(msg);
         Error.captureStackTrace(err, ClientError);
         setPrototypeOf(err, ClientError.prototype);
@@ -1328,8 +1328,8 @@ var require_http_errors = __commonJS({
     }
     function createServerErrorConstructor(HttpError, name, code) {
       var className = toClassName(name);
-      function ServerError(message) {
-        var msg = message != null ? message : statuses.message[code];
+      function ServerError(message2) {
+        var msg = message2 != null ? message2 : statuses.message[code];
         var err = new Error(msg);
         Error.captureStackTrace(err, ServerError);
         setPrototypeOf(err, ServerError.prototype);
@@ -1548,8 +1548,8 @@ var require_bom_handling = __commonJS({
     "use strict";
     var BOMChar = "\uFEFF";
     exports.PrependBOM = PrependBOMWrapper;
-    function PrependBOMWrapper(encoder, options) {
-      this.encoder = encoder;
+    function PrependBOMWrapper(encoder2, options) {
+      this.encoder = encoder2;
       this.addBOM = true;
     }
     PrependBOMWrapper.prototype.write = function(str) {
@@ -1563,8 +1563,8 @@ var require_bom_handling = __commonJS({
       return this.encoder.end();
     };
     exports.StripBOM = StripBOMWrapper;
-    function StripBOMWrapper(decoder, options) {
-      this.decoder = decoder;
+    function StripBOMWrapper(decoder2, options) {
+      this.decoder = decoder2;
       this.pass = false;
       this.options = options || {};
     }
@@ -5134,14 +5134,14 @@ var require_lib = __commonJS({
     module.exports.encodings = null;
     module.exports.defaultCharUnicode = "\uFFFD";
     module.exports.defaultCharSingleByte = "?";
-    module.exports.encode = function encode(str, encoding, options) {
+    module.exports.encode = function encode2(str, encoding, options) {
       str = "" + (str || "");
-      var encoder = module.exports.getEncoder(encoding, options);
-      var res = encoder.write(str);
-      var trail = encoder.end();
+      var encoder2 = module.exports.getEncoder(encoding, options);
+      var res = encoder2.write(str);
+      var trail = encoder2.end();
       return trail && trail.length > 0 ? Buffer2.concat([res, trail]) : res;
     };
-    module.exports.decode = function decode(buf, encoding, options) {
+    module.exports.decode = function decode2(buf, encoding, options) {
       if (typeof buf === "string") {
         if (!module.exports.skipDecodeWarning) {
           console.error("Iconv-lite warning: decode()-ing strings is deprecated. Refer to https://github.com/ashtuchkin/iconv-lite/wiki/Use-Buffers-when-decoding");
@@ -5149,9 +5149,9 @@ var require_lib = __commonJS({
         }
         buf = Buffer2.from("" + (buf || ""), "binary");
       }
-      var decoder = module.exports.getDecoder(encoding, options);
-      var res = decoder.write(buf);
-      var trail = decoder.end();
+      var decoder2 = module.exports.getDecoder(encoding, options);
+      var res = decoder2.write(buf);
+      var trail = decoder2.end();
       return trail ? res + trail : res;
     };
     module.exports.encodingExists = function encodingExists(enc) {
@@ -5209,19 +5209,19 @@ var require_lib = __commonJS({
     };
     module.exports.getEncoder = function getEncoder(encoding, options) {
       var codec = module.exports.getCodec(encoding);
-      var encoder = new codec.encoder(options, codec);
+      var encoder2 = new codec.encoder(options, codec);
       if (codec.bomAware && options && options.addBOM) {
-        encoder = new bomHandling.PrependBOM(encoder, options);
+        encoder2 = new bomHandling.PrependBOM(encoder2, options);
       }
-      return encoder;
+      return encoder2;
     };
     module.exports.getDecoder = function getDecoder(encoding, options) {
       var codec = module.exports.getCodec(encoding);
-      var decoder = new codec.decoder(options, codec);
+      var decoder2 = new codec.decoder(options, codec);
       if (codec.bomAware && !(options && options.stripBOM === false)) {
-        decoder = new bomHandling.StripBOM(decoder, options);
+        decoder2 = new bomHandling.StripBOM(decoder2, options);
       }
-      return decoder;
+      return decoder2;
     };
     module.exports.enableStreamingAPI = function enableStreamingAPI(streamModule2) {
       if (module.exports.supportsStreams) {
@@ -5382,13 +5382,13 @@ var require_raw_body = __commonJS({
         }));
       }
       var received = 0;
-      var decoder;
+      var decoder2;
       try {
-        decoder = getDecoder(encoding);
+        decoder2 = getDecoder(encoding);
       } catch (err) {
         return done(err);
       }
-      var buffer = decoder ? "" : [];
+      var buffer = decoder2 ? "" : [];
       stream.on("aborted", onAborted);
       stream.on("close", cleanup);
       stream.on("data", onData);
@@ -5433,8 +5433,8 @@ var require_raw_body = __commonJS({
             received,
             type: "entity.too.large"
           }));
-        } else if (decoder) {
-          buffer += decoder.write(chunk);
+        } else if (decoder2) {
+          buffer += decoder2.write(chunk);
         } else {
           buffer.push(chunk);
         }
@@ -5450,7 +5450,7 @@ var require_raw_body = __commonJS({
             type: "request.size.invalid"
           }));
         } else {
-          var string4 = decoder ? buffer + (decoder.end() || "") : Buffer.concat(buffer);
+          var string4 = decoder2 ? buffer + (decoder2.end() || "") : Buffer.concat(buffer);
           done(null, string4);
         }
       }
@@ -15447,16 +15447,16 @@ var require_utils = __commonJS({
       var inflate = options?.inflate !== false;
       var limit = typeof options?.limit !== "number" ? bytes.parse(options?.limit || "100kb") : options?.limit;
       var type = options?.type || defaultType;
-      var verify = options?.verify || false;
+      var verify2 = options?.verify || false;
       var defaultCharset = options?.defaultCharset || "utf-8";
-      if (verify !== false && typeof verify !== "function") {
+      if (verify2 !== false && typeof verify2 !== "function") {
         throw new TypeError("option verify must be function");
       }
       var shouldParse = typeof type !== "function" ? typeChecker(type) : type;
       return {
         inflate,
         limit,
-        verify,
+        verify: verify2,
         defaultCharset,
         shouldParse
       };
@@ -15514,7 +15514,7 @@ var require_read = __commonJS({
       var length;
       var opts = options;
       var stream;
-      var verify = opts.verify;
+      var verify2 = opts.verify;
       try {
         stream = contentstream(req, debug, opts.inflate);
         length = stream.length;
@@ -15523,7 +15523,7 @@ var require_read = __commonJS({
         return next(err);
       }
       opts.length = length;
-      opts.encoding = verify ? null : encoding;
+      opts.encoding = verify2 ? null : encoding;
       if (opts.encoding === null && encoding !== null && !iconv.encodingExists(encoding)) {
         return next(createError(415, 'unsupported charset "' + encoding.toUpperCase() + '"', {
           charset: encoding.toLowerCase(),
@@ -15551,10 +15551,10 @@ var require_read = __commonJS({
           });
           return;
         }
-        if (verify) {
+        if (verify2) {
           try {
             debug("verify body");
-            verify(req, res, body, encoding);
+            verify2(req, res, body, encoding);
           } catch (err) {
             next(createError(403, err, {
               body,
@@ -15999,14 +15999,14 @@ var require_object_inspect = __commonJS({
         var protoTag = obj instanceof Object ? "" : "null prototype";
         var stringTag = !isPlainObject2 && toStringTag && Object(obj) === obj && toStringTag in obj ? $slice.call(toStr(obj), 8, -1) : protoTag ? "Object" : "";
         var constructorTag = isPlainObject2 || typeof obj.constructor !== "function" ? "" : obj.constructor.name ? obj.constructor.name + " " : "";
-        var tag = constructorTag + (stringTag || protoTag ? "[" + $join.call($concat.call([], stringTag || [], protoTag || []), ": ") + "] " : "");
+        var tag2 = constructorTag + (stringTag || protoTag ? "[" + $join.call($concat.call([], stringTag || [], protoTag || []), ": ") + "] " : "");
         if (ys.length === 0) {
-          return tag + "{}";
+          return tag2 + "{}";
         }
         if (indent) {
-          return tag + "{" + indentedJoin(ys, indent) + "}";
+          return tag2 + "{" + indentedJoin(ys, indent) + "}";
         }
-        return tag + "{ " + $join.call(ys, ", ") + " }";
+        return tag2 + "{ " + $join.call(ys, ", ") + " }";
       }
       return String(obj);
     };
@@ -17537,7 +17537,7 @@ var require_utils2 = __commonJS({
         return acc;
       }, target);
     };
-    var decode = function(str, defaultDecoder, charset) {
+    var decode2 = function(str, defaultDecoder, charset) {
       var strWithoutPlus = str.replace(/\+/g, " ");
       if (charset === "iso-8859-1") {
         return strWithoutPlus.replace(/%[0-9a-f]{2}/gi, unescape);
@@ -17549,7 +17549,7 @@ var require_utils2 = __commonJS({
       }
     };
     var limit = 1024;
-    var encode = function encode2(str, defaultEncoder, charset, kind, format) {
+    var encode2 = function encode3(str, defaultEncoder, charset, kind, format) {
       if (str.length === 0) {
         return str;
       }
@@ -17650,8 +17650,8 @@ var require_utils2 = __commonJS({
       assign,
       combine,
       compact,
-      decode,
-      encode,
+      decode: decode2,
+      encode: encode2,
       isBuffer,
       isOverflow,
       isRegExp,
@@ -17717,7 +17717,7 @@ var require_stringify = __commonJS({
       return typeof v === "string" || typeof v === "number" || typeof v === "boolean" || typeof v === "symbol" || typeof v === "bigint";
     };
     var sentinel = {};
-    var stringify = function stringify2(object2, prefix, generateArrayPrefix, commaRoundTrip, allowEmptyArrays, strictNullHandling, skipNulls, encodeDotInKeys, encoder, filter, sort, allowDots, serializeDate, format, formatter, encodeValuesOnly, charset, sideChannel) {
+    var stringify = function stringify2(object2, prefix, generateArrayPrefix, commaRoundTrip, allowEmptyArrays, strictNullHandling, skipNulls, encodeDotInKeys, encoder2, filter, sort, allowDots, serializeDate, format, formatter, encodeValuesOnly, charset, sideChannel) {
       var obj = object2;
       var tmpSc = sideChannel;
       var step = 0;
@@ -17750,14 +17750,14 @@ var require_stringify = __commonJS({
       }
       if (obj === null) {
         if (strictNullHandling) {
-          return encoder && !encodeValuesOnly ? encoder(prefix, defaults2.encoder, charset, "key", format) : prefix;
+          return encoder2 && !encodeValuesOnly ? encoder2(prefix, defaults2.encoder, charset, "key", format) : prefix;
         }
         obj = "";
       }
       if (isNonNullishPrimitive(obj) || utils.isBuffer(obj)) {
-        if (encoder) {
-          var keyValue = encodeValuesOnly ? prefix : encoder(prefix, defaults2.encoder, charset, "key", format);
-          return [formatter(keyValue) + "=" + formatter(encoder(obj, defaults2.encoder, charset, "value", format))];
+        if (encoder2) {
+          var keyValue = encodeValuesOnly ? prefix : encoder2(prefix, defaults2.encoder, charset, "key", format);
+          return [formatter(keyValue) + "=" + formatter(encoder2(obj, defaults2.encoder, charset, "value", format))];
         }
         return [formatter(prefix) + "=" + formatter(String(obj))];
       }
@@ -17767,8 +17767,8 @@ var require_stringify = __commonJS({
       }
       var objKeys;
       if (generateArrayPrefix === "comma" && isArray(obj)) {
-        if (encodeValuesOnly && encoder) {
-          obj = utils.maybeMap(obj, encoder);
+        if (encodeValuesOnly && encoder2) {
+          obj = utils.maybeMap(obj, encoder2);
         }
         objKeys = [{ value: obj.length > 0 ? obj.join(",") || null : void 0 }];
       } else if (isArray(filter)) {
@@ -17802,7 +17802,7 @@ var require_stringify = __commonJS({
           strictNullHandling,
           skipNulls,
           encodeDotInKeys,
-          generateArrayPrefix === "comma" && encodeValuesOnly && isArray(obj) ? null : encoder,
+          generateArrayPrefix === "comma" && encodeValuesOnly && isArray(obj) ? null : encoder2,
           filter,
           sort,
           allowDots,
@@ -18558,8 +18558,8 @@ var require_finalhandler = __commonJS({
     var parseUrl = require_parseurl();
     var statuses = require_statuses();
     var isFinished = onFinished.isFinished;
-    function createHtmlDocument(message) {
-      var body = escapeHtml(message).replaceAll("\n", "<br>").replaceAll("  ", " &nbsp;");
+    function createHtmlDocument(message2) {
+      var body = escapeHtml(message2).replaceAll("\n", "<br>").replaceAll("  ", " &nbsp;");
       return '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>' + body + "</pre>\n</body>\n</html>\n";
     }
     module.exports = finalhandler;
@@ -18640,9 +18640,9 @@ var require_finalhandler = __commonJS({
       }
       return status;
     }
-    function send(req, res, status, headers, message) {
+    function send(req, res, status, headers, message2) {
       function write() {
-        var body = createHtmlDocument(message);
+        var body = createHtmlDocument(message2);
         res.statusCode = status;
         if (req.httpVersionMajor < 2) {
           res.statusMessage = statuses.message[status];
@@ -18793,8 +18793,8 @@ var require_etag = __commonJS({
       if (!isStats && typeof entity !== "string" && !Buffer.isBuffer(entity)) {
         throw new TypeError("argument entity must be string, Buffer, or fs.Stats");
       }
-      var tag = isStats ? stattag(entity) : entitytag(entity);
-      return weak ? "W/" + tag : tag;
+      var tag2 = isStats ? stattag(entity) : entitytag(entity);
+      return weak ? "W/" + tag2 : tag2;
     }
     function isstats(obj) {
       if (typeof Stats === "function" && obj instanceof Stats) {
@@ -19892,8 +19892,8 @@ var require_dist = __commonJS({
     };
     exports.TokenData = TokenData;
     var PathError = class extends TypeError {
-      constructor(message, originalPath) {
-        let text2 = message;
+      constructor(message2, originalPath) {
+        let text2 = message2;
         if (originalPath)
           text2 += `: ${originalPath}`;
         text2 += `; visit https://git.new/pathToRegexpError for info`;
@@ -19991,9 +19991,9 @@ var require_dist = __commonJS({
       return new TokenData(consumeUntil("end"), str);
     }
     function compile(path, options = {}) {
-      const { encode = encodeURIComponent, delimiter = DEFAULT_DELIMITER } = options;
+      const { encode: encode2 = encodeURIComponent, delimiter = DEFAULT_DELIMITER } = options;
       const data = typeof path === "object" ? path : parse3(path, options);
-      const fn = tokensToFunction(data.tokens, delimiter, encode);
+      const fn = tokensToFunction(data.tokens, delimiter, encode2);
       return function path2(params = {}) {
         const [path3, ...missing] = fn(params);
         if (missing.length) {
@@ -20002,23 +20002,23 @@ var require_dist = __commonJS({
         return path3;
       };
     }
-    function tokensToFunction(tokens, delimiter, encode) {
-      const encoders = tokens.map((token) => tokenToFunction(token, delimiter, encode));
+    function tokensToFunction(tokens, delimiter, encode2) {
+      const encoders = tokens.map((token) => tokenToFunction(token, delimiter, encode2));
       return (data) => {
         const result = [""];
-        for (const encoder of encoders) {
-          const [value, ...extras] = encoder(data);
+        for (const encoder2 of encoders) {
+          const [value, ...extras] = encoder2(data);
           result[0] += value;
           result.push(...extras);
         }
         return result;
       };
     }
-    function tokenToFunction(token, delimiter, encode) {
+    function tokenToFunction(token, delimiter, encode2) {
       if (token.type === "text")
         return () => [token.value];
       if (token.type === "group") {
-        const fn = tokensToFunction(token.tokens, delimiter, encode);
+        const fn = tokensToFunction(token.tokens, delimiter, encode2);
         return (data) => {
           const [value, ...missing] = fn(data);
           if (!missing.length)
@@ -20026,8 +20026,8 @@ var require_dist = __commonJS({
           return [""];
         };
       }
-      const encodeValue = encode || NOOP_VALUE;
-      if (token.type === "wildcard" && encode !== false) {
+      const encodeValue = encode2 || NOOP_VALUE;
+      if (token.type === "wildcard" && encode2 !== false) {
         return (data) => {
           const value = data[token.name];
           if (value == null)
@@ -20056,14 +20056,14 @@ var require_dist = __commonJS({
       };
     }
     function match(path, options = {}) {
-      const { decode = decodeURIComponent, delimiter = DEFAULT_DELIMITER } = options;
+      const { decode: decode2 = decodeURIComponent, delimiter = DEFAULT_DELIMITER } = options;
       const { regexp, keys } = pathToRegexp(path, options);
       const decoders = keys.map((key) => {
-        if (decode === false)
+        if (decode2 === false)
           return NOOP_VALUE;
         if (key.type === "param")
-          return decode;
-        return (value) => value.split(delimiter).map(decode);
+          return decode2;
+        return (value) => value.split(delimiter).map(decode2);
       });
       return function match2(input) {
         const m = regexp.exec(input);
@@ -20075,8 +20075,8 @@ var require_dist = __commonJS({
           if (m[i] === void 0)
             continue;
           const key = keys[i - 1];
-          const decoder = decoders[i - 1];
-          params[key.name] = decoder(m[i]);
+          const decoder2 = decoders[i - 1];
+          params[key.name] = decoder2(m[i]);
         }
         return { path: path2, params };
       };
@@ -20489,27 +20489,27 @@ var require_router = __commonJS({
     var slice = Array.prototype.slice;
     var flatten = Array.prototype.flat;
     var methods = METHODS.map((method) => method.toLowerCase());
-    module.exports = Router42;
+    module.exports = Router49;
     module.exports.Route = Route;
-    function Router42(options) {
-      if (!(this instanceof Router42)) {
-        return new Router42(options);
+    function Router49(options) {
+      if (!(this instanceof Router49)) {
+        return new Router49(options);
       }
       const opts = options || {};
-      function router42(req, res, next) {
-        router42.handle(req, res, next);
+      function router49(req, res, next) {
+        router49.handle(req, res, next);
       }
-      Object.setPrototypeOf(router42, this);
-      router42.caseSensitive = opts.caseSensitive;
-      router42.mergeParams = opts.mergeParams;
-      router42.params = {};
-      router42.strict = opts.strict;
-      router42.stack = [];
-      return router42;
+      Object.setPrototypeOf(router49, this);
+      router49.caseSensitive = opts.caseSensitive;
+      router49.mergeParams = opts.mergeParams;
+      router49.params = {};
+      router49.strict = opts.strict;
+      router49.stack = [];
+      return router49;
     }
-    Router42.prototype = function() {
+    Router49.prototype = function() {
     };
-    Router42.prototype.param = function param(name, fn) {
+    Router49.prototype.param = function param(name, fn) {
       if (!name) {
         throw new TypeError("argument name is required");
       }
@@ -20529,7 +20529,7 @@ var require_router = __commonJS({
       params.push(fn);
       return this;
     };
-    Router42.prototype.handle = function handle(req, res, callback) {
+    Router49.prototype.handle = function handle(req, res, callback) {
       if (!callback) {
         throw new TypeError("argument callback is required");
       }
@@ -20656,7 +20656,7 @@ var require_router = __commonJS({
         }
       }
     };
-    Router42.prototype.use = function use(handler) {
+    Router49.prototype.use = function use(handler) {
       let offset = 0;
       let path = "/";
       if (typeof handler !== "function") {
@@ -20689,7 +20689,7 @@ var require_router = __commonJS({
       }
       return this;
     };
-    Router42.prototype.route = function route(path) {
+    Router49.prototype.route = function route(path) {
       const route2 = new Route(path);
       const layer = new Layer(path, {
         sensitive: this.caseSensitive,
@@ -20704,7 +20704,7 @@ var require_router = __commonJS({
       return route2;
     };
     methods.concat("all").forEach(function(method) {
-      Router42.prototype[method] = function(path) {
+      Router49.prototype[method] = function(path) {
         const route = this.route(path);
         route[method].apply(route, slice.call(arguments, 1));
         return this;
@@ -20887,13 +20887,13 @@ var require_application = __commonJS({
     var compileTrust = require_utils3().compileTrust;
     var resolve = __require("node:path").resolve;
     var once = require_once();
-    var Router42 = require_router();
+    var Router49 = require_router();
     var slice = Array.prototype.slice;
     var flatten = Array.prototype.flat;
     var app2 = exports = module.exports = {};
     var trustProxyDefaultSymbol = "@@symbol:trust_proxy_default";
     app2.init = function init() {
-      var router42 = null;
+      var router49 = null;
       this.cache = /* @__PURE__ */ Object.create(null);
       this.engines = /* @__PURE__ */ Object.create(null);
       this.settings = /* @__PURE__ */ Object.create(null);
@@ -20902,13 +20902,13 @@ var require_application = __commonJS({
         configurable: true,
         enumerable: true,
         get: function getrouter() {
-          if (router42 === null) {
-            router42 = new Router42({
+          if (router49 === null) {
+            router49 = new Router49({
               caseSensitive: this.enabled("case sensitive routing"),
               strict: this.enabled("strict routing")
             });
           }
-          return router42;
+          return router49;
         }
       });
     };
@@ -20979,15 +20979,15 @@ var require_application = __commonJS({
       if (fns.length === 0) {
         throw new TypeError("app.use() requires a middleware function");
       }
-      var router42 = this.router;
+      var router49 = this.router;
       fns.forEach(function(fn2) {
         if (!fn2 || !fn2.handle || !fn2.set) {
-          return router42.use(path, fn2);
+          return router49.use(path, fn2);
         }
         debug(".use app under %s", path);
         fn2.mountpath = path;
         fn2.parent = this;
-        router42.use(path, function mounted_app(req, res, next) {
+        router49.use(path, function mounted_app(req, res, next) {
           var orig = req.app;
           fn2.handle(req, res, function(err) {
             Object.setPrototypeOf(req, orig.request);
@@ -21077,7 +21077,7 @@ var require_application = __commonJS({
       return this;
     };
     app2.render = function render(name, options, callback) {
-      var cache = this.cache;
+      var cache2 = this.cache;
       var done = callback;
       var engines = this.engines;
       var opts = options;
@@ -21091,7 +21091,7 @@ var require_application = __commonJS({
         renderOptions.cache = this.enabled("view cache");
       }
       if (renderOptions.cache) {
-        view = cache[name];
+        view = cache2[name];
       }
       if (!view) {
         var View3 = this.get("view");
@@ -21107,7 +21107,7 @@ var require_application = __commonJS({
           return done(err);
         }
         if (renderOptions.cache) {
-          cache[name] = view;
+          cache2[name] = view;
         }
       }
       tryRender(view, renderOptions, done);
@@ -22229,7 +22229,7 @@ var require_cookie = __commonJS({
       var obj = {};
       var len = str.length;
       if (len < 2) return obj;
-      var dec = opt && opt.decode || decode;
+      var dec = opt && opt.decode || decode2;
       var index = 0;
       var eqIdx = 0;
       var endIdx = 0;
@@ -22360,15 +22360,15 @@ var require_cookie = __commonJS({
       }
       return str;
     }
-    function decode(str) {
+    function decode2(str) {
       return str.indexOf("%") !== -1 ? decodeURIComponent(str) : str;
     }
     function isDate(val) {
       return __toString.call(val) === "[object Date]";
     }
-    function tryDecode(str, decode2) {
+    function tryDecode(str, decode3) {
       try {
-        return decode2(str);
+        return decode3(str);
       } catch (e) {
         return str;
       }
@@ -22548,7 +22548,7 @@ var require_send = __commonJS({
     SendStream.prototype.pipe = function pipe2(res) {
       var root = this._root;
       this.res = res;
-      var path2 = decode(this.path);
+      var path2 = decode2(this.path);
       if (path2 === -1) {
         this.error(400);
         return res;
@@ -22798,7 +22798,7 @@ var require_send = __commonJS({
       }
       return err instanceof Error ? createError(status, err, { expose: false }) : createError(status, err);
     }
-    function decode(path2) {
+    function decode2(path2) {
       try {
         return decodeURIComponent(path2);
       } catch (err) {
@@ -23514,7 +23514,7 @@ var require_express = __commonJS({
     var EventEmitter = __require("node:events").EventEmitter;
     var mixin = require_merge_descriptors();
     var proto = require_application();
-    var Router42 = require_router();
+    var Router49 = require_router();
     var req = require_request();
     var res = require_response();
     exports = module.exports = createApplication;
@@ -23536,8 +23536,8 @@ var require_express = __commonJS({
     exports.application = proto;
     exports.request = req;
     exports.response = res;
-    exports.Route = Router42.Route;
-    exports.Router = Router42;
+    exports.Route = Router49.Route;
+    exports.Router = Router49;
     exports.json = bodyParser.json;
     exports.raw = bodyParser.raw;
     exports.static = require_serve_static();
@@ -23866,17 +23866,17 @@ var require_err_helpers = __commonJS({
     var stackWithCauses = (err) => _stackWithCauses(err, /* @__PURE__ */ new Set());
     var _messageWithCauses = (err, seen, skip) => {
       if (!isErrorLike(err)) return "";
-      const message = skip ? "" : err.message || "";
+      const message2 = skip ? "" : err.message || "";
       if (seen.has(err)) {
-        return message + ": ...";
+        return message2 + ": ...";
       }
       const cause = getErrorCause(err);
       if (cause) {
         seen.add(err);
         const skipIfVErrorStyleCause = typeof err.cause === "function";
-        return message + (skipIfVErrorStyleCause ? "" : ": ") + _messageWithCauses(cause, seen, skipIfVErrorStyleCause);
+        return message2 + (skipIfVErrorStyleCause ? "" : ": ") + _messageWithCauses(cause, seen, skipIfVErrorStyleCause);
       } else {
-        return message;
+        return message2;
       }
     };
     var messageWithCauses = (err) => _messageWithCauses(err, /* @__PURE__ */ new Set());
@@ -24837,13 +24837,13 @@ var require_time = __commonJS({
       const nanosWithinSecond = currentTimeNs % NS_PER_SEC;
       const msSinceEpoch = Number(secondsSinceEpoch * 1000n + nanosWithinSecond / 1000000n);
       const date6 = new Date(msSinceEpoch);
-      const year = date6.getUTCFullYear();
+      const year2 = date6.getUTCFullYear();
       const month = (date6.getUTCMonth() + 1).toString().padStart(2, "0");
-      const day = date6.getUTCDate().toString().padStart(2, "0");
+      const day2 = date6.getUTCDate().toString().padStart(2, "0");
       const hours = date6.getUTCHours().toString().padStart(2, "0");
       const minutes = date6.getUTCMinutes().toString().padStart(2, "0");
       const seconds = date6.getUTCSeconds().toString().padStart(2, "0");
-      return `,"time":"${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${nanosWithinSecond.toString().padStart(9, "0")}Z"`;
+      return `,"time":"${year2}-${month}-${day2}T${hours}:${minutes}:${seconds}.${nanosWithinSecond.toString().padStart(9, "0")}Z"`;
     };
     module.exports = { nullTime, epochTime, unixTime, isoTime, isoTimeNano };
   }
@@ -26002,8 +26002,8 @@ var require_thread_stream = __commonJS({
         this[kImpl].closed = false;
         this[kImpl].buf = "";
         this.worker = createWorker(this, opts);
-        this.on("message", (message, transferList) => {
-          this.worker.postMessage(message, transferList);
+        this.on("message", (message2, transferList) => {
+          this.worker.postMessage(message2, transferList);
         });
       }
       write(data) {
@@ -26777,12 +26777,12 @@ var require_levels = __commonJS({
     function genLsCache(instance) {
       const formatter = instance[formattersSym].level;
       const { labels } = instance.levels;
-      const cache = {};
+      const cache2 = {};
       for (const label in labels) {
         const level = formatter(labels[label], Number(label));
-        cache[label] = JSON.stringify(level).slice(0, -1);
+        cache2[label] = JSON.stringify(level).slice(0, -1);
       }
-      instance[lsCacheSym] = cache;
+      instance[lsCacheSym] = cache2;
       return instance;
     }
     function isStandardLevel(level, useOnlyCustomLevels) {
@@ -27298,9 +27298,9 @@ var require_safe_stable_stringify = __commonJS({
         }
         if (value) {
           return (value2) => {
-            let message = `Object can not safely be stringified. Received type ${typeof value2}`;
-            if (typeof value2 !== "function") message += ` (${value2.toString()})`;
-            throw new Error(message);
+            let message2 = `Object can not safely be stringified. Received type ${typeof value2}`;
+            if (typeof value2 !== "function") message2 += ` (${value2.toString()})`;
+            throw new Error(message2);
           };
         }
       }
@@ -28522,31 +28522,31 @@ var require_postgres_date = __commonJS({
         return getDate(isoDate) || null;
       }
       var isBC = !!matches[8];
-      var year = parseInt(matches[1], 10);
+      var year2 = parseInt(matches[1], 10);
       if (isBC) {
-        year = bcYearToNegativeYear(year);
+        year2 = bcYearToNegativeYear(year2);
       }
       var month = parseInt(matches[2], 10) - 1;
-      var day = matches[3];
-      var hour = parseInt(matches[4], 10);
-      var minute = parseInt(matches[5], 10);
+      var day2 = matches[3];
+      var hour2 = parseInt(matches[4], 10);
+      var minute2 = parseInt(matches[5], 10);
       var second = parseInt(matches[6], 10);
       var ms = matches[7];
       ms = ms ? 1e3 * parseFloat(ms) : 0;
       var date6;
       var offset = timeZoneOffset(isoDate);
       if (offset != null) {
-        date6 = new Date(Date.UTC(year, month, day, hour, minute, second, ms));
-        if (is0To99(year)) {
-          date6.setUTCFullYear(year);
+        date6 = new Date(Date.UTC(year2, month, day2, hour2, minute2, second, ms));
+        if (is0To99(year2)) {
+          date6.setUTCFullYear(year2);
         }
         if (offset !== 0) {
           date6.setTime(date6.getTime() - offset);
         }
       } else {
-        date6 = new Date(year, month, day, hour, minute, second, ms);
-        if (is0To99(year)) {
-          date6.setFullYear(year);
+        date6 = new Date(year2, month, day2, hour2, minute2, second, ms);
+        if (is0To99(year2)) {
+          date6.setFullYear(year2);
         }
       }
       return date6;
@@ -28556,16 +28556,16 @@ var require_postgres_date = __commonJS({
       if (!matches) {
         return;
       }
-      var year = parseInt(matches[1], 10);
+      var year2 = parseInt(matches[1], 10);
       var isBC = !!matches[4];
       if (isBC) {
-        year = bcYearToNegativeYear(year);
+        year2 = bcYearToNegativeYear(year2);
       }
       var month = parseInt(matches[2], 10) - 1;
-      var day = matches[3];
-      var date6 = new Date(year, month, day);
-      if (is0To99(year)) {
-        date6.setFullYear(year);
+      var day2 = matches[3];
+      var date6 = new Date(year2, month, day2);
+      if (is0To99(year2)) {
+        date6.setFullYear(year2);
       }
       return date6;
     }
@@ -28583,8 +28583,8 @@ var require_postgres_date = __commonJS({
       var offset = parseInt(zone[2], 10) * 3600 + parseInt(zone[3] || 0, 10) * 60 + parseInt(zone[4] || 0, 10);
       return offset * sign * 1e3;
     }
-    function bcYearToNegativeYear(year) {
-      return -(year - 1);
+    function bcYearToNegativeYear(year2) {
+      return -(year2 - 1);
     }
     function is0To99(num) {
       return num >= 0 && num < 100;
@@ -29475,10 +29475,10 @@ var require_utils4 = __commonJS({
     }
     function dateToString(date6) {
       let offset = -date6.getTimezoneOffset();
-      let year = date6.getFullYear();
-      const isBCYear = year < 1;
-      if (isBCYear) year = Math.abs(year) + 1;
-      let ret = String(year).padStart(4, "0") + "-" + String(date6.getMonth() + 1).padStart(2, "0") + "-" + String(date6.getDate()).padStart(2, "0") + "T" + String(date6.getHours()).padStart(2, "0") + ":" + String(date6.getMinutes()).padStart(2, "0") + ":" + String(date6.getSeconds()).padStart(2, "0") + "." + String(date6.getMilliseconds()).padStart(3, "0");
+      let year2 = date6.getFullYear();
+      const isBCYear = year2 < 1;
+      if (isBCYear) year2 = Math.abs(year2) + 1;
+      let ret = String(year2).padStart(4, "0") + "-" + String(date6.getMonth() + 1).padStart(2, "0") + "-" + String(date6.getDate()).padStart(2, "0") + "T" + String(date6.getHours()).padStart(2, "0") + ":" + String(date6.getMinutes()).padStart(2, "0") + ":" + String(date6.getSeconds()).padStart(2, "0") + "." + String(date6.getMilliseconds()).padStart(3, "0");
       if (offset < 0) {
         ret += "-";
         offset *= -1;
@@ -29490,10 +29490,10 @@ var require_utils4 = __commonJS({
       return ret;
     }
     function dateToStringUTC(date6) {
-      let year = date6.getUTCFullYear();
-      const isBCYear = year < 1;
-      if (isBCYear) year = Math.abs(year) + 1;
-      let ret = String(year).padStart(4, "0") + "-" + String(date6.getUTCMonth() + 1).padStart(2, "0") + "-" + String(date6.getUTCDate()).padStart(2, "0") + "T" + String(date6.getUTCHours()).padStart(2, "0") + ":" + String(date6.getUTCMinutes()).padStart(2, "0") + ":" + String(date6.getUTCSeconds()).padStart(2, "0") + "." + String(date6.getUTCMilliseconds()).padStart(3, "0");
+      let year2 = date6.getUTCFullYear();
+      const isBCYear = year2 < 1;
+      if (isBCYear) year2 = Math.abs(year2) + 1;
+      let ret = String(year2).padStart(4, "0") + "-" + String(date6.getUTCMonth() + 1).padStart(2, "0") + "-" + String(date6.getUTCDate()).padStart(2, "0") + "T" + String(date6.getUTCHours()).padStart(2, "0") + ":" + String(date6.getUTCMinutes()).padStart(2, "0") + ":" + String(date6.getUTCSeconds()).padStart(2, "0") + "." + String(date6.getUTCMilliseconds()).padStart(3, "0");
       ret += "+00:00";
       if (isBCYear) ret += " BC";
       return ret;
@@ -30622,8 +30622,8 @@ var require_messages = __commonJS({
       length: 4
     };
     var DatabaseError2 = class extends Error {
-      constructor(message, length, name) {
-        super(message);
+      constructor(message2, length, name) {
+        super(message2);
         this.length = length;
         this.name = name;
       }
@@ -30738,9 +30738,9 @@ var require_messages = __commonJS({
     };
     exports.DataRowMessage = DataRowMessage;
     var NoticeMessage = class {
-      constructor(length, message) {
+      constructor(length, message2) {
         this.length = length;
-        this.message = message;
+        this.message = message2;
         this.name = "notice";
       }
     };
@@ -31002,8 +31002,8 @@ var require_serializer = __commonJS({
         /* code.copyFromChunk */
       );
     };
-    var copyFail = (message) => {
-      return cstringMessage(102, message);
+    var copyFail = (message2) => {
+      return cstringMessage(102, message2);
     };
     var codeOnlyBuffer = (code) => Buffer.from([code, 0, 0, 0, 4]);
     var flushBuffer = codeOnlyBuffer(
@@ -31138,8 +31138,8 @@ var require_parser = __commonJS({
           const length = this.buffer.readUInt32BE(offset + CODE_LENGTH);
           const fullMessageLength = CODE_LENGTH + length;
           if (fullMessageLength + offset <= bufferFullLength) {
-            const message = this.handlePacket(offset + HEADER_LENGTH, code, length, this.buffer);
-            callback(message);
+            const message2 = this.handlePacket(offset + HEADER_LENGTH, code, length, this.buffer);
+            callback(message2);
             offset += fullMessageLength;
           } else {
             break;
@@ -31184,80 +31184,80 @@ var require_parser = __commonJS({
       handlePacket(offset, code, length, bytes) {
         const { reader } = this;
         reader.setBuffer(offset, bytes);
-        let message;
+        let message2;
         switch (code) {
           case 50:
-            message = messages_1.bindComplete;
+            message2 = messages_1.bindComplete;
             break;
           case 49:
-            message = messages_1.parseComplete;
+            message2 = messages_1.parseComplete;
             break;
           case 51:
-            message = messages_1.closeComplete;
+            message2 = messages_1.closeComplete;
             break;
           case 110:
-            message = messages_1.noData;
+            message2 = messages_1.noData;
             break;
           case 115:
-            message = messages_1.portalSuspended;
+            message2 = messages_1.portalSuspended;
             break;
           case 99:
-            message = messages_1.copyDone;
+            message2 = messages_1.copyDone;
             break;
           case 87:
-            message = messages_1.replicationStart;
+            message2 = messages_1.replicationStart;
             break;
           case 73:
-            message = messages_1.emptyQuery;
+            message2 = messages_1.emptyQuery;
             break;
           case 68:
-            message = parseDataRowMessage(reader);
+            message2 = parseDataRowMessage(reader);
             break;
           case 67:
-            message = parseCommandCompleteMessage(reader);
+            message2 = parseCommandCompleteMessage(reader);
             break;
           case 90:
-            message = parseReadyForQueryMessage(reader);
+            message2 = parseReadyForQueryMessage(reader);
             break;
           case 65:
-            message = parseNotificationMessage(reader);
+            message2 = parseNotificationMessage(reader);
             break;
           case 82:
-            message = parseAuthenticationResponse(reader, length);
+            message2 = parseAuthenticationResponse(reader, length);
             break;
           case 83:
-            message = parseParameterStatusMessage(reader);
+            message2 = parseParameterStatusMessage(reader);
             break;
           case 75:
-            message = parseBackendKeyData(reader);
+            message2 = parseBackendKeyData(reader);
             break;
           case 69:
-            message = parseErrorMessage(reader, "error");
+            message2 = parseErrorMessage(reader, "error");
             break;
           case 78:
-            message = parseErrorMessage(reader, "notice");
+            message2 = parseErrorMessage(reader, "notice");
             break;
           case 84:
-            message = parseRowDescriptionMessage(reader);
+            message2 = parseRowDescriptionMessage(reader);
             break;
           case 116:
-            message = parseParameterDescriptionMessage(reader);
+            message2 = parseParameterDescriptionMessage(reader);
             break;
           case 71:
-            message = parseCopyInMessage(reader);
+            message2 = parseCopyInMessage(reader);
             break;
           case 72:
-            message = parseCopyOutMessage(reader);
+            message2 = parseCopyOutMessage(reader);
             break;
           case 100:
-            message = parseCopyData(reader, length);
+            message2 = parseCopyData(reader, length);
             break;
           default:
             return new messages_1.DatabaseError("received invalid response: " + code.toString(16), length, "error");
         }
         reader.setBuffer(0, emptyBuffer);
-        message.length = length;
-        return message;
+        message2.length = length;
+        return message2;
       }
     };
     exports.Parser = Parser;
@@ -31278,11 +31278,11 @@ var require_parser = __commonJS({
     var parseCopyMessage = (reader, messageName) => {
       const isBinary = reader.byte() !== 0;
       const columnCount = reader.int16();
-      const message = new messages_1.CopyResponse(LATEINIT_LENGTH, messageName, isBinary, columnCount);
+      const message2 = new messages_1.CopyResponse(LATEINIT_LENGTH, messageName, isBinary, columnCount);
       for (let i = 0; i < columnCount; i++) {
-        message.columnTypes[i] = reader.int16();
+        message2.columnTypes[i] = reader.int16();
       }
-      return message;
+      return message2;
     };
     var parseNotificationMessage = (reader) => {
       const processId = reader.int32();
@@ -31292,11 +31292,11 @@ var require_parser = __commonJS({
     };
     var parseRowDescriptionMessage = (reader) => {
       const fieldCount = reader.int16();
-      const message = new messages_1.RowDescriptionMessage(LATEINIT_LENGTH, fieldCount);
+      const message2 = new messages_1.RowDescriptionMessage(LATEINIT_LENGTH, fieldCount);
       for (let i = 0; i < fieldCount; i++) {
-        message.fields[i] = parseField(reader);
+        message2.fields[i] = parseField(reader);
       }
-      return message;
+      return message2;
     };
     var parseField = (reader) => {
       const name = reader.cstring();
@@ -31310,11 +31310,11 @@ var require_parser = __commonJS({
     };
     var parseParameterDescriptionMessage = (reader) => {
       const parameterCount = reader.int16();
-      const message = new messages_1.ParameterDescriptionMessage(LATEINIT_LENGTH, parameterCount);
+      const message2 = new messages_1.ParameterDescriptionMessage(LATEINIT_LENGTH, parameterCount);
       for (let i = 0; i < parameterCount; i++) {
-        message.dataTypeIDs[i] = reader.int32();
+        message2.dataTypeIDs[i] = reader.int32();
       }
-      return message;
+      return message2;
     };
     var parseDataRowMessage = (reader) => {
       const fieldCount = reader.int16();
@@ -31337,7 +31337,7 @@ var require_parser = __commonJS({
     };
     var parseAuthenticationResponse = (reader, length) => {
       const code = reader.int32();
-      const message = {
+      const message2 = {
         name: "authenticationOk",
         length
       };
@@ -31345,42 +31345,42 @@ var require_parser = __commonJS({
         case 0:
           break;
         case 3:
-          if (message.length === 8) {
-            message.name = "authenticationCleartextPassword";
+          if (message2.length === 8) {
+            message2.name = "authenticationCleartextPassword";
           }
           break;
         case 5:
-          if (message.length === 12) {
-            message.name = "authenticationMD5Password";
+          if (message2.length === 12) {
+            message2.name = "authenticationMD5Password";
             const salt = reader.bytes(4);
             return new messages_1.AuthenticationMD5Password(LATEINIT_LENGTH, salt);
           }
           break;
         case 10:
           {
-            message.name = "authenticationSASL";
-            message.mechanisms = [];
+            message2.name = "authenticationSASL";
+            message2.mechanisms = [];
             let mechanism;
             do {
               mechanism = reader.cstring();
               if (mechanism) {
-                message.mechanisms.push(mechanism);
+                message2.mechanisms.push(mechanism);
               }
             } while (mechanism);
           }
           break;
         case 11:
-          message.name = "authenticationSASLContinue";
-          message.data = reader.string(length - 8);
+          message2.name = "authenticationSASLContinue";
+          message2.data = reader.string(length - 8);
           break;
         case 12:
-          message.name = "authenticationSASLFinal";
-          message.data = reader.string(length - 8);
+          message2.name = "authenticationSASLFinal";
+          message2.data = reader.string(length - 8);
           break;
         default:
           throw new Error("Unknown authenticationOk message type " + code);
       }
-      return message;
+      return message2;
     };
     var parseErrorMessage = (reader, name) => {
       const fields = {};
@@ -31390,24 +31390,24 @@ var require_parser = __commonJS({
         fieldType = reader.string(1);
       }
       const messageValue = fields.M;
-      const message = name === "notice" ? new messages_1.NoticeMessage(LATEINIT_LENGTH, messageValue) : new messages_1.DatabaseError(messageValue, LATEINIT_LENGTH, name);
-      message.severity = fields.S;
-      message.code = fields.C;
-      message.detail = fields.D;
-      message.hint = fields.H;
-      message.position = fields.P;
-      message.internalPosition = fields.p;
-      message.internalQuery = fields.q;
-      message.where = fields.W;
-      message.schema = fields.s;
-      message.table = fields.t;
-      message.column = fields.c;
-      message.dataType = fields.d;
-      message.constraint = fields.n;
-      message.file = fields.F;
-      message.line = fields.L;
-      message.routine = fields.R;
-      return message;
+      const message2 = name === "notice" ? new messages_1.NoticeMessage(LATEINIT_LENGTH, messageValue) : new messages_1.DatabaseError(messageValue, LATEINIT_LENGTH, name);
+      message2.severity = fields.S;
+      message2.code = fields.C;
+      message2.detail = fields.D;
+      message2.hint = fields.H;
+      message2.position = fields.P;
+      message2.internalPosition = fields.p;
+      message2.internalQuery = fields.q;
+      message2.where = fields.W;
+      message2.schema = fields.s;
+      message2.table = fields.t;
+      message2.column = fields.c;
+      message2.dataType = fields.d;
+      message2.constraint = fields.n;
+      message2.file = fields.F;
+      message2.line = fields.L;
+      message2.routine = fields.R;
+      return message2;
     };
   }
 });
@@ -33537,8 +33537,8 @@ var init_logger = __esm({
     init_entity();
     ConsoleLogWriter = class {
       static [entityKind] = "ConsoleLogWriter";
-      write(message) {
-        console.log(message);
+      write(message2) {
+        console.log(message2);
       }
     };
     DefaultLogger = class {
@@ -34678,8 +34678,8 @@ var init_sql = __esm({
         }
         return new _SQL.Aliased(this, alias);
       }
-      mapWith(decoder) {
-        this.decoder = typeof decoder === "function" ? { mapFromDriverValue: decoder } : decoder;
+      mapWith(decoder2) {
+        this.decoder = typeof decoder2 === "function" ? { mapFromDriverValue: decoder2 } : decoder2;
         return this;
       }
       inlineParams() {
@@ -34721,9 +34721,9 @@ var init_sql = __esm({
        * @param value - Parameter value
        * @param encoder - Encoder to convert the value to a driver parameter
        */
-      constructor(value, encoder = noopEncoder) {
+      constructor(value, encoder2 = noopEncoder) {
         this.value = value;
-        this.encoder = encoder;
+        this.encoder = encoder2;
       }
       static [entityKind] = "Param";
       brand;
@@ -34763,8 +34763,8 @@ var init_sql = __esm({
         return new Placeholder(name2);
       }
       sql22.placeholder = placeholder2;
-      function param2(value, encoder) {
-        return new Param(value, encoder);
+      function param2(value, encoder2) {
+        return new Param(value, encoder2);
       }
       sql22.param = param2;
     })(sql || (sql = {}));
@@ -35020,15 +35020,15 @@ function mapResultRow(columns, row, joinsNotNullableMap) {
   const nullifyMap = {};
   const result = columns.reduce(
     (result2, { path, field }, columnIndex) => {
-      let decoder;
+      let decoder2;
       if (is(field, Column)) {
-        decoder = field;
+        decoder2 = field;
       } else if (is(field, SQL)) {
-        decoder = field.decoder;
+        decoder2 = field.decoder;
       } else if (is(field, Subquery)) {
-        decoder = field._.sql.decoder;
+        decoder2 = field._.sql.decoder;
       } else {
-        decoder = field.sql.decoder;
+        decoder2 = field.sql.decoder;
       }
       let node = result2;
       for (const [pathChunkIndex, pathChunk] of path.entries()) {
@@ -35039,7 +35039,7 @@ function mapResultRow(columns, row, joinsNotNullableMap) {
           node = node[pathChunk];
         } else {
           const rawValue = row[columnIndex];
-          const value = node[pathChunk] = rawValue === null ? null : decoder.mapFromDriverValue(rawValue);
+          const value = node[pathChunk] = rawValue === null ? null : decoder2.mapFromDriverValue(rawValue);
           if (joinsNotNullableMap && is(field, Column) && path.length === 2) {
             const objectName = path[0];
             if (!(objectName in nullifyMap)) {
@@ -37233,8 +37233,8 @@ var init_errors = __esm({
     init_entity();
     DrizzleError = class extends Error {
       static [entityKind] = "DrizzleError";
-      constructor({ message, cause }) {
-        super(message);
+      constructor({ message: message2, cause }) {
+        super(message2);
         this.name = "DrizzleError";
         this.cause = cause;
       }
@@ -37599,15 +37599,15 @@ function mapRelationalRow(tablesConfig, tableConfig, row, buildQueryResultSelect
     } else {
       const value = mapColumnValue(row[selectionItemIndex]);
       const field = selectionItem.field;
-      let decoder;
+      let decoder2;
       if (is(field, Column)) {
-        decoder = field;
+        decoder2 = field;
       } else if (is(field, SQL)) {
-        decoder = field.decoder;
+        decoder2 = field.decoder;
       } else {
-        decoder = field.sql.decoder;
+        decoder2 = field.sql.decoder;
       }
-      result[selectionItem.tsKey] = value === null ? null : decoder.mapFromDriverValue(value);
+      result[selectionItem.tsKey] = value === null ? null : decoder2.mapFromDriverValue(value);
     }
   }
   return result;
@@ -38114,18 +38114,18 @@ var init_dialect = __esm({
         const withNoDataSql = withNoData ? sql` with no data` : void 0;
         return sql`refresh materialized view${concurrentlySql} ${view}${withNoDataSql}`;
       }
-      prepareTyping(encoder) {
-        if (is(encoder, PgJsonb) || is(encoder, PgJson)) {
+      prepareTyping(encoder2) {
+        if (is(encoder2, PgJsonb) || is(encoder2, PgJson)) {
           return "json";
-        } else if (is(encoder, PgNumeric)) {
+        } else if (is(encoder2, PgNumeric)) {
           return "decimal";
-        } else if (is(encoder, PgTime)) {
+        } else if (is(encoder2, PgTime)) {
           return "time";
-        } else if (is(encoder, PgTimestamp) || is(encoder, PgTimestampString)) {
+        } else if (is(encoder2, PgTimestamp) || is(encoder2, PgTimestampString)) {
           return "timestamp";
-        } else if (is(encoder, PgDate) || is(encoder, PgDateString)) {
+        } else if (is(encoder2, PgDate) || is(encoder2, PgDateString)) {
           return "date";
-        } else if (is(encoder, PgUUID)) {
+        } else if (is(encoder2, PgUUID)) {
           return "uuid";
         } else {
           return "none";
@@ -41199,8 +41199,8 @@ var init_db = __esm({
 // ../../node_modules/.pnpm/drizzle-orm@0.45.1_@types+pg@8.18.0_pg@8.20.0/node_modules/drizzle-orm/cache/core/cache.js
 async function hashQuery(sql4, params) {
   const dataToHash = `${sql4}-${JSON.stringify(params)}`;
-  const encoder = new TextEncoder();
-  const data = encoder.encode(dataToHash);
+  const encoder2 = new TextEncoder();
+  const data = encoder2.encode(dataToHash);
   const hashBuffer = await crypto.subtle.digest("SHA-256", data);
   const hashArray = [...new Uint8Array(hashBuffer)];
   const hashHex = hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
@@ -41340,12 +41340,12 @@ var init_session = __esm({
     init_tracing();
     init_db();
     PgPreparedQuery = class {
-      constructor(query, cache, queryMetadata, cacheConfig) {
+      constructor(query, cache2, queryMetadata, cacheConfig) {
         this.query = query;
-        this.cache = cache;
+        this.cache = cache2;
         this.queryMetadata = queryMetadata;
         this.cacheConfig = cacheConfig;
-        if (cache && cache.strategy() === "all" && cacheConfig === void 0) {
+        if (cache2 && cache2.strategy() === "all" && cacheConfig === void 0) {
           this.cacheConfig = { enable: true, autoInvalidate: true };
         }
         if (!this.cacheConfig?.enable) {
@@ -42001,14 +42001,14 @@ function prefixIssues(path, issues) {
     return iss;
   });
 }
-function unwrapMessage(message) {
-  return typeof message === "string" ? message : message?.message;
+function unwrapMessage(message2) {
+  return typeof message2 === "string" ? message2 : message2?.message;
 }
 function finalizeIssue(iss, ctx, config2) {
   const full = { ...iss, path: iss.path ?? [] };
   if (!iss.message) {
-    const message = unwrapMessage(iss.inst?._zod.def?.error?.(iss)) ?? unwrapMessage(ctx?.error?.(iss)) ?? unwrapMessage(config2.customError?.(iss)) ?? unwrapMessage(config2.localeError?.(iss)) ?? "Invalid input";
-    full.message = message;
+    const message2 = unwrapMessage(iss.inst?._zod.def?.error?.(iss)) ?? unwrapMessage(ctx?.error?.(iss)) ?? unwrapMessage(config2.customError?.(iss)) ?? unwrapMessage(config2.localeError?.(iss)) ?? "Invalid input";
+    full.message = message2;
   }
   delete full.inst;
   delete full.continue;
@@ -43965,7 +43965,7 @@ var init_schemas = __esm({
         return (payload, ctx) => fn(shape, payload, ctx);
       };
       let fastpass;
-      const isObject2 = isObject;
+      const isObject3 = isObject;
       const jit = !globalConfig.jitless;
       const allowsEval2 = allowsEval;
       const fastEnabled = jit && allowsEval2.value;
@@ -43974,7 +43974,7 @@ var init_schemas = __esm({
       inst._zod.parse = (payload, ctx) => {
         value ?? (value = _normalized.value);
         const input = payload.value;
-        if (!isObject2(input)) {
+        if (!isObject3(input)) {
           payload.issues.push({
             expected: "object",
             code: "invalid_type",
@@ -54143,6 +54143,174 @@ var init_faleconosco = __esm({
   }
 });
 
+// ../../lib/db/src/schema/servidor.ts
+var servidoresCadastroTable, insertServidorCadastroSchema, contrachequeTable, insertContrachequeSchema, contrachequeLinhasTable, insertContrachequeLinhaSchema, periodosAquisitivosTable, insertPeriodoAquisitivoSchema, solicitacoesFeriasTable, insertSolicitacaoFeriasSchema, requerimentosTable, insertRequerimentoSchema, historicoFuncionalTable, insertHistoricoFuncionalSchema;
+var init_servidor = __esm({
+  "../../lib/db/src/schema/servidor.ts"() {
+    "use strict";
+    init_pg_core();
+    init_drizzle_zod();
+    init_tenant();
+    servidoresCadastroTable = pgTable("servidores_cadastro", {
+      id: text("id").primaryKey(),
+      tenantId: text("tenant_id").notNull().references(() => tenantsTable.id),
+      // Identificação
+      nome: text("nome").notNull(),
+      cpf: text("cpf").notNull(),
+      matricula: text("matricula").notNull(),
+      email: text("email").notNull(),
+      emailPessoal: text("email_pessoal"),
+      telefone: text("telefone"),
+      dataNascimento: date("data_nascimento"),
+      // Dados Funcionais
+      cargo: text("cargo").notNull(),
+      codigoCargo: text("codigo_cargo"),
+      nivel: text("nivel"),
+      referencia: text("referencia"),
+      vinculo: text("vinculo").notNull().default("estatutario"),
+      status: text("status").notNull().default("ativo"),
+      dataIngresso: date("data_ingresso").notNull(),
+      dataConcurso: date("data_concurso"),
+      concursoOrigem: text("concurso_origem"),
+      // Lotação
+      secretaria: text("secretaria").notNull(),
+      localTrabalho: text("local_trabalho"),
+      // Dados Bancários
+      banco: text("banco"),
+      agencia: text("agencia"),
+      conta: text("conta"),
+      tipoConta: text("tipo_conta").default("corrente"),
+      // Endereço
+      endereco: text("endereco"),
+      numero: text("numero"),
+      complemento: text("complemento"),
+      bairro: text("bairro"),
+      cidade: text("cidade"),
+      estado: text("estado"),
+      cep: text("cep"),
+      // Remuneração base
+      salarioBase: real("salario_base").notNull().default(0),
+      // Dependentes para IRRF (JSON array)
+      dependentes: jsonb("dependentes").notNull().default([]),
+      createdAt: timestamp("created_at").notNull().defaultNow(),
+      updatedAt: timestamp("updated_at").notNull().defaultNow()
+    });
+    insertServidorCadastroSchema = createInsertSchema(servidoresCadastroTable).omit({ createdAt: true, updatedAt: true });
+    contrachequeTable = pgTable("contracheques", {
+      id: text("id").primaryKey(),
+      tenantId: text("tenant_id").notNull().references(() => tenantsTable.id),
+      servidorId: text("servidor_id").notNull().references(() => servidoresCadastroTable.id),
+      mes: integer("mes").notNull(),
+      ano: integer("ano").notNull(),
+      competencia: text("competencia").notNull(),
+      // Totais
+      totalBruto: real("total_bruto").notNull().default(0),
+      totalDescontos: real("total_descontos").notNull().default(0),
+      totalLiquido: real("total_liquido").notNull().default(0),
+      status: text("status").notNull().default("pago"),
+      // Snapshot dos dados do servidor na competência
+      cargoNaCompetencia: text("cargo_na_competencia"),
+      secretariaNaCompetencia: text("secretaria_na_competencia"),
+      nivelNaCompetencia: text("nivel_na_competencia"),
+      createdAt: timestamp("created_at").notNull().defaultNow()
+    });
+    insertContrachequeSchema = createInsertSchema(contrachequeTable).omit({ createdAt: true });
+    contrachequeLinhasTable = pgTable("contracheque_linhas", {
+      id: text("id").primaryKey(),
+      contrachequeId: text("contracheque_id").notNull().references(() => contrachequeTable.id, { onDelete: "cascade" }),
+      tipo: text("tipo").notNull(),
+      codigo: text("codigo").notNull(),
+      descricao: text("descricao").notNull(),
+      referencia: text("referencia"),
+      valor: real("valor").notNull().default(0),
+      sortOrder: integer("sort_order").notNull().default(0)
+    });
+    insertContrachequeLinhaSchema = createInsertSchema(contrachequeLinhasTable);
+    periodosAquisitivosTable = pgTable("periodos_aquisitivos", {
+      id: text("id").primaryKey(),
+      servidorId: text("servidor_id").notNull().references(() => servidoresCadastroTable.id),
+      dataInicio: date("data_inicio").notNull(),
+      dataFim: date("data_fim").notNull(),
+      diasDireito: integer("dias_direito").notNull().default(30),
+      diasGozados: integer("dias_gozados").notNull().default(0),
+      diasVendidos: integer("dias_vendidos").notNull().default(0),
+      diasSaldo: integer("dias_saldo").notNull().default(30),
+      prazoLimite: date("prazo_limite"),
+      status: text("status").notNull().default("disponivel"),
+      createdAt: timestamp("created_at").notNull().defaultNow()
+    });
+    insertPeriodoAquisitivoSchema = createInsertSchema(periodosAquisitivosTable).omit({ createdAt: true });
+    solicitacoesFeriasTable = pgTable("solicitacoes_ferias", {
+      id: text("id").primaryKey(),
+      tenantId: text("tenant_id").notNull().references(() => tenantsTable.id),
+      servidorId: text("servidor_id").notNull().references(() => servidoresCadastroTable.id),
+      periodoAquisitivoId: text("periodo_aquisitivo_id").notNull().references(() => periodosAquisitivosTable.id),
+      protocolo: text("protocolo").notNull(),
+      dataInicio: date("data_inicio").notNull(),
+      dataFim: date("data_fim").notNull(),
+      dataRetorno: date("data_retorno").notNull(),
+      qtdDias: integer("qtd_dias").notNull(),
+      parcelamento: integer("parcelamento").notNull().default(1),
+      adiantamento13: boolean("adiantamento_13").notNull().default(false),
+      abonoPecuniario: boolean("abono_pecuniario").notNull().default(false),
+      diasAbono: integer("dias_abono").notNull().default(0),
+      status: text("status").notNull().default("aguardando_chefia"),
+      // Workflow de aprovação (JSON array de eventos)
+      timeline: jsonb("timeline").notNull().default([]),
+      // Aprovação / Rejeição
+      aprovadoPor: text("aprovado_por"),
+      aprovadoEm: timestamp("aprovado_em"),
+      motivoRejeicao: text("motivo_rejeicao"),
+      createdAt: timestamp("created_at").notNull().defaultNow(),
+      updatedAt: timestamp("updated_at").notNull().defaultNow()
+    });
+    insertSolicitacaoFeriasSchema = createInsertSchema(solicitacoesFeriasTable).omit({ createdAt: true, updatedAt: true });
+    requerimentosTable = pgTable("requerimentos", {
+      id: text("id").primaryKey(),
+      tenantId: text("tenant_id").notNull().references(() => tenantsTable.id),
+      servidorId: text("servidor_id").notNull().references(() => servidoresCadastroTable.id),
+      protocolo: text("protocolo").notNull(),
+      tipo: text("tipo").notNull(),
+      assunto: text("assunto").notNull(),
+      justificativa: text("justificativa").notNull(),
+      // Campos extras específicos por tipo (JSON)
+      camposEspecificos: jsonb("campos_especificos").notNull().default({}),
+      // Documentos anexados (JSON array: { nome, url, tamanho })
+      documentos: jsonb("documentos").notNull().default([]),
+      status: text("status").notNull().default("protocolado"),
+      // Timeline de tramitação (JSON array de eventos)
+      timeline: jsonb("timeline").notNull().default([]),
+      // Parecer e decisão
+      parecerTecnico: text("parecer_tecnico"),
+      decisao: text("decisao"),
+      motivoDecisao: text("motivo_decisao"),
+      decisorNome: text("decisor_nome"),
+      decidoEm: timestamp("decidido_em"),
+      // Prazo para recurso (se indeferido)
+      prazoRecurso: date("prazo_recurso"),
+      recursoPresentado: boolean("recurso_apresentado").notNull().default(false),
+      createdAt: timestamp("created_at").notNull().defaultNow(),
+      updatedAt: timestamp("updated_at").notNull().defaultNow()
+    });
+    insertRequerimentoSchema = createInsertSchema(requerimentosTable).omit({ createdAt: true, updatedAt: true });
+    historicoFuncionalTable = pgTable("historico_funcional", {
+      id: text("id").primaryKey(),
+      servidorId: text("servidor_id").notNull().references(() => servidoresCadastroTable.id),
+      data: date("data").notNull(),
+      tipo: text("tipo").notNull(),
+      descricao: text("descricao").notNull(),
+      portaria: text("portaria"),
+      portariaUrl: text("portaria_url"),
+      despacho: text("despacho"),
+      secretariaDestino: text("secretaria_destino"),
+      cargoApos: text("cargo_apos"),
+      observacoes: text("observacoes"),
+      createdAt: timestamp("created_at").notNull().defaultNow()
+    });
+    insertHistoricoFuncionalSchema = createInsertSchema(historicoFuncionalTable).omit({ createdAt: true });
+  }
+});
+
 // ../../lib/db/src/schema/index.ts
 var schema_exports = {};
 __export(schema_exports, {
@@ -54151,6 +54319,8 @@ __export(schema_exports, {
   bidEventsTable: () => bidEventsTable,
   chatSessionsTable: () => chatSessionsTable,
   concursosTable: () => concursosTable,
+  contrachequeLinhasTable: () => contrachequeLinhasTable,
+  contrachequeTable: () => contrachequeTable,
   contractsTable: () => contractsTable,
   despesasTable: () => despesasTable,
   faleConoscoConfigTable: () => faleConoscoConfigTable,
@@ -54158,16 +54328,20 @@ __export(schema_exports, {
   galleryAlbumsTable: () => galleryAlbumsTable,
   galleryItemsTable: () => galleryItemsTable,
   gestoresTable: () => gestoresTable,
+  historicoFuncionalTable: () => historicoFuncionalTable,
   insertAlbumSchema: () => insertAlbumSchema,
   insertBannerSchema: () => insertBannerSchema,
   insertBidEventSchema: () => insertBidEventSchema,
   insertConcursoSchema: () => insertConcursoSchema,
+  insertContrachequeLinhaSchema: () => insertContrachequeLinhaSchema,
+  insertContrachequeSchema: () => insertContrachequeSchema,
   insertContractSchema: () => insertContractSchema,
   insertDespesaSchema: () => insertDespesaSchema,
   insertEventoSchema: () => insertEventoSchema,
   insertGalleryAlbumSchema: () => insertGalleryAlbumSchema,
   insertGalleryItemSchema: () => insertGalleryItemSchema,
   insertGestorSchema: () => insertGestorSchema,
+  insertHistoricoFuncionalSchema: () => insertHistoricoFuncionalSchema,
   insertLegislacaoSchema: () => insertLegislacaoSchema,
   insertLicitacaoSchema: () => insertLicitacaoSchema,
   insertMenuItemSchema: () => insertMenuItemSchema,
@@ -54178,11 +54352,15 @@ __export(schema_exports, {
   insertOrcamentoSchema: () => insertOrcamentoSchema,
   insertPageBlockSchema: () => insertPageBlockSchema,
   insertPageSchema: () => insertPageSchema,
+  insertPeriodoAquisitivoSchema: () => insertPeriodoAquisitivoSchema,
   insertReceitaSchema: () => insertReceitaSchema,
+  insertRequerimentoSchema: () => insertRequerimentoSchema,
   insertSecretariaSchema: () => insertSecretariaSchema,
   insertServicoSchema: () => insertServicoSchema,
+  insertServidorCadastroSchema: () => insertServidorCadastroSchema,
   insertServidorSchema: () => insertServidorSchema,
   insertSiteConfigSchema: () => insertSiteConfigSchema,
+  insertSolicitacaoFeriasSchema: () => insertSolicitacaoFeriasSchema,
   insertTenantSchema: () => insertTenantSchema,
   insertTransparencyDocSchema: () => insertTransparencyDocSchema,
   legislacaoTable: () => legislacaoTable,
@@ -54197,13 +54375,17 @@ __export(schema_exports, {
   ouvidoriaEstatisticasTable: () => ouvidoriaEstatisticasTable,
   pageBlocksTable: () => pageBlocksTable,
   pagesTable: () => pagesTable,
+  periodosAquisitivosTable: () => periodosAquisitivosTable,
   receitasTable: () => receitasTable,
   refreshTokensTable: () => refreshTokensTable,
+  requerimentosTable: () => requerimentosTable,
   secretariasTable: () => secretariasTable,
   servicosTable: () => servicosTable,
+  servidoresCadastroTable: () => servidoresCadastroTable,
   servidoresTable: () => servidoresTable,
   sicPedidosTable: () => sicPedidosTable,
   siteConfigTable: () => siteConfigTable,
+  solicitacoesFeriasTable: () => solicitacoesFeriasTable,
   tenantsTable: () => tenantsTable,
   transparencyDocsTable: () => transparencyDocsTable,
   usuariosTable: () => usuariosTable
@@ -54225,6 +54407,7 @@ var init_schema2 = __esm({
     init_auth();
     init_ouvidoria();
     init_faleconosco();
+    init_servidor();
   }
 });
 
@@ -54712,8 +54895,8 @@ var init_tslib_es6 = __esm({
       };
       return ownKeys(o);
     };
-    _SuppressedError = typeof SuppressedError === "function" ? SuppressedError : function(error40, suppressed, message) {
-      var e = new Error(message);
+    _SuppressedError = typeof SuppressedError === "function" ? SuppressedError : function(error40, suppressed, message2) {
+      var e = new Error(message2);
       return e.name = "SuppressedError", e.error = error40, e.suppressed = suppressed, e;
     };
     tslib_es6_default = {
@@ -58181,9 +58364,9 @@ var require_old = __commonJS({
     "use strict";
     var assert2 = __require("assert");
     var util2 = __require("util");
-    function RedisError(message) {
+    function RedisError(message2) {
       Object.defineProperty(this, "message", {
-        value: message || "",
+        value: message2 || "",
         configurable: true,
         writable: true
       });
@@ -58195,11 +58378,11 @@ var require_old = __commonJS({
       configurable: true,
       writable: true
     });
-    function ParserError(message, buffer, offset) {
+    function ParserError(message2, buffer, offset) {
       assert2(buffer);
       assert2.strictEqual(typeof offset, "number");
       Object.defineProperty(this, "message", {
-        value: message || "",
+        value: message2 || "",
         configurable: true,
         writable: true
       });
@@ -58216,9 +58399,9 @@ var require_old = __commonJS({
       configurable: true,
       writable: true
     });
-    function ReplyError(message) {
+    function ReplyError(message2) {
       Object.defineProperty(this, "message", {
-        value: message || "",
+        value: message2 || "",
         configurable: true,
         writable: true
       });
@@ -58233,9 +58416,9 @@ var require_old = __commonJS({
       configurable: true,
       writable: true
     });
-    function AbortError(message) {
+    function AbortError(message2) {
       Object.defineProperty(this, "message", {
-        value: message || "",
+        value: message2 || "",
         configurable: true,
         writable: true
       });
@@ -58247,9 +58430,9 @@ var require_old = __commonJS({
       configurable: true,
       writable: true
     });
-    function InterruptError(message) {
+    function InterruptError(message2) {
       Object.defineProperty(this, "message", {
-        value: message || "",
+        value: message2 || "",
         configurable: true,
         writable: true
       });
@@ -58282,12 +58465,12 @@ var require_modern = __commonJS({
       }
     };
     var ParserError = class extends RedisError {
-      constructor(message, buffer, offset) {
+      constructor(message2, buffer, offset) {
         assert2(buffer);
         assert2.strictEqual(typeof offset, "number");
         const tmp = Error.stackTraceLimit;
         Error.stackTraceLimit = 2;
-        super(message);
+        super(message2);
         Error.stackTraceLimit = tmp;
         this.offset = offset;
         this.buffer = buffer;
@@ -58297,10 +58480,10 @@ var require_modern = __commonJS({
       }
     };
     var ReplyError = class extends RedisError {
-      constructor(message) {
+      constructor(message2) {
         const tmp = Error.stackTraceLimit;
         Error.stackTraceLimit = 2;
-        super(message);
+        super(message2);
         Error.stackTraceLimit = tmp;
       }
       get name() {
@@ -58715,7 +58898,7 @@ var require_lodash = __commonJS({
       }
     }
     function baseKeysIn(object2) {
-      if (!isObject2(object2)) {
+      if (!isObject3(object2)) {
         return nativeKeysIn(object2);
       }
       var isProto = isPrototype(object2), result = [];
@@ -58775,7 +58958,7 @@ var require_lodash = __commonJS({
       return !!length && (typeof value == "number" || reIsUint.test(value)) && (value > -1 && value % 1 == 0 && value < length);
     }
     function isIterateeCall(value, index, object2) {
-      if (!isObject2(object2)) {
+      if (!isObject3(object2)) {
         return false;
       }
       var type = typeof index;
@@ -58808,20 +58991,20 @@ var require_lodash = __commonJS({
       return value != null && isLength(value.length) && !isFunction(value);
     }
     function isArrayLikeObject(value) {
-      return isObjectLike(value) && isArrayLike(value);
+      return isObjectLike2(value) && isArrayLike(value);
     }
     function isFunction(value) {
-      var tag = isObject2(value) ? objectToString.call(value) : "";
-      return tag == funcTag || tag == genTag;
+      var tag2 = isObject3(value) ? objectToString.call(value) : "";
+      return tag2 == funcTag || tag2 == genTag;
     }
     function isLength(value) {
       return typeof value == "number" && value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER;
     }
-    function isObject2(value) {
+    function isObject3(value) {
       var type = typeof value;
       return !!value && (type == "object" || type == "function");
     }
-    function isObjectLike(value) {
+    function isObjectLike2(value) {
       return !!value && typeof value == "object";
     }
     var assignInWith = createAssigner(function(object2, source, srcIndex, customizer) {
@@ -58856,20 +59039,20 @@ var require_lodash2 = __commonJS({
       return value != null && isLength(value.length) && !isFunction(value);
     }
     function isArrayLikeObject(value) {
-      return isObjectLike(value) && isArrayLike(value);
+      return isObjectLike2(value) && isArrayLike(value);
     }
     function isFunction(value) {
-      var tag = isObject2(value) ? objectToString.call(value) : "";
-      return tag == funcTag || tag == genTag;
+      var tag2 = isObject3(value) ? objectToString.call(value) : "";
+      return tag2 == funcTag || tag2 == genTag;
     }
     function isLength(value) {
       return typeof value == "number" && value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER;
     }
-    function isObject2(value) {
+    function isObject3(value) {
       var type = typeof value;
       return !!value && (type == "object" || type == "function");
     }
-    function isObjectLike(value) {
+    function isObjectLike2(value) {
       return !!value && typeof value == "object";
     }
     module.exports = isArguments;
@@ -59820,8 +60003,8 @@ var require_ClusterAllFailedError = __commonJS({
     Object.defineProperty(exports, "__esModule", { value: true });
     var redis_errors_1 = require_redis_errors();
     var ClusterAllFailedError = class extends redis_errors_1.RedisError {
-      constructor(message, lastNodeError) {
-        super(message);
+      constructor(message2, lastNodeError) {
+        super(message2);
         this.lastNodeError = lastNodeError;
         Error.captureStackTrace(this, this.constructor);
       }
@@ -61912,11 +62095,11 @@ var require_cluster = __commonJS({
             reject(new Error("Redis is already connecting/connected"));
             return;
           }
-          const epoch = ++this.connectionEpoch;
+          const epoch2 = ++this.connectionEpoch;
           this.setStatus("connecting");
           this.resolveStartupNodeHostnames().then((nodes) => {
-            if (this.connectionEpoch !== epoch) {
-              debug("discard connecting after resolving startup nodes because epoch not match: %d != %d", epoch, this.connectionEpoch);
+            if (this.connectionEpoch !== epoch2) {
+              debug("discard connecting after resolving startup nodes because epoch not match: %d != %d", epoch2, this.connectionEpoch);
               reject(new redis_errors_1.RedisError("Connection is discarded because a new connection is made"));
               return;
             }
@@ -63137,8 +63320,8 @@ var require_MaxRetriesPerRequestError = __commonJS({
     var redis_errors_1 = require_redis_errors();
     var MaxRetriesPerRequestError = class extends redis_errors_1.AbortError {
       constructor(maxRetriesPerRequest) {
-        const message = `Reached the max retries per request limit (which is ${maxRetriesPerRequest}). Refer to "maxRetriesPerRequest" option for details.`;
-        super(message);
+        const message2 = `Reached the max retries per request limit (which is ${maxRetriesPerRequest}). Refer to "maxRetriesPerRequest" option for details.`;
+        super(message2);
         Error.captureStackTrace(this, this.constructor);
       }
       get name() {
@@ -63166,7 +63349,7 @@ var require_parser2 = __commonJS({
     "use strict";
     var Buffer2 = __require("buffer").Buffer;
     var StringDecoder = __require("string_decoder").StringDecoder;
-    var decoder = new StringDecoder();
+    var decoder2 = new StringDecoder();
     var errors = require_redis_errors();
     var ReplyError = errors.ReplyError;
     var ParserError = errors.ParserError;
@@ -63404,11 +63587,11 @@ var require_parser2 = __commonJS({
         chunks--;
         offset = list[list.length - 2].length + offset;
       }
-      var res = decoder.write(list[0].slice(oldOffset));
+      var res = decoder2.write(list[0].slice(oldOffset));
       for (var i = 1; i < chunks - 1; i++) {
-        res += decoder.write(list[i]);
+        res += decoder2.write(list[i]);
       }
-      res += decoder.end(list[i].slice(0, offset - 2));
+      res += decoder2.end(list[i].slice(0, offset - 2));
       return res;
     }
     function concatBulkBuffer(parser) {
@@ -63777,8 +63960,8 @@ var require_DataHandler = __commonJS({
       shiftCommand(reply) {
         const item = this.redis.commandQueue.shift();
         if (!item) {
-          const message = "Command queue state error. If you can reproduce this, please report it.";
-          const error40 = new Error(message + (reply instanceof Error ? ` Last error: ${reply.message}` : ` Last reply: ${reply.toString()}`));
+          const message2 = "Command queue state error. If you can reproduce this, please report it.";
+          const error40 = new Error(message2 + (reply instanceof Error ? ` Last error: ${reply.message}` : ` Last reply: ${reply.toString()}`));
           this.redis.emit("error", error40);
           return null;
         }
@@ -65811,7 +65994,7 @@ var require_range2 = __commonJS({
       parseRange(range) {
         const memoOpts = (this.options.includePrerelease && FLAG_INCLUDE_PRERELEASE) | (this.options.loose && FLAG_LOOSE);
         const memoKey = memoOpts + ":" + range;
-        const cached2 = cache.get(memoKey);
+        const cached2 = cache2.get(memoKey);
         if (cached2) {
           return cached2;
         }
@@ -65845,7 +66028,7 @@ var require_range2 = __commonJS({
           rangeMap.delete("");
         }
         const result = [...rangeMap.values()];
-        cache.set(memoKey, result);
+        cache2.set(memoKey, result);
         return result;
       }
       intersects(range, options) {
@@ -65884,7 +66067,7 @@ var require_range2 = __commonJS({
     };
     module.exports = Range;
     var LRU = require_lrucache();
-    var cache = new LRU();
+    var cache2 = new LRU();
     var parseOptions = require_parse_options();
     var Comparator = require_comparator();
     var debug = require_debug2();
@@ -67317,8 +67500,8 @@ var require_delayed_error = __commonJS({
     exports.DelayedError = exports.DELAYED_ERROR = void 0;
     exports.DELAYED_ERROR = "bullmq:movedToDelayed";
     var DelayedError = class extends Error {
-      constructor(message = exports.DELAYED_ERROR) {
-        super(message);
+      constructor(message2 = exports.DELAYED_ERROR) {
+        super(message2);
         this.name = this.constructor.name;
         Object.setPrototypeOf(this, new.target.prototype);
       }
@@ -67335,8 +67518,8 @@ var require_rate_limit_error = __commonJS({
     exports.RateLimitError = exports.RATE_LIMIT_ERROR = void 0;
     exports.RATE_LIMIT_ERROR = "bullmq:rateLimitExceeded";
     var RateLimitError = class extends Error {
-      constructor(message = exports.RATE_LIMIT_ERROR) {
-        super(message);
+      constructor(message2 = exports.RATE_LIMIT_ERROR) {
+        super(message2);
         this.name = this.constructor.name;
         Object.setPrototypeOf(this, new.target.prototype);
       }
@@ -67353,8 +67536,8 @@ var require_unrecoverable_error = __commonJS({
     exports.UnrecoverableError = exports.UNRECOVERABLE_ERROR = void 0;
     exports.UNRECOVERABLE_ERROR = "bullmq:unrecoverable";
     var UnrecoverableError = class extends Error {
-      constructor(message = exports.UNRECOVERABLE_ERROR) {
-        super(message);
+      constructor(message2 = exports.UNRECOVERABLE_ERROR) {
+        super(message2);
         this.name = this.constructor.name;
         Object.setPrototypeOf(this, new.target.prototype);
       }
@@ -67371,8 +67554,8 @@ var require_waiting_children_error = __commonJS({
     exports.WaitingChildrenError = exports.WAITING_CHILDREN_ERROR = void 0;
     exports.WAITING_CHILDREN_ERROR = "bullmq:movedToWaitingChildren";
     var WaitingChildrenError = class extends Error {
-      constructor(message = exports.WAITING_CHILDREN_ERROR) {
-        super(message);
+      constructor(message2 = exports.WAITING_CHILDREN_ERROR) {
+        super(message2);
         this.name = this.constructor.name;
         Object.setPrototypeOf(this, new.target.prototype);
       }
@@ -67389,8 +67572,8 @@ var require_waiting_error = __commonJS({
     exports.WaitingError = exports.WAITING_ERROR = void 0;
     exports.WAITING_ERROR = "bullmq:movedToWait";
     var WaitingError = class extends Error {
-      constructor(message = exports.WAITING_ERROR) {
-        super(message);
+      constructor(message2 = exports.WAITING_ERROR) {
+        super(message2);
         this.name = this.constructor.name;
         Object.setPrototypeOf(this, new.target.prototype);
       }
@@ -68478,19 +68661,19 @@ var require_node_gyp_build = __commonJS({
       var tags = { file: file2, specificity: 0 };
       if (extension !== "node") return;
       for (var i = 0; i < arr.length; i++) {
-        var tag = arr[i];
-        if (tag === "node" || tag === "electron" || tag === "node-webkit") {
-          tags.runtime = tag;
-        } else if (tag === "napi") {
+        var tag2 = arr[i];
+        if (tag2 === "node" || tag2 === "electron" || tag2 === "node-webkit") {
+          tags.runtime = tag2;
+        } else if (tag2 === "napi") {
           tags.napi = true;
-        } else if (tag.slice(0, 3) === "abi") {
-          tags.abi = tag.slice(3);
-        } else if (tag.slice(0, 2) === "uv") {
-          tags.uv = tag.slice(2);
-        } else if (tag.slice(0, 4) === "armv") {
-          tags.armv = tag.slice(4);
-        } else if (tag === "glibc" || tag === "musl") {
-          tags.libc = tag;
+        } else if (tag2.slice(0, 3) === "abi") {
+          tags.abi = tag2.slice(3);
+        } else if (tag2.slice(0, 2) === "uv") {
+          tags.uv = tag2.slice(2);
+        } else if (tag2.slice(0, 4) === "armv") {
+          tags.armv = tag2.slice(4);
+        } else if (tag2 === "glibc" || tag2 === "musl") {
+          tags.libc = tag2;
         } else {
           continue;
         }
@@ -68572,9 +68755,9 @@ var require_node2 = __commonJS({
     "use strict";
     var stream = __require("stream");
     var module$1 = __require("module");
-    var decoder;
+    var decoder2;
     try {
-      decoder = new TextDecoder();
+      decoder2 = new TextDecoder();
     } catch (error40) {
     }
     var src;
@@ -69135,8 +69318,8 @@ var require_node2 = __commonJS({
         if (result = shortStringInJS(length))
           return result;
       }
-      if (length > 64 && decoder)
-        return decoder.decode(src.subarray(position$1, position$1 += length));
+      if (length > 64 && decoder2)
+        return decoder2.decode(src.subarray(position$1, position$1 += length));
       const end = position$1 + length;
       const units = [];
       result = "";
@@ -69507,7 +69690,7 @@ var require_node2 = __commonJS({
       }
       if (data.byteLength !== headLength) {
         let view = new DataView(data.buffer, data.byteOffset, data.byteLength);
-        let decode2 = (start, end) => {
+        let decode3 = (start, end) => {
           let length = end - start;
           if (length <= 40) {
             let out = view.getBigUint64(start);
@@ -69518,11 +69701,11 @@ var require_node2 = __commonJS({
             return out;
           }
           let middle = start + (length >> 4 << 3);
-          let left = decode2(start, middle);
-          let right = decode2(middle, end);
+          let left = decode3(start, middle);
+          let right = decode3(middle, end);
           return left << BigInt((end - middle) * 8) | right;
         };
-        head = head << BigInt((view.byteLength - headLength) * 8) | decode2(headLength, view.byteLength);
+        head = head << BigInt((view.byteLength - headLength) * 8) | decode3(headLength, view.byteLength);
       }
       return head;
     };
@@ -69680,7 +69863,7 @@ var require_node2 = __commonJS({
     var defaultUnpackr = new Unpackr({ useRecords: false });
     var unpack = defaultUnpackr.unpack;
     var unpackMultiple = defaultUnpackr.unpackMultiple;
-    var decode = defaultUnpackr.unpack;
+    var decode2 = defaultUnpackr.unpack;
     var FLOAT32_OPTIONS = {
       NEVER: 0,
       ALWAYS: 1,
@@ -70628,7 +70811,7 @@ var require_node2 = __commonJS({
         target2[position2] = 193;
       }
     }];
-    function writeExtBuffer(typedArray, type, allocateForWrite, encode2) {
+    function writeExtBuffer(typedArray, type, allocateForWrite, encode3) {
       let length = typedArray.byteLength;
       if (length + 1 < 256) {
         var { target: target2, position: position2 } = allocateForWrite(4 + length);
@@ -70765,7 +70948,7 @@ var require_node2 = __commonJS({
     }
     var defaultPackr = new Packr({ useRecords: false });
     var pack = defaultPackr.pack;
-    var encode = defaultPackr.pack;
+    var encode2 = defaultPackr.pack;
     var Encoder = Packr;
     var { NEVER: NEVER2, ALWAYS, DECIMAL_ROUND, DECIMAL_FIT } = FLOAT32_OPTIONS;
     var REUSE_BUFFER_MODE = 512;
@@ -71628,9 +71811,9 @@ var require_node2 = __commonJS({
     exports.UnpackrStream = UnpackrStream;
     exports.addExtension = addExtension;
     exports.clearSource = clearSource;
-    exports.decode = decode;
+    exports.decode = decode2;
     exports.decodeIter = decodeIter;
-    exports.encode = encode;
+    exports.encode = encode2;
     exports.encodeIter = encodeIter;
     exports.mapsAsObjects = mapsAsObjects;
     exports.pack = pack;
@@ -83769,17 +83952,17 @@ var require_luxon = __commonJS({
         const date6 = new Date(ts);
         if (isNaN(date6)) return NaN;
         const dtf = makeDTF(this.name);
-        let [year, month, day, adOrBc, hour, minute, second] = dtf.formatToParts ? partsOffset(dtf, date6) : hackyOffset(dtf, date6);
+        let [year2, month, day2, adOrBc, hour2, minute2, second] = dtf.formatToParts ? partsOffset(dtf, date6) : hackyOffset(dtf, date6);
         if (adOrBc === "BC") {
-          year = -Math.abs(year) + 1;
+          year2 = -Math.abs(year2) + 1;
         }
-        const adjustedHour = hour === 24 ? 0 : hour;
+        const adjustedHour = hour2 === 24 ? 0 : hour2;
         const asUTC = objToLocalTS({
-          year,
+          year: year2,
           month,
-          day,
+          day: day2,
           hour: adjustedHour,
-          minute,
+          minute: minute2,
           second,
           millisecond: 0
         });
@@ -84706,22 +84889,22 @@ var require_luxon = __commonJS({
     function unitOutOfRange(unit, value) {
       return new Invalid("unit out of range", `you specified ${value} (of type ${typeof value}) as a ${unit}, which is invalid`);
     }
-    function dayOfWeek(year, month, day) {
-      const d = new Date(Date.UTC(year, month - 1, day));
-      if (year < 100 && year >= 0) {
+    function dayOfWeek(year2, month, day2) {
+      const d = new Date(Date.UTC(year2, month - 1, day2));
+      if (year2 < 100 && year2 >= 0) {
         d.setUTCFullYear(d.getUTCFullYear() - 1900);
       }
       const js = d.getUTCDay();
       return js === 0 ? 7 : js;
     }
-    function computeOrdinal(year, month, day) {
-      return day + (isLeapYear(year) ? leapLadder : nonLeapLadder)[month - 1];
+    function computeOrdinal(year2, month, day2) {
+      return day2 + (isLeapYear(year2) ? leapLadder : nonLeapLadder)[month - 1];
     }
-    function uncomputeOrdinal(year, ordinal) {
-      const table = isLeapYear(year) ? leapLadder : nonLeapLadder, month0 = table.findIndex((i) => i < ordinal), day = ordinal - table[month0];
+    function uncomputeOrdinal(year2, ordinal) {
+      const table = isLeapYear(year2) ? leapLadder : nonLeapLadder, month0 = table.findIndex((i) => i < ordinal), day2 = ordinal - table[month0];
       return {
         month: month0 + 1,
-        day
+        day: day2
       };
     }
     function isoWeekdayToLocal(isoWeekday, startOfWeek) {
@@ -84729,19 +84912,19 @@ var require_luxon = __commonJS({
     }
     function gregorianToWeek(gregObj, minDaysInFirstWeek = 4, startOfWeek = 1) {
       const {
-        year,
+        year: year2,
         month,
-        day
-      } = gregObj, ordinal = computeOrdinal(year, month, day), weekday = isoWeekdayToLocal(dayOfWeek(year, month, day), startOfWeek);
+        day: day2
+      } = gregObj, ordinal = computeOrdinal(year2, month, day2), weekday = isoWeekdayToLocal(dayOfWeek(year2, month, day2), startOfWeek);
       let weekNumber = Math.floor((ordinal - weekday + 14 - minDaysInFirstWeek) / 7), weekYear;
       if (weekNumber < 1) {
-        weekYear = year - 1;
+        weekYear = year2 - 1;
         weekNumber = weeksInWeekYear(weekYear, minDaysInFirstWeek, startOfWeek);
-      } else if (weekNumber > weeksInWeekYear(year, minDaysInFirstWeek, startOfWeek)) {
-        weekYear = year + 1;
+      } else if (weekNumber > weeksInWeekYear(year2, minDaysInFirstWeek, startOfWeek)) {
+        weekYear = year2 + 1;
         weekNumber = 1;
       } else {
-        weekYear = year;
+        weekYear = year2;
       }
       return {
         weekYear,
@@ -84756,53 +84939,53 @@ var require_luxon = __commonJS({
         weekNumber,
         weekday
       } = weekData, weekdayOfJan4 = isoWeekdayToLocal(dayOfWeek(weekYear, 1, minDaysInFirstWeek), startOfWeek), yearInDays = daysInYear(weekYear);
-      let ordinal = weekNumber * 7 + weekday - weekdayOfJan4 - 7 + minDaysInFirstWeek, year;
+      let ordinal = weekNumber * 7 + weekday - weekdayOfJan4 - 7 + minDaysInFirstWeek, year2;
       if (ordinal < 1) {
-        year = weekYear - 1;
-        ordinal += daysInYear(year);
+        year2 = weekYear - 1;
+        ordinal += daysInYear(year2);
       } else if (ordinal > yearInDays) {
-        year = weekYear + 1;
+        year2 = weekYear + 1;
         ordinal -= daysInYear(weekYear);
       } else {
-        year = weekYear;
+        year2 = weekYear;
       }
       const {
         month,
-        day
-      } = uncomputeOrdinal(year, ordinal);
+        day: day2
+      } = uncomputeOrdinal(year2, ordinal);
       return {
-        year,
+        year: year2,
         month,
-        day,
+        day: day2,
         ...timeObject(weekData)
       };
     }
     function gregorianToOrdinal(gregData) {
       const {
-        year,
+        year: year2,
         month,
-        day
+        day: day2
       } = gregData;
-      const ordinal = computeOrdinal(year, month, day);
+      const ordinal = computeOrdinal(year2, month, day2);
       return {
-        year,
+        year: year2,
         ordinal,
         ...timeObject(gregData)
       };
     }
     function ordinalToGregorian(ordinalData) {
       const {
-        year,
+        year: year2,
         ordinal
       } = ordinalData;
       const {
         month,
-        day
-      } = uncomputeOrdinal(year, ordinal);
+        day: day2
+      } = uncomputeOrdinal(year2, ordinal);
       return {
-        year,
+        year: year2,
         month,
-        day,
+        day: day2,
         ...timeObject(ordinalData)
       };
     }
@@ -84860,16 +85043,16 @@ var require_luxon = __commonJS({
     }
     function hasInvalidTimeData(obj) {
       const {
-        hour,
-        minute,
+        hour: hour2,
+        minute: minute2,
         second,
         millisecond
       } = obj;
-      const validHour = integerBetween(hour, 0, 23) || hour === 24 && minute === 0 && second === 0 && millisecond === 0, validMinute = integerBetween(minute, 0, 59), validSecond = integerBetween(second, 0, 59), validMillisecond = integerBetween(millisecond, 0, 999);
+      const validHour = integerBetween(hour2, 0, 23) || hour2 === 24 && minute2 === 0 && second === 0 && millisecond === 0, validMinute = integerBetween(minute2, 0, 59), validSecond = integerBetween(second, 0, 59), validMillisecond = integerBetween(millisecond, 0, 999);
       if (!validHour) {
-        return unitOutOfRange("hour", hour);
+        return unitOutOfRange("hour", hour2);
       } else if (!validMinute) {
-        return unitOutOfRange("minute", minute);
+        return unitOutOfRange("minute", minute2);
       } else if (!validSecond) {
         return unitOutOfRange("second", second);
       } else if (!validMillisecond) {
@@ -85003,14 +85186,14 @@ var require_luxon = __commonJS({
           throw new RangeError(`Value rounding ${rounding} is out of range`);
       }
     }
-    function isLeapYear(year) {
-      return year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
+    function isLeapYear(year2) {
+      return year2 % 4 === 0 && (year2 % 100 !== 0 || year2 % 400 === 0);
     }
-    function daysInYear(year) {
-      return isLeapYear(year) ? 366 : 365;
+    function daysInYear(year2) {
+      return isLeapYear(year2) ? 366 : 365;
     }
-    function daysInMonth(year, month) {
-      const modMonth = floorMod(month - 1, 12) + 1, modYear = year + (month - modMonth) / 12;
+    function daysInMonth(year2, month) {
+      const modMonth = floorMod(month - 1, 12) + 1, modYear = year2 + (month - modMonth) / 12;
       if (modMonth === 2) {
         return isLeapYear(modYear) ? 29 : 28;
       } else {
@@ -85025,8 +85208,8 @@ var require_luxon = __commonJS({
       }
       return +d;
     }
-    function firstWeekOffset(year, minDaysInFirstWeek, startOfWeek) {
-      const fwdlw = isoWeekdayToLocal(dayOfWeek(year, 1, minDaysInFirstWeek), startOfWeek);
+    function firstWeekOffset(year2, minDaysInFirstWeek, startOfWeek) {
+      const fwdlw = isoWeekdayToLocal(dayOfWeek(year2, 1, minDaysInFirstWeek), startOfWeek);
       return -fwdlw + minDaysInFirstWeek - 1;
     }
     function weeksInWeekYear(weekYear, minDaysInFirstWeek = 4, startOfWeek = 1) {
@@ -85034,10 +85217,10 @@ var require_luxon = __commonJS({
       const weekOffsetNext = firstWeekOffset(weekYear + 1, minDaysInFirstWeek, startOfWeek);
       return (daysInYear(weekYear) - weekOffset + weekOffsetNext) / 7;
     }
-    function untruncateYear(year) {
-      if (year > 99) {
-        return year;
-      } else return year > Settings.twoDigitCutoffYear ? 1900 + year : 2e3 + year;
+    function untruncateYear(year2) {
+      if (year2 > 99) {
+        return year2;
+      } else return year2 > Settings.twoDigitCutoffYear ? 1900 + year2 : 2e3 + year2;
     }
     function parseZoneInfo(ts, offsetFormat, locale, timeZone = null) {
       const date6 = new Date(ts), intlOpts = {
@@ -87934,11 +88117,11 @@ var require_luxon = __commonJS({
       return fixOffset(objToLocalTS(obj), offset2, zone);
     }
     function adjustTime(inst, dur) {
-      const oPre = inst.o, year = inst.c.year + Math.trunc(dur.years), month = inst.c.month + Math.trunc(dur.months) + Math.trunc(dur.quarters) * 3, c = {
+      const oPre = inst.o, year2 = inst.c.year + Math.trunc(dur.years), month = inst.c.month + Math.trunc(dur.months) + Math.trunc(dur.quarters) * 3, c = {
         ...inst.c,
-        year,
+        year: year2,
         month,
-        day: Math.min(inst.c.day, daysInMonth(year, month)) + Math.trunc(dur.days) + Math.trunc(dur.weeks) * 7
+        day: Math.min(inst.c.day, daysInMonth(year2, month)) + Math.trunc(dur.days) + Math.trunc(dur.weeks) * 7
       }, millisToAdd = Duration.fromObject({
         years: dur.years - Math.trunc(dur.years),
         quarters: dur.quarters - Math.trunc(dur.quarters),
@@ -88266,13 +88449,13 @@ var require_luxon = __commonJS({
        * @return {DateTime}
        */
       static local() {
-        const [opts, args] = lastOpts(arguments), [year, month, day, hour, minute, second, millisecond] = args;
+        const [opts, args] = lastOpts(arguments), [year2, month, day2, hour2, minute2, second, millisecond] = args;
         return quickDT({
-          year,
+          year: year2,
           month,
-          day,
-          hour,
-          minute,
+          day: day2,
+          hour: hour2,
+          minute: minute2,
           second,
           millisecond
         }, opts);
@@ -88303,14 +88486,14 @@ var require_luxon = __commonJS({
        * @return {DateTime}
        */
       static utc() {
-        const [opts, args] = lastOpts(arguments), [year, month, day, hour, minute, second, millisecond] = args;
+        const [opts, args] = lastOpts(arguments), [year2, month, day2, hour2, minute2, second, millisecond] = args;
         opts.zone = FixedOffsetZone.utcInstance;
         return quickDT({
-          year,
+          year: year2,
           month,
-          day,
-          hour,
-          minute,
+          day: day2,
+          hour: hour2,
+          minute: minute2,
           second,
           millisecond
         }, opts);
@@ -94605,12 +94788,12 @@ var require_cjs2 = __commonJS({
 });
 
 // src/app.ts
-var import_express42 = __toESM(require_express2(), 1);
+var import_express49 = __toESM(require_express2(), 1);
 var import_cors = __toESM(require_lib3(), 1);
 var import_pino_http = __toESM(require_logger(), 1);
 
 // src/routes/index.ts
-var import_express41 = __toESM(require_express2(), 1);
+var import_express48 = __toESM(require_express2(), 1);
 
 // src/routes/health.ts
 var import_express = __toESM(require_express2(), 1);
@@ -94865,104 +95048,104 @@ ZodError.create = (issues) => {
 
 // ../../node_modules/.pnpm/zod@3.25.76/node_modules/zod/v3/locales/en.js
 var errorMap = (issue2, _ctx) => {
-  let message;
+  let message2;
   switch (issue2.code) {
     case ZodIssueCode.invalid_type:
       if (issue2.received === ZodParsedType.undefined) {
-        message = "Required";
+        message2 = "Required";
       } else {
-        message = `Expected ${issue2.expected}, received ${issue2.received}`;
+        message2 = `Expected ${issue2.expected}, received ${issue2.received}`;
       }
       break;
     case ZodIssueCode.invalid_literal:
-      message = `Invalid literal value, expected ${JSON.stringify(issue2.expected, util.jsonStringifyReplacer)}`;
+      message2 = `Invalid literal value, expected ${JSON.stringify(issue2.expected, util.jsonStringifyReplacer)}`;
       break;
     case ZodIssueCode.unrecognized_keys:
-      message = `Unrecognized key(s) in object: ${util.joinValues(issue2.keys, ", ")}`;
+      message2 = `Unrecognized key(s) in object: ${util.joinValues(issue2.keys, ", ")}`;
       break;
     case ZodIssueCode.invalid_union:
-      message = `Invalid input`;
+      message2 = `Invalid input`;
       break;
     case ZodIssueCode.invalid_union_discriminator:
-      message = `Invalid discriminator value. Expected ${util.joinValues(issue2.options)}`;
+      message2 = `Invalid discriminator value. Expected ${util.joinValues(issue2.options)}`;
       break;
     case ZodIssueCode.invalid_enum_value:
-      message = `Invalid enum value. Expected ${util.joinValues(issue2.options)}, received '${issue2.received}'`;
+      message2 = `Invalid enum value. Expected ${util.joinValues(issue2.options)}, received '${issue2.received}'`;
       break;
     case ZodIssueCode.invalid_arguments:
-      message = `Invalid function arguments`;
+      message2 = `Invalid function arguments`;
       break;
     case ZodIssueCode.invalid_return_type:
-      message = `Invalid function return type`;
+      message2 = `Invalid function return type`;
       break;
     case ZodIssueCode.invalid_date:
-      message = `Invalid date`;
+      message2 = `Invalid date`;
       break;
     case ZodIssueCode.invalid_string:
       if (typeof issue2.validation === "object") {
         if ("includes" in issue2.validation) {
-          message = `Invalid input: must include "${issue2.validation.includes}"`;
+          message2 = `Invalid input: must include "${issue2.validation.includes}"`;
           if (typeof issue2.validation.position === "number") {
-            message = `${message} at one or more positions greater than or equal to ${issue2.validation.position}`;
+            message2 = `${message2} at one or more positions greater than or equal to ${issue2.validation.position}`;
           }
         } else if ("startsWith" in issue2.validation) {
-          message = `Invalid input: must start with "${issue2.validation.startsWith}"`;
+          message2 = `Invalid input: must start with "${issue2.validation.startsWith}"`;
         } else if ("endsWith" in issue2.validation) {
-          message = `Invalid input: must end with "${issue2.validation.endsWith}"`;
+          message2 = `Invalid input: must end with "${issue2.validation.endsWith}"`;
         } else {
           util.assertNever(issue2.validation);
         }
       } else if (issue2.validation !== "regex") {
-        message = `Invalid ${issue2.validation}`;
+        message2 = `Invalid ${issue2.validation}`;
       } else {
-        message = "Invalid";
+        message2 = "Invalid";
       }
       break;
     case ZodIssueCode.too_small:
       if (issue2.type === "array")
-        message = `Array must contain ${issue2.exact ? "exactly" : issue2.inclusive ? `at least` : `more than`} ${issue2.minimum} element(s)`;
+        message2 = `Array must contain ${issue2.exact ? "exactly" : issue2.inclusive ? `at least` : `more than`} ${issue2.minimum} element(s)`;
       else if (issue2.type === "string")
-        message = `String must contain ${issue2.exact ? "exactly" : issue2.inclusive ? `at least` : `over`} ${issue2.minimum} character(s)`;
+        message2 = `String must contain ${issue2.exact ? "exactly" : issue2.inclusive ? `at least` : `over`} ${issue2.minimum} character(s)`;
       else if (issue2.type === "number")
-        message = `Number must be ${issue2.exact ? `exactly equal to ` : issue2.inclusive ? `greater than or equal to ` : `greater than `}${issue2.minimum}`;
+        message2 = `Number must be ${issue2.exact ? `exactly equal to ` : issue2.inclusive ? `greater than or equal to ` : `greater than `}${issue2.minimum}`;
       else if (issue2.type === "bigint")
-        message = `Number must be ${issue2.exact ? `exactly equal to ` : issue2.inclusive ? `greater than or equal to ` : `greater than `}${issue2.minimum}`;
+        message2 = `Number must be ${issue2.exact ? `exactly equal to ` : issue2.inclusive ? `greater than or equal to ` : `greater than `}${issue2.minimum}`;
       else if (issue2.type === "date")
-        message = `Date must be ${issue2.exact ? `exactly equal to ` : issue2.inclusive ? `greater than or equal to ` : `greater than `}${new Date(Number(issue2.minimum))}`;
+        message2 = `Date must be ${issue2.exact ? `exactly equal to ` : issue2.inclusive ? `greater than or equal to ` : `greater than `}${new Date(Number(issue2.minimum))}`;
       else
-        message = "Invalid input";
+        message2 = "Invalid input";
       break;
     case ZodIssueCode.too_big:
       if (issue2.type === "array")
-        message = `Array must contain ${issue2.exact ? `exactly` : issue2.inclusive ? `at most` : `less than`} ${issue2.maximum} element(s)`;
+        message2 = `Array must contain ${issue2.exact ? `exactly` : issue2.inclusive ? `at most` : `less than`} ${issue2.maximum} element(s)`;
       else if (issue2.type === "string")
-        message = `String must contain ${issue2.exact ? `exactly` : issue2.inclusive ? `at most` : `under`} ${issue2.maximum} character(s)`;
+        message2 = `String must contain ${issue2.exact ? `exactly` : issue2.inclusive ? `at most` : `under`} ${issue2.maximum} character(s)`;
       else if (issue2.type === "number")
-        message = `Number must be ${issue2.exact ? `exactly` : issue2.inclusive ? `less than or equal to` : `less than`} ${issue2.maximum}`;
+        message2 = `Number must be ${issue2.exact ? `exactly` : issue2.inclusive ? `less than or equal to` : `less than`} ${issue2.maximum}`;
       else if (issue2.type === "bigint")
-        message = `BigInt must be ${issue2.exact ? `exactly` : issue2.inclusive ? `less than or equal to` : `less than`} ${issue2.maximum}`;
+        message2 = `BigInt must be ${issue2.exact ? `exactly` : issue2.inclusive ? `less than or equal to` : `less than`} ${issue2.maximum}`;
       else if (issue2.type === "date")
-        message = `Date must be ${issue2.exact ? `exactly` : issue2.inclusive ? `smaller than or equal to` : `smaller than`} ${new Date(Number(issue2.maximum))}`;
+        message2 = `Date must be ${issue2.exact ? `exactly` : issue2.inclusive ? `smaller than or equal to` : `smaller than`} ${new Date(Number(issue2.maximum))}`;
       else
-        message = "Invalid input";
+        message2 = "Invalid input";
       break;
     case ZodIssueCode.custom:
-      message = `Invalid input`;
+      message2 = `Invalid input`;
       break;
     case ZodIssueCode.invalid_intersection_types:
-      message = `Intersection results could not be merged`;
+      message2 = `Intersection results could not be merged`;
       break;
     case ZodIssueCode.not_multiple_of:
-      message = `Number must be a multiple of ${issue2.multipleOf}`;
+      message2 = `Number must be a multiple of ${issue2.multipleOf}`;
       break;
     case ZodIssueCode.not_finite:
-      message = "Number must be finite";
+      message2 = "Number must be finite";
       break;
     default:
-      message = _ctx.defaultError;
+      message2 = _ctx.defaultError;
       util.assertNever(issue2);
   }
-  return { message };
+  return { message: message2 };
 };
 var en_default = errorMap;
 
@@ -95084,8 +95267,8 @@ var isAsync = (x) => typeof Promise !== "undefined" && x instanceof Promise;
 // ../../node_modules/.pnpm/zod@3.25.76/node_modules/zod/v3/helpers/errorUtil.js
 var errorUtil;
 (function(errorUtil2) {
-  errorUtil2.errToObj = (message) => typeof message === "string" ? { message } : message || {};
-  errorUtil2.toString = (message) => typeof message === "string" ? message : message?.message;
+  errorUtil2.errToObj = (message2) => typeof message2 === "string" ? { message: message2 } : message2 || {};
+  errorUtil2.toString = (message2) => typeof message2 === "string" ? message2 : message2?.message;
 })(errorUtil || (errorUtil = {}));
 
 // ../../node_modules/.pnpm/zod@3.25.76/node_modules/zod/v3/types.js
@@ -95137,16 +95320,16 @@ function processCreateParams(params) {
   if (errorMap2)
     return { errorMap: errorMap2, description };
   const customMap = (iss, ctx) => {
-    const { message } = params;
+    const { message: message2 } = params;
     if (iss.code === "invalid_enum_value") {
-      return { message: message ?? ctx.defaultError };
+      return { message: message2 ?? ctx.defaultError };
     }
     if (typeof ctx.data === "undefined") {
-      return { message: message ?? required_error ?? ctx.defaultError };
+      return { message: message2 ?? required_error ?? ctx.defaultError };
     }
     if (iss.code !== "invalid_type")
       return { message: ctx.defaultError };
-    return { message: message ?? invalid_type_error ?? ctx.defaultError };
+    return { message: message2 ?? invalid_type_error ?? ctx.defaultError };
   };
   return { errorMap: customMap, description };
 }
@@ -95272,14 +95455,14 @@ var ZodType = class {
     const result = await (isAsync(maybeAsyncResult) ? maybeAsyncResult : Promise.resolve(maybeAsyncResult));
     return handleResult(ctx, result);
   }
-  refine(check2, message) {
+  refine(check2, message2) {
     const getIssueProperties = (val) => {
-      if (typeof message === "string" || typeof message === "undefined") {
-        return { message };
-      } else if (typeof message === "function") {
-        return message(val);
+      if (typeof message2 === "string" || typeof message2 === "undefined") {
+        return { message: message2 };
+      } else if (typeof message2 === "function") {
+        return message2(val);
       } else {
-        return message;
+        return message2;
       }
     };
     return this._refinement((val, ctx) => {
@@ -95815,11 +95998,11 @@ var ZodString = class _ZodString2 extends ZodType {
     }
     return { status: status.value, value: input.data };
   }
-  _regex(regex, validation, message) {
+  _regex(regex, validation, message2) {
     return this.refinement((data) => regex.test(data), {
       validation,
       code: ZodIssueCode.invalid_string,
-      ...errorUtil.errToObj(message)
+      ...errorUtil.errToObj(message2)
     });
   }
   _addCheck(check2) {
@@ -95828,37 +96011,37 @@ var ZodString = class _ZodString2 extends ZodType {
       checks: [...this._def.checks, check2]
     });
   }
-  email(message) {
-    return this._addCheck({ kind: "email", ...errorUtil.errToObj(message) });
+  email(message2) {
+    return this._addCheck({ kind: "email", ...errorUtil.errToObj(message2) });
   }
-  url(message) {
-    return this._addCheck({ kind: "url", ...errorUtil.errToObj(message) });
+  url(message2) {
+    return this._addCheck({ kind: "url", ...errorUtil.errToObj(message2) });
   }
-  emoji(message) {
-    return this._addCheck({ kind: "emoji", ...errorUtil.errToObj(message) });
+  emoji(message2) {
+    return this._addCheck({ kind: "emoji", ...errorUtil.errToObj(message2) });
   }
-  uuid(message) {
-    return this._addCheck({ kind: "uuid", ...errorUtil.errToObj(message) });
+  uuid(message2) {
+    return this._addCheck({ kind: "uuid", ...errorUtil.errToObj(message2) });
   }
-  nanoid(message) {
-    return this._addCheck({ kind: "nanoid", ...errorUtil.errToObj(message) });
+  nanoid(message2) {
+    return this._addCheck({ kind: "nanoid", ...errorUtil.errToObj(message2) });
   }
-  cuid(message) {
-    return this._addCheck({ kind: "cuid", ...errorUtil.errToObj(message) });
+  cuid(message2) {
+    return this._addCheck({ kind: "cuid", ...errorUtil.errToObj(message2) });
   }
-  cuid2(message) {
-    return this._addCheck({ kind: "cuid2", ...errorUtil.errToObj(message) });
+  cuid2(message2) {
+    return this._addCheck({ kind: "cuid2", ...errorUtil.errToObj(message2) });
   }
-  ulid(message) {
-    return this._addCheck({ kind: "ulid", ...errorUtil.errToObj(message) });
+  ulid(message2) {
+    return this._addCheck({ kind: "ulid", ...errorUtil.errToObj(message2) });
   }
-  base64(message) {
-    return this._addCheck({ kind: "base64", ...errorUtil.errToObj(message) });
+  base64(message2) {
+    return this._addCheck({ kind: "base64", ...errorUtil.errToObj(message2) });
   }
-  base64url(message) {
+  base64url(message2) {
     return this._addCheck({
       kind: "base64url",
-      ...errorUtil.errToObj(message)
+      ...errorUtil.errToObj(message2)
     });
   }
   jwt(options) {
@@ -95888,8 +96071,8 @@ var ZodString = class _ZodString2 extends ZodType {
       ...errorUtil.errToObj(options?.message)
     });
   }
-  date(message) {
-    return this._addCheck({ kind: "date", message });
+  date(message2) {
+    return this._addCheck({ kind: "date", message: message2 });
   }
   time(options) {
     if (typeof options === "string") {
@@ -95905,14 +96088,14 @@ var ZodString = class _ZodString2 extends ZodType {
       ...errorUtil.errToObj(options?.message)
     });
   }
-  duration(message) {
-    return this._addCheck({ kind: "duration", ...errorUtil.errToObj(message) });
+  duration(message2) {
+    return this._addCheck({ kind: "duration", ...errorUtil.errToObj(message2) });
   }
-  regex(regex, message) {
+  regex(regex, message2) {
     return this._addCheck({
       kind: "regex",
       regex,
-      ...errorUtil.errToObj(message)
+      ...errorUtil.errToObj(message2)
     });
   }
   includes(value, options) {
@@ -95923,46 +96106,46 @@ var ZodString = class _ZodString2 extends ZodType {
       ...errorUtil.errToObj(options?.message)
     });
   }
-  startsWith(value, message) {
+  startsWith(value, message2) {
     return this._addCheck({
       kind: "startsWith",
       value,
-      ...errorUtil.errToObj(message)
+      ...errorUtil.errToObj(message2)
     });
   }
-  endsWith(value, message) {
+  endsWith(value, message2) {
     return this._addCheck({
       kind: "endsWith",
       value,
-      ...errorUtil.errToObj(message)
+      ...errorUtil.errToObj(message2)
     });
   }
-  min(minLength, message) {
+  min(minLength, message2) {
     return this._addCheck({
       kind: "min",
       value: minLength,
-      ...errorUtil.errToObj(message)
+      ...errorUtil.errToObj(message2)
     });
   }
-  max(maxLength, message) {
+  max(maxLength, message2) {
     return this._addCheck({
       kind: "max",
       value: maxLength,
-      ...errorUtil.errToObj(message)
+      ...errorUtil.errToObj(message2)
     });
   }
-  length(len, message) {
+  length(len, message2) {
     return this._addCheck({
       kind: "length",
       value: len,
-      ...errorUtil.errToObj(message)
+      ...errorUtil.errToObj(message2)
     });
   }
   /**
    * Equivalent to `.min(1)`
    */
-  nonempty(message) {
-    return this.min(1, errorUtil.errToObj(message));
+  nonempty(message2) {
+    return this.min(1, errorUtil.errToObj(message2));
   }
   trim() {
     return new _ZodString2({
@@ -96155,19 +96338,19 @@ var ZodNumber = class _ZodNumber extends ZodType {
     }
     return { status: status.value, value: input.data };
   }
-  gte(value, message) {
-    return this.setLimit("min", value, true, errorUtil.toString(message));
+  gte(value, message2) {
+    return this.setLimit("min", value, true, errorUtil.toString(message2));
   }
-  gt(value, message) {
-    return this.setLimit("min", value, false, errorUtil.toString(message));
+  gt(value, message2) {
+    return this.setLimit("min", value, false, errorUtil.toString(message2));
   }
-  lte(value, message) {
-    return this.setLimit("max", value, true, errorUtil.toString(message));
+  lte(value, message2) {
+    return this.setLimit("max", value, true, errorUtil.toString(message2));
   }
-  lt(value, message) {
-    return this.setLimit("max", value, false, errorUtil.toString(message));
+  lt(value, message2) {
+    return this.setLimit("max", value, false, errorUtil.toString(message2));
   }
-  setLimit(kind, value, inclusive, message) {
+  setLimit(kind, value, inclusive, message2) {
     return new _ZodNumber({
       ...this._def,
       checks: [
@@ -96176,7 +96359,7 @@ var ZodNumber = class _ZodNumber extends ZodType {
           kind,
           value,
           inclusive,
-          message: errorUtil.toString(message)
+          message: errorUtil.toString(message2)
         }
       ]
     });
@@ -96187,68 +96370,68 @@ var ZodNumber = class _ZodNumber extends ZodType {
       checks: [...this._def.checks, check2]
     });
   }
-  int(message) {
+  int(message2) {
     return this._addCheck({
       kind: "int",
-      message: errorUtil.toString(message)
+      message: errorUtil.toString(message2)
     });
   }
-  positive(message) {
+  positive(message2) {
     return this._addCheck({
       kind: "min",
       value: 0,
       inclusive: false,
-      message: errorUtil.toString(message)
+      message: errorUtil.toString(message2)
     });
   }
-  negative(message) {
+  negative(message2) {
     return this._addCheck({
       kind: "max",
       value: 0,
       inclusive: false,
-      message: errorUtil.toString(message)
+      message: errorUtil.toString(message2)
     });
   }
-  nonpositive(message) {
+  nonpositive(message2) {
     return this._addCheck({
       kind: "max",
       value: 0,
       inclusive: true,
-      message: errorUtil.toString(message)
+      message: errorUtil.toString(message2)
     });
   }
-  nonnegative(message) {
+  nonnegative(message2) {
     return this._addCheck({
       kind: "min",
       value: 0,
       inclusive: true,
-      message: errorUtil.toString(message)
+      message: errorUtil.toString(message2)
     });
   }
-  multipleOf(value, message) {
+  multipleOf(value, message2) {
     return this._addCheck({
       kind: "multipleOf",
       value,
-      message: errorUtil.toString(message)
+      message: errorUtil.toString(message2)
     });
   }
-  finite(message) {
+  finite(message2) {
     return this._addCheck({
       kind: "finite",
-      message: errorUtil.toString(message)
+      message: errorUtil.toString(message2)
     });
   }
-  safe(message) {
+  safe(message2) {
     return this._addCheck({
       kind: "min",
       inclusive: true,
       value: Number.MIN_SAFE_INTEGER,
-      message: errorUtil.toString(message)
+      message: errorUtil.toString(message2)
     })._addCheck({
       kind: "max",
       inclusive: true,
       value: Number.MAX_SAFE_INTEGER,
-      message: errorUtil.toString(message)
+      message: errorUtil.toString(message2)
     });
   }
   get minValue() {
@@ -96371,19 +96554,19 @@ var ZodBigInt = class _ZodBigInt extends ZodType {
     });
     return INVALID;
   }
-  gte(value, message) {
-    return this.setLimit("min", value, true, errorUtil.toString(message));
+  gte(value, message2) {
+    return this.setLimit("min", value, true, errorUtil.toString(message2));
   }
-  gt(value, message) {
-    return this.setLimit("min", value, false, errorUtil.toString(message));
+  gt(value, message2) {
+    return this.setLimit("min", value, false, errorUtil.toString(message2));
   }
-  lte(value, message) {
-    return this.setLimit("max", value, true, errorUtil.toString(message));
+  lte(value, message2) {
+    return this.setLimit("max", value, true, errorUtil.toString(message2));
   }
-  lt(value, message) {
-    return this.setLimit("max", value, false, errorUtil.toString(message));
+  lt(value, message2) {
+    return this.setLimit("max", value, false, errorUtil.toString(message2));
   }
-  setLimit(kind, value, inclusive, message) {
+  setLimit(kind, value, inclusive, message2) {
     return new _ZodBigInt({
       ...this._def,
       checks: [
@@ -96392,7 +96575,7 @@ var ZodBigInt = class _ZodBigInt extends ZodType {
           kind,
           value,
           inclusive,
-          message: errorUtil.toString(message)
+          message: errorUtil.toString(message2)
         }
       ]
     });
@@ -96403,43 +96586,43 @@ var ZodBigInt = class _ZodBigInt extends ZodType {
       checks: [...this._def.checks, check2]
     });
   }
-  positive(message) {
+  positive(message2) {
     return this._addCheck({
       kind: "min",
       value: BigInt(0),
       inclusive: false,
-      message: errorUtil.toString(message)
+      message: errorUtil.toString(message2)
     });
   }
-  negative(message) {
+  negative(message2) {
     return this._addCheck({
       kind: "max",
       value: BigInt(0),
       inclusive: false,
-      message: errorUtil.toString(message)
+      message: errorUtil.toString(message2)
     });
   }
-  nonpositive(message) {
+  nonpositive(message2) {
     return this._addCheck({
       kind: "max",
       value: BigInt(0),
       inclusive: true,
-      message: errorUtil.toString(message)
+      message: errorUtil.toString(message2)
     });
   }
-  nonnegative(message) {
+  nonnegative(message2) {
     return this._addCheck({
       kind: "min",
       value: BigInt(0),
       inclusive: true,
-      message: errorUtil.toString(message)
+      message: errorUtil.toString(message2)
     });
   }
-  multipleOf(value, message) {
+  multipleOf(value, message2) {
     return this._addCheck({
       kind: "multipleOf",
       value,
-      message: errorUtil.toString(message)
+      message: errorUtil.toString(message2)
     });
   }
   get minValue() {
@@ -96562,18 +96745,18 @@ var ZodDate = class _ZodDate extends ZodType {
       checks: [...this._def.checks, check2]
     });
   }
-  min(minDate, message) {
+  min(minDate, message2) {
     return this._addCheck({
       kind: "min",
       value: minDate.getTime(),
-      message: errorUtil.toString(message)
+      message: errorUtil.toString(message2)
     });
   }
-  max(maxDate, message) {
+  max(maxDate, message2) {
     return this._addCheck({
       kind: "max",
       value: maxDate.getTime(),
-      message: errorUtil.toString(message)
+      message: errorUtil.toString(message2)
     });
   }
   get minDate() {
@@ -96805,26 +96988,26 @@ var ZodArray = class _ZodArray extends ZodType {
   get element() {
     return this._def.type;
   }
-  min(minLength, message) {
+  min(minLength, message2) {
     return new _ZodArray({
       ...this._def,
-      minLength: { value: minLength, message: errorUtil.toString(message) }
+      minLength: { value: minLength, message: errorUtil.toString(message2) }
     });
   }
-  max(maxLength, message) {
+  max(maxLength, message2) {
     return new _ZodArray({
       ...this._def,
-      maxLength: { value: maxLength, message: errorUtil.toString(message) }
+      maxLength: { value: maxLength, message: errorUtil.toString(message2) }
     });
   }
-  length(len, message) {
+  length(len, message2) {
     return new _ZodArray({
       ...this._def,
-      exactLength: { value: len, message: errorUtil.toString(message) }
+      exactLength: { value: len, message: errorUtil.toString(message2) }
     });
   }
-  nonempty(message) {
-    return this.min(1, message);
+  nonempty(message2) {
+    return this.min(1, message2);
   }
 };
 ZodArray.create = (schema, params) => {
@@ -96967,17 +97150,17 @@ var ZodObject = class _ZodObject extends ZodType {
   get shape() {
     return this._def.shape();
   }
-  strict(message) {
+  strict(message2) {
     errorUtil.errToObj;
     return new _ZodObject({
       ...this._def,
       unknownKeys: "strict",
-      ...message !== void 0 ? {
+      ...message2 !== void 0 ? {
         errorMap: (issue2, ctx) => {
           const defaultError = this._def.errorMap?.(issue2, ctx).message ?? ctx.defaultError;
           if (issue2.code === "unrecognized_keys")
             return {
-              message: errorUtil.errToObj(message).message ?? defaultError
+              message: errorUtil.errToObj(message2).message ?? defaultError
             };
           return {
             message: defaultError
@@ -97733,23 +97916,23 @@ var ZodSet = class _ZodSet extends ZodType {
       return finalizeSet(elements);
     }
   }
-  min(minSize, message) {
+  min(minSize, message2) {
     return new _ZodSet({
       ...this._def,
-      minSize: { value: minSize, message: errorUtil.toString(message) }
+      minSize: { value: minSize, message: errorUtil.toString(message2) }
     });
   }
-  max(maxSize, message) {
+  max(maxSize, message2) {
     return new _ZodSet({
       ...this._def,
-      maxSize: { value: maxSize, message: errorUtil.toString(message) }
+      maxSize: { value: maxSize, message: errorUtil.toString(message2) }
     });
   }
-  size(size, message) {
-    return this.min(size, message).max(size, message);
+  size(size, message2) {
+    return this.min(size, message2).max(size, message2);
   }
-  nonempty(message) {
-    return this.min(1, message);
+  nonempty(message2) {
+    return this.min(1, message2);
   }
 };
 ZodSet.create = (valueType, params) => {
@@ -99103,8 +99286,8 @@ init_tracing();
 init_utils();
 var { Pool: Pool2, types: types2 } = esm_default;
 var NodePgPreparedQuery = class extends PgPreparedQuery {
-  constructor(client, queryString, params, logger2, cache, queryMetadata, cacheConfig, fields, name, _isResponseInArrayMode, customResultMapper) {
-    super({ sql: queryString, params }, cache, queryMetadata, cacheConfig);
+  constructor(client, queryString, params, logger2, cache2, queryMetadata, cacheConfig, fields, name, _isResponseInArrayMode, customResultMapper) {
+    super({ sql: queryString, params }, cache2, queryMetadata, cacheConfig);
     this.client = client;
     this.queryString = queryString;
     this.params = params;
@@ -100061,9 +100244,9 @@ function validate(body) {
   return null;
 }
 function generateProtocolo() {
-  const year = (/* @__PURE__ */ new Date()).getFullYear();
+  const year2 = (/* @__PURE__ */ new Date()).getFullYear();
   const seq = String(Math.floor(Math.random() * 999999)).padStart(6, "0");
-  return `SIC-${year}-${seq}`;
+  return `SIC-${year2}-${seq}`;
 }
 function getPrazo() {
   const date6 = /* @__PURE__ */ new Date();
@@ -101507,11 +101690,11 @@ function startInMemorySchedulers(handlers2) {
   );
   logger.info("Schedulers em mem\xF3ria iniciados (sem Redis)");
 }
-function scheduleDailyAt(hour, minute, fn) {
+function scheduleDailyAt(hour2, minute2, fn) {
   const msUntilNext = () => {
     const now = /* @__PURE__ */ new Date();
     const next = /* @__PURE__ */ new Date();
-    next.setHours(hour, minute, 0, 0);
+    next.setHours(hour2, minute2, 0, 0);
     if (next <= now) next.setDate(next.getDate() + 1);
     return next.getTime() - now.getTime();
   };
@@ -101647,13 +101830,13 @@ router27.get("/site/agenda", async (req, res) => {
     const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT24;
     const now = /* @__PURE__ */ new Date();
     const month = parseInt(req.query["month"] ?? String(now.getMonth() + 1));
-    const year = parseInt(req.query["year"] ?? String(now.getFullYear()));
-    const cacheKey = `site:agenda:${tenantSlug}:${year}:${month}`;
+    const year2 = parseInt(req.query["year"] ?? String(now.getFullYear()));
+    const cacheKey = `site:agenda:${tenantSlug}:${year2}:${month}`;
     const result = await withCache(cacheKey, TTL4, async () => {
       const [tenant] = await db.select({ id: tenantsTable.id }).from(tenantsTable).where(eq(tenantsTable.slug, tenantSlug)).limit(1);
       if (!tenant) return null;
-      const startOfMonth = new Date(year, month - 1, 1);
-      const endOfMonth = new Date(year, month, 0, 23, 59, 59);
+      const startOfMonth = new Date(year2, month - 1, 1);
+      const endOfMonth = new Date(year2, month, 0, 23, 59, 59);
       const eventos = await db.select().from(agendaTable).where(
         and(
           eq(agendaTable.tenantId, tenant.id),
@@ -101663,7 +101846,7 @@ router27.get("/site/agenda", async (req, res) => {
           lte(agendaTable.dataInicio, endOfMonth)
         )
       ).orderBy(asc(agendaTable.dataInicio));
-      return { data: eventos, month, year };
+      return { data: eventos, month, year: year2 };
     });
     if (!result) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
     res.setHeader("Cache-Control", "public, max-age=60");
@@ -101724,12 +101907,12 @@ router29.get("/site/legislation", async (req, res) => {
   try {
     const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT26;
     const type = req.query["type"];
-    const year = req.query["year"] ? parseInt(req.query["year"]) : void 0;
+    const year2 = req.query["year"] ? parseInt(req.query["year"]) : void 0;
     const search = req.query["search"];
     const page = Math.max(1, parseInt(req.query["page"] ?? "1"));
     const limit = Math.min(50, Math.max(1, parseInt(req.query["limit"] ?? "20")));
     const offset = (page - 1) * limit;
-    const cacheKey = `site:legislation:${tenantSlug}:${type ?? ""}:${year ?? ""}:${search ?? ""}:${page}`;
+    const cacheKey = `site:legislation:${tenantSlug}:${type ?? ""}:${year2 ?? ""}:${search ?? ""}:${page}`;
     const result = await withCache(cacheKey, TTL6, async () => {
       const [tenant] = await db.select({ id: tenantsTable.id }).from(tenantsTable).where(eq(tenantsTable.slug, tenantSlug)).limit(1);
       if (!tenant) return null;
@@ -101738,7 +101921,7 @@ router29.get("/site/legislation", async (req, res) => {
         eq(legislacaoTable.status, "publicado")
       ];
       if (type) conditions.push(eq(legislacaoTable.tipo, type));
-      if (year) conditions.push(eq(legislacaoTable.ano, year));
+      if (year2) conditions.push(eq(legislacaoTable.ano, year2));
       if (search) {
         conditions.push(
           sql`to_tsvector('portuguese', ${legislacaoTable.numero} || ' ' || ${legislacaoTable.ementa}) @@ plainto_tsquery('portuguese', ${search})`
@@ -101853,7 +102036,7 @@ router31.get("/site/transparency/:category", async (req, res) => {
   try {
     const tenantSlug = req.query["tenant"] ?? DEFAULT_TENANT28;
     const category = req.params["category"].toLowerCase();
-    const year = req.query["year"] ? parseInt(req.query["year"]) : void 0;
+    const year2 = req.query["year"] ? parseInt(req.query["year"]) : void 0;
     const period = req.query["period"];
     const page = Math.max(1, parseInt(req.query["page"] ?? "1"));
     const limit = 20;
@@ -101864,20 +102047,20 @@ router31.get("/site/transparency/:category", async (req, res) => {
         valid: VALID_CATEGORIES
       });
     }
-    const cacheKey = `site:transparency:${tenantSlug}:${category}:${year ?? ""}:${period ?? ""}:${page}`;
+    const cacheKey = `site:transparency:${tenantSlug}:${category}:${year2 ?? ""}:${period ?? ""}:${page}`;
     const result = await withCache(cacheKey, TTL8, async () => {
       const [tenant] = await db.select({ id: tenantsTable.id }).from(tenantsTable).where(eq(tenantsTable.slug, tenantSlug)).limit(1);
       if (!tenant) return null;
       if (category === "despesas") {
         const conditions = [eq(despesasTable.tenantId, tenant.id)];
-        if (year) conditions.push(eq(despesasTable.ano, year));
+        if (year2) conditions.push(eq(despesasTable.ano, year2));
         if (period) conditions.push(eq(despesasTable.mes, parseInt(period)));
         const rows = await db.select().from(despesasTable).where(and(...conditions)).orderBy(desc(despesasTable.data)).limit(limit).offset(offset);
         return { type: "structured", category, data: rows, page };
       }
       if (category === "receitas") {
         const conditions = [eq(receitasTable.tenantId, tenant.id)];
-        if (year) conditions.push(eq(receitasTable.ano, year));
+        if (year2) conditions.push(eq(receitasTable.ano, year2));
         if (period) conditions.push(eq(receitasTable.mes, parseInt(period)));
         const rows = await db.select().from(receitasTable).where(and(...conditions)).orderBy(desc(receitasTable.data)).limit(limit).offset(offset);
         return { type: "structured", category, data: rows, page };
@@ -101888,7 +102071,7 @@ router31.get("/site/transparency/:category", async (req, res) => {
       }
       if (category === "orcamento") {
         const conditions = [eq(orcamentosTable.tenantId, tenant.id)];
-        if (year) conditions.push(eq(orcamentosTable.ano, year));
+        if (year2) conditions.push(eq(orcamentosTable.ano, year2));
         const rows = await db.select().from(orcamentosTable).where(and(...conditions));
         return { type: "structured", category, data: rows, page };
       }
@@ -101896,7 +102079,7 @@ router31.get("/site/transparency/:category", async (req, res) => {
         eq(transparencyDocsTable.tenantId, tenant.id),
         eq(transparencyDocsTable.categoria, category)
       ];
-      if (year) docConditions.push(eq(transparencyDocsTable.anoReferencia, year));
+      if (year2) docConditions.push(eq(transparencyDocsTable.anoReferencia, year2));
       if (period) docConditions.push(eq(transparencyDocsTable.periodoReferencia, period));
       const where = and(...docConditions);
       const [countResult, docs] = await Promise.all([
@@ -102729,15 +102912,15 @@ router39.get("/site-admin/agenda", async (req, res) => {
     if (!tenantId) return res.status(404).json({ error: "Tenant n\xE3o encontrado" });
     const now = /* @__PURE__ */ new Date();
     const month = parseInt(req.query["month"] ?? String(now.getMonth() + 1));
-    const year = parseInt(req.query["year"] ?? String(now.getFullYear()));
-    const startOfMonth = new Date(year, month - 1, 1);
-    const endOfMonth = new Date(year, month, 0, 23, 59, 59);
+    const year2 = parseInt(req.query["year"] ?? String(now.getFullYear()));
+    const startOfMonth = new Date(year2, month - 1, 1);
+    const endOfMonth = new Date(year2, month, 0, 23, 59, 59);
     const data = await db.select().from(agendaTable).where(and(
       eq(agendaTable.tenantId, tenantId),
       gte(agendaTable.dataInicio, startOfMonth),
       lte(agendaTable.dataInicio, endOfMonth)
     )).orderBy(asc(agendaTable.dataInicio));
-    res.json({ data, month, year });
+    res.json({ data, month, year: year2 });
   } catch (err) {
     req.log.error(err);
     res.status(500).json({ error: "Internal server error" });
@@ -102945,52 +103128,1938 @@ router40.put("/site-admin/config/menus", async (req, res) => {
 });
 var config_default2 = router40;
 
-// src/routes/index.ts
+// src/routes/servidor/index.ts
+var import_express45 = __toESM(require_express2(), 1);
+
+// src/routes/servidor/contracheques.ts
+var import_express41 = __toESM(require_express2(), 1);
+init_schema2();
+init_drizzle_orm();
+
+// ../../node_modules/.pnpm/jose@6.2.2/node_modules/jose/dist/webapi/lib/buffer_utils.js
+var encoder = new TextEncoder();
+var decoder = new TextDecoder();
+var MAX_INT32 = 2 ** 32;
+function concat(...buffers) {
+  const size = buffers.reduce((acc, { length }) => acc + length, 0);
+  const buf = new Uint8Array(size);
+  let i = 0;
+  for (const buffer of buffers) {
+    buf.set(buffer, i);
+    i += buffer.length;
+  }
+  return buf;
+}
+function encode(string4) {
+  const bytes = new Uint8Array(string4.length);
+  for (let i = 0; i < string4.length; i++) {
+    const code = string4.charCodeAt(i);
+    if (code > 127) {
+      throw new TypeError("non-ASCII string encountered in encode()");
+    }
+    bytes[i] = code;
+  }
+  return bytes;
+}
+
+// ../../node_modules/.pnpm/jose@6.2.2/node_modules/jose/dist/webapi/lib/base64.js
+function decodeBase64(encoded) {
+  if (Uint8Array.fromBase64) {
+    return Uint8Array.fromBase64(encoded);
+  }
+  const binary = atob(encoded);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) {
+    bytes[i] = binary.charCodeAt(i);
+  }
+  return bytes;
+}
+
+// ../../node_modules/.pnpm/jose@6.2.2/node_modules/jose/dist/webapi/util/base64url.js
+function decode(input) {
+  if (Uint8Array.fromBase64) {
+    return Uint8Array.fromBase64(typeof input === "string" ? input : decoder.decode(input), {
+      alphabet: "base64url"
+    });
+  }
+  let encoded = input;
+  if (encoded instanceof Uint8Array) {
+    encoded = decoder.decode(encoded);
+  }
+  encoded = encoded.replace(/-/g, "+").replace(/_/g, "/");
+  try {
+    return decodeBase64(encoded);
+  } catch {
+    throw new TypeError("The input to be decoded is not correctly encoded.");
+  }
+}
+
+// ../../node_modules/.pnpm/jose@6.2.2/node_modules/jose/dist/webapi/lib/crypto_key.js
+var unusable = (name, prop = "algorithm.name") => new TypeError(`CryptoKey does not support this operation, its ${prop} must be ${name}`);
+var isAlgorithm = (algorithm, name) => algorithm.name === name;
+function getHashLength(hash) {
+  return parseInt(hash.name.slice(4), 10);
+}
+function checkHashLength(algorithm, expected) {
+  const actual = getHashLength(algorithm.hash);
+  if (actual !== expected)
+    throw unusable(`SHA-${expected}`, "algorithm.hash");
+}
+function getNamedCurve(alg) {
+  switch (alg) {
+    case "ES256":
+      return "P-256";
+    case "ES384":
+      return "P-384";
+    case "ES512":
+      return "P-521";
+    default:
+      throw new Error("unreachable");
+  }
+}
+function checkUsage(key, usage) {
+  if (usage && !key.usages.includes(usage)) {
+    throw new TypeError(`CryptoKey does not support this operation, its usages must include ${usage}.`);
+  }
+}
+function checkSigCryptoKey(key, alg, usage) {
+  switch (alg) {
+    case "HS256":
+    case "HS384":
+    case "HS512": {
+      if (!isAlgorithm(key.algorithm, "HMAC"))
+        throw unusable("HMAC");
+      checkHashLength(key.algorithm, parseInt(alg.slice(2), 10));
+      break;
+    }
+    case "RS256":
+    case "RS384":
+    case "RS512": {
+      if (!isAlgorithm(key.algorithm, "RSASSA-PKCS1-v1_5"))
+        throw unusable("RSASSA-PKCS1-v1_5");
+      checkHashLength(key.algorithm, parseInt(alg.slice(2), 10));
+      break;
+    }
+    case "PS256":
+    case "PS384":
+    case "PS512": {
+      if (!isAlgorithm(key.algorithm, "RSA-PSS"))
+        throw unusable("RSA-PSS");
+      checkHashLength(key.algorithm, parseInt(alg.slice(2), 10));
+      break;
+    }
+    case "Ed25519":
+    case "EdDSA": {
+      if (!isAlgorithm(key.algorithm, "Ed25519"))
+        throw unusable("Ed25519");
+      break;
+    }
+    case "ML-DSA-44":
+    case "ML-DSA-65":
+    case "ML-DSA-87": {
+      if (!isAlgorithm(key.algorithm, alg))
+        throw unusable(alg);
+      break;
+    }
+    case "ES256":
+    case "ES384":
+    case "ES512": {
+      if (!isAlgorithm(key.algorithm, "ECDSA"))
+        throw unusable("ECDSA");
+      const expected = getNamedCurve(alg);
+      const actual = key.algorithm.namedCurve;
+      if (actual !== expected)
+        throw unusable(expected, "algorithm.namedCurve");
+      break;
+    }
+    default:
+      throw new TypeError("CryptoKey does not support this operation");
+  }
+  checkUsage(key, usage);
+}
+
+// ../../node_modules/.pnpm/jose@6.2.2/node_modules/jose/dist/webapi/lib/invalid_key_input.js
+function message(msg, actual, ...types3) {
+  types3 = types3.filter(Boolean);
+  if (types3.length > 2) {
+    const last = types3.pop();
+    msg += `one of type ${types3.join(", ")}, or ${last}.`;
+  } else if (types3.length === 2) {
+    msg += `one of type ${types3[0]} or ${types3[1]}.`;
+  } else {
+    msg += `of type ${types3[0]}.`;
+  }
+  if (actual == null) {
+    msg += ` Received ${actual}`;
+  } else if (typeof actual === "function" && actual.name) {
+    msg += ` Received function ${actual.name}`;
+  } else if (typeof actual === "object" && actual != null) {
+    if (actual.constructor?.name) {
+      msg += ` Received an instance of ${actual.constructor.name}`;
+    }
+  }
+  return msg;
+}
+var invalidKeyInput = (actual, ...types3) => message("Key must be ", actual, ...types3);
+var withAlg = (alg, actual, ...types3) => message(`Key for the ${alg} algorithm must be `, actual, ...types3);
+
+// ../../node_modules/.pnpm/jose@6.2.2/node_modules/jose/dist/webapi/util/errors.js
+var JOSEError = class extends Error {
+  static code = "ERR_JOSE_GENERIC";
+  code = "ERR_JOSE_GENERIC";
+  constructor(message2, options) {
+    super(message2, options);
+    this.name = this.constructor.name;
+    Error.captureStackTrace?.(this, this.constructor);
+  }
+};
+var JWTClaimValidationFailed = class extends JOSEError {
+  static code = "ERR_JWT_CLAIM_VALIDATION_FAILED";
+  code = "ERR_JWT_CLAIM_VALIDATION_FAILED";
+  claim;
+  reason;
+  payload;
+  constructor(message2, payload, claim = "unspecified", reason = "unspecified") {
+    super(message2, { cause: { claim, reason, payload } });
+    this.claim = claim;
+    this.reason = reason;
+    this.payload = payload;
+  }
+};
+var JWTExpired = class extends JOSEError {
+  static code = "ERR_JWT_EXPIRED";
+  code = "ERR_JWT_EXPIRED";
+  claim;
+  reason;
+  payload;
+  constructor(message2, payload, claim = "unspecified", reason = "unspecified") {
+    super(message2, { cause: { claim, reason, payload } });
+    this.claim = claim;
+    this.reason = reason;
+    this.payload = payload;
+  }
+};
+var JOSEAlgNotAllowed = class extends JOSEError {
+  static code = "ERR_JOSE_ALG_NOT_ALLOWED";
+  code = "ERR_JOSE_ALG_NOT_ALLOWED";
+};
+var JOSENotSupported = class extends JOSEError {
+  static code = "ERR_JOSE_NOT_SUPPORTED";
+  code = "ERR_JOSE_NOT_SUPPORTED";
+};
+var JWSInvalid = class extends JOSEError {
+  static code = "ERR_JWS_INVALID";
+  code = "ERR_JWS_INVALID";
+};
+var JWTInvalid = class extends JOSEError {
+  static code = "ERR_JWT_INVALID";
+  code = "ERR_JWT_INVALID";
+};
+var JWSSignatureVerificationFailed = class extends JOSEError {
+  static code = "ERR_JWS_SIGNATURE_VERIFICATION_FAILED";
+  code = "ERR_JWS_SIGNATURE_VERIFICATION_FAILED";
+  constructor(message2 = "signature verification failed", options) {
+    super(message2, options);
+  }
+};
+
+// ../../node_modules/.pnpm/jose@6.2.2/node_modules/jose/dist/webapi/lib/is_key_like.js
+var isCryptoKey = (key) => {
+  if (key?.[Symbol.toStringTag] === "CryptoKey")
+    return true;
+  try {
+    return key instanceof CryptoKey;
+  } catch {
+    return false;
+  }
+};
+var isKeyObject = (key) => key?.[Symbol.toStringTag] === "KeyObject";
+var isKeyLike = (key) => isCryptoKey(key) || isKeyObject(key);
+
+// ../../node_modules/.pnpm/jose@6.2.2/node_modules/jose/dist/webapi/lib/helpers.js
+function decodeBase64url(value, label, ErrorClass) {
+  try {
+    return decode(value);
+  } catch {
+    throw new ErrorClass(`Failed to base64url decode the ${label}`);
+  }
+}
+
+// ../../node_modules/.pnpm/jose@6.2.2/node_modules/jose/dist/webapi/lib/type_checks.js
+var isObjectLike = (value) => typeof value === "object" && value !== null;
+function isObject2(input) {
+  if (!isObjectLike(input) || Object.prototype.toString.call(input) !== "[object Object]") {
+    return false;
+  }
+  if (Object.getPrototypeOf(input) === null) {
+    return true;
+  }
+  let proto = input;
+  while (Object.getPrototypeOf(proto) !== null) {
+    proto = Object.getPrototypeOf(proto);
+  }
+  return Object.getPrototypeOf(input) === proto;
+}
+function isDisjoint(...headers) {
+  const sources = headers.filter(Boolean);
+  if (sources.length === 0 || sources.length === 1) {
+    return true;
+  }
+  let acc;
+  for (const header of sources) {
+    const parameters = Object.keys(header);
+    if (!acc || acc.size === 0) {
+      acc = new Set(parameters);
+      continue;
+    }
+    for (const parameter of parameters) {
+      if (acc.has(parameter)) {
+        return false;
+      }
+      acc.add(parameter);
+    }
+  }
+  return true;
+}
+var isJWK = (key) => isObject2(key) && typeof key.kty === "string";
+var isPrivateJWK = (key) => key.kty !== "oct" && (key.kty === "AKP" && typeof key.priv === "string" || typeof key.d === "string");
+var isPublicJWK = (key) => key.kty !== "oct" && key.d === void 0 && key.priv === void 0;
+var isSecretJWK = (key) => key.kty === "oct" && typeof key.k === "string";
+
+// ../../node_modules/.pnpm/jose@6.2.2/node_modules/jose/dist/webapi/lib/signing.js
+function checkKeyLength(alg, key) {
+  if (alg.startsWith("RS") || alg.startsWith("PS")) {
+    const { modulusLength } = key.algorithm;
+    if (typeof modulusLength !== "number" || modulusLength < 2048) {
+      throw new TypeError(`${alg} requires key modulusLength to be 2048 bits or larger`);
+    }
+  }
+}
+function subtleAlgorithm(alg, algorithm) {
+  const hash = `SHA-${alg.slice(-3)}`;
+  switch (alg) {
+    case "HS256":
+    case "HS384":
+    case "HS512":
+      return { hash, name: "HMAC" };
+    case "PS256":
+    case "PS384":
+    case "PS512":
+      return { hash, name: "RSA-PSS", saltLength: parseInt(alg.slice(-3), 10) >> 3 };
+    case "RS256":
+    case "RS384":
+    case "RS512":
+      return { hash, name: "RSASSA-PKCS1-v1_5" };
+    case "ES256":
+    case "ES384":
+    case "ES512":
+      return { hash, name: "ECDSA", namedCurve: algorithm.namedCurve };
+    case "Ed25519":
+    case "EdDSA":
+      return { name: "Ed25519" };
+    case "ML-DSA-44":
+    case "ML-DSA-65":
+    case "ML-DSA-87":
+      return { name: alg };
+    default:
+      throw new JOSENotSupported(`alg ${alg} is not supported either by JOSE or your javascript runtime`);
+  }
+}
+async function getSigKey(alg, key, usage) {
+  if (key instanceof Uint8Array) {
+    if (!alg.startsWith("HS")) {
+      throw new TypeError(invalidKeyInput(key, "CryptoKey", "KeyObject", "JSON Web Key"));
+    }
+    return crypto.subtle.importKey("raw", key, { hash: `SHA-${alg.slice(-3)}`, name: "HMAC" }, false, [usage]);
+  }
+  checkSigCryptoKey(key, alg, usage);
+  return key;
+}
+async function verify(alg, key, signature, data) {
+  const cryptoKey = await getSigKey(alg, key, "verify");
+  checkKeyLength(alg, cryptoKey);
+  const algorithm = subtleAlgorithm(alg, cryptoKey.algorithm);
+  try {
+    return await crypto.subtle.verify(algorithm, cryptoKey, signature, data);
+  } catch {
+    return false;
+  }
+}
+
+// ../../node_modules/.pnpm/jose@6.2.2/node_modules/jose/dist/webapi/lib/jwk_to_key.js
+var unsupportedAlg = 'Invalid or unsupported JWK "alg" (Algorithm) Parameter value';
+function subtleMapping(jwk) {
+  let algorithm;
+  let keyUsages;
+  switch (jwk.kty) {
+    case "AKP": {
+      switch (jwk.alg) {
+        case "ML-DSA-44":
+        case "ML-DSA-65":
+        case "ML-DSA-87":
+          algorithm = { name: jwk.alg };
+          keyUsages = jwk.priv ? ["sign"] : ["verify"];
+          break;
+        default:
+          throw new JOSENotSupported(unsupportedAlg);
+      }
+      break;
+    }
+    case "RSA": {
+      switch (jwk.alg) {
+        case "PS256":
+        case "PS384":
+        case "PS512":
+          algorithm = { name: "RSA-PSS", hash: `SHA-${jwk.alg.slice(-3)}` };
+          keyUsages = jwk.d ? ["sign"] : ["verify"];
+          break;
+        case "RS256":
+        case "RS384":
+        case "RS512":
+          algorithm = { name: "RSASSA-PKCS1-v1_5", hash: `SHA-${jwk.alg.slice(-3)}` };
+          keyUsages = jwk.d ? ["sign"] : ["verify"];
+          break;
+        case "RSA-OAEP":
+        case "RSA-OAEP-256":
+        case "RSA-OAEP-384":
+        case "RSA-OAEP-512":
+          algorithm = {
+            name: "RSA-OAEP",
+            hash: `SHA-${parseInt(jwk.alg.slice(-3), 10) || 1}`
+          };
+          keyUsages = jwk.d ? ["decrypt", "unwrapKey"] : ["encrypt", "wrapKey"];
+          break;
+        default:
+          throw new JOSENotSupported(unsupportedAlg);
+      }
+      break;
+    }
+    case "EC": {
+      switch (jwk.alg) {
+        case "ES256":
+        case "ES384":
+        case "ES512":
+          algorithm = {
+            name: "ECDSA",
+            namedCurve: { ES256: "P-256", ES384: "P-384", ES512: "P-521" }[jwk.alg]
+          };
+          keyUsages = jwk.d ? ["sign"] : ["verify"];
+          break;
+        case "ECDH-ES":
+        case "ECDH-ES+A128KW":
+        case "ECDH-ES+A192KW":
+        case "ECDH-ES+A256KW":
+          algorithm = { name: "ECDH", namedCurve: jwk.crv };
+          keyUsages = jwk.d ? ["deriveBits"] : [];
+          break;
+        default:
+          throw new JOSENotSupported(unsupportedAlg);
+      }
+      break;
+    }
+    case "OKP": {
+      switch (jwk.alg) {
+        case "Ed25519":
+        case "EdDSA":
+          algorithm = { name: "Ed25519" };
+          keyUsages = jwk.d ? ["sign"] : ["verify"];
+          break;
+        case "ECDH-ES":
+        case "ECDH-ES+A128KW":
+        case "ECDH-ES+A192KW":
+        case "ECDH-ES+A256KW":
+          algorithm = { name: jwk.crv };
+          keyUsages = jwk.d ? ["deriveBits"] : [];
+          break;
+        default:
+          throw new JOSENotSupported(unsupportedAlg);
+      }
+      break;
+    }
+    default:
+      throw new JOSENotSupported('Invalid or unsupported JWK "kty" (Key Type) Parameter value');
+  }
+  return { algorithm, keyUsages };
+}
+async function jwkToKey(jwk) {
+  if (!jwk.alg) {
+    throw new TypeError('"alg" argument is required when "jwk.alg" is not present');
+  }
+  const { algorithm, keyUsages } = subtleMapping(jwk);
+  const keyData = { ...jwk };
+  if (keyData.kty !== "AKP") {
+    delete keyData.alg;
+  }
+  delete keyData.use;
+  return crypto.subtle.importKey("jwk", keyData, algorithm, jwk.ext ?? (jwk.d || jwk.priv ? false : true), jwk.key_ops ?? keyUsages);
+}
+
+// ../../node_modules/.pnpm/jose@6.2.2/node_modules/jose/dist/webapi/lib/normalize_key.js
+var unusableForAlg = "given KeyObject instance cannot be used for this algorithm";
+var cache;
+var handleJWK = async (key, jwk, alg, freeze = false) => {
+  cache ||= /* @__PURE__ */ new WeakMap();
+  let cached2 = cache.get(key);
+  if (cached2?.[alg]) {
+    return cached2[alg];
+  }
+  const cryptoKey = await jwkToKey({ ...jwk, alg });
+  if (freeze)
+    Object.freeze(key);
+  if (!cached2) {
+    cache.set(key, { [alg]: cryptoKey });
+  } else {
+    cached2[alg] = cryptoKey;
+  }
+  return cryptoKey;
+};
+var handleKeyObject = (keyObject, alg) => {
+  cache ||= /* @__PURE__ */ new WeakMap();
+  let cached2 = cache.get(keyObject);
+  if (cached2?.[alg]) {
+    return cached2[alg];
+  }
+  const isPublic = keyObject.type === "public";
+  const extractable = isPublic ? true : false;
+  let cryptoKey;
+  if (keyObject.asymmetricKeyType === "x25519") {
+    switch (alg) {
+      case "ECDH-ES":
+      case "ECDH-ES+A128KW":
+      case "ECDH-ES+A192KW":
+      case "ECDH-ES+A256KW":
+        break;
+      default:
+        throw new TypeError(unusableForAlg);
+    }
+    cryptoKey = keyObject.toCryptoKey(keyObject.asymmetricKeyType, extractable, isPublic ? [] : ["deriveBits"]);
+  }
+  if (keyObject.asymmetricKeyType === "ed25519") {
+    if (alg !== "EdDSA" && alg !== "Ed25519") {
+      throw new TypeError(unusableForAlg);
+    }
+    cryptoKey = keyObject.toCryptoKey(keyObject.asymmetricKeyType, extractable, [
+      isPublic ? "verify" : "sign"
+    ]);
+  }
+  switch (keyObject.asymmetricKeyType) {
+    case "ml-dsa-44":
+    case "ml-dsa-65":
+    case "ml-dsa-87": {
+      if (alg !== keyObject.asymmetricKeyType.toUpperCase()) {
+        throw new TypeError(unusableForAlg);
+      }
+      cryptoKey = keyObject.toCryptoKey(keyObject.asymmetricKeyType, extractable, [
+        isPublic ? "verify" : "sign"
+      ]);
+    }
+  }
+  if (keyObject.asymmetricKeyType === "rsa") {
+    let hash;
+    switch (alg) {
+      case "RSA-OAEP":
+        hash = "SHA-1";
+        break;
+      case "RS256":
+      case "PS256":
+      case "RSA-OAEP-256":
+        hash = "SHA-256";
+        break;
+      case "RS384":
+      case "PS384":
+      case "RSA-OAEP-384":
+        hash = "SHA-384";
+        break;
+      case "RS512":
+      case "PS512":
+      case "RSA-OAEP-512":
+        hash = "SHA-512";
+        break;
+      default:
+        throw new TypeError(unusableForAlg);
+    }
+    if (alg.startsWith("RSA-OAEP")) {
+      return keyObject.toCryptoKey({
+        name: "RSA-OAEP",
+        hash
+      }, extractable, isPublic ? ["encrypt"] : ["decrypt"]);
+    }
+    cryptoKey = keyObject.toCryptoKey({
+      name: alg.startsWith("PS") ? "RSA-PSS" : "RSASSA-PKCS1-v1_5",
+      hash
+    }, extractable, [isPublic ? "verify" : "sign"]);
+  }
+  if (keyObject.asymmetricKeyType === "ec") {
+    const nist = /* @__PURE__ */ new Map([
+      ["prime256v1", "P-256"],
+      ["secp384r1", "P-384"],
+      ["secp521r1", "P-521"]
+    ]);
+    const namedCurve = nist.get(keyObject.asymmetricKeyDetails?.namedCurve);
+    if (!namedCurve) {
+      throw new TypeError(unusableForAlg);
+    }
+    const expectedCurve = { ES256: "P-256", ES384: "P-384", ES512: "P-521" };
+    if (expectedCurve[alg] && namedCurve === expectedCurve[alg]) {
+      cryptoKey = keyObject.toCryptoKey({
+        name: "ECDSA",
+        namedCurve
+      }, extractable, [isPublic ? "verify" : "sign"]);
+    }
+    if (alg.startsWith("ECDH-ES")) {
+      cryptoKey = keyObject.toCryptoKey({
+        name: "ECDH",
+        namedCurve
+      }, extractable, isPublic ? [] : ["deriveBits"]);
+    }
+  }
+  if (!cryptoKey) {
+    throw new TypeError(unusableForAlg);
+  }
+  if (!cached2) {
+    cache.set(keyObject, { [alg]: cryptoKey });
+  } else {
+    cached2[alg] = cryptoKey;
+  }
+  return cryptoKey;
+};
+async function normalizeKey(key, alg) {
+  if (key instanceof Uint8Array) {
+    return key;
+  }
+  if (isCryptoKey(key)) {
+    return key;
+  }
+  if (isKeyObject(key)) {
+    if (key.type === "secret") {
+      return key.export();
+    }
+    if ("toCryptoKey" in key && typeof key.toCryptoKey === "function") {
+      try {
+        return handleKeyObject(key, alg);
+      } catch (err) {
+        if (err instanceof TypeError) {
+          throw err;
+        }
+      }
+    }
+    let jwk = key.export({ format: "jwk" });
+    return handleJWK(key, jwk, alg);
+  }
+  if (isJWK(key)) {
+    if (key.k) {
+      return decode(key.k);
+    }
+    return handleJWK(key, key, alg, true);
+  }
+  throw new Error("unreachable");
+}
+
+// ../../node_modules/.pnpm/jose@6.2.2/node_modules/jose/dist/webapi/lib/validate_crit.js
+function validateCrit(Err, recognizedDefault, recognizedOption, protectedHeader, joseHeader) {
+  if (joseHeader.crit !== void 0 && protectedHeader?.crit === void 0) {
+    throw new Err('"crit" (Critical) Header Parameter MUST be integrity protected');
+  }
+  if (!protectedHeader || protectedHeader.crit === void 0) {
+    return /* @__PURE__ */ new Set();
+  }
+  if (!Array.isArray(protectedHeader.crit) || protectedHeader.crit.length === 0 || protectedHeader.crit.some((input) => typeof input !== "string" || input.length === 0)) {
+    throw new Err('"crit" (Critical) Header Parameter MUST be an array of non-empty strings when present');
+  }
+  let recognized;
+  if (recognizedOption !== void 0) {
+    recognized = new Map([...Object.entries(recognizedOption), ...recognizedDefault.entries()]);
+  } else {
+    recognized = recognizedDefault;
+  }
+  for (const parameter of protectedHeader.crit) {
+    if (!recognized.has(parameter)) {
+      throw new JOSENotSupported(`Extension Header Parameter "${parameter}" is not recognized`);
+    }
+    if (joseHeader[parameter] === void 0) {
+      throw new Err(`Extension Header Parameter "${parameter}" is missing`);
+    }
+    if (recognized.get(parameter) && protectedHeader[parameter] === void 0) {
+      throw new Err(`Extension Header Parameter "${parameter}" MUST be integrity protected`);
+    }
+  }
+  return new Set(protectedHeader.crit);
+}
+
+// ../../node_modules/.pnpm/jose@6.2.2/node_modules/jose/dist/webapi/lib/validate_algorithms.js
+function validateAlgorithms(option, algorithms) {
+  if (algorithms !== void 0 && (!Array.isArray(algorithms) || algorithms.some((s) => typeof s !== "string"))) {
+    throw new TypeError(`"${option}" option must be an array of strings`);
+  }
+  if (!algorithms) {
+    return void 0;
+  }
+  return new Set(algorithms);
+}
+
+// ../../node_modules/.pnpm/jose@6.2.2/node_modules/jose/dist/webapi/lib/check_key_type.js
+var tag = (key) => key?.[Symbol.toStringTag];
+var jwkMatchesOp = (alg, key, usage) => {
+  if (key.use !== void 0) {
+    let expected;
+    switch (usage) {
+      case "sign":
+      case "verify":
+        expected = "sig";
+        break;
+      case "encrypt":
+      case "decrypt":
+        expected = "enc";
+        break;
+    }
+    if (key.use !== expected) {
+      throw new TypeError(`Invalid key for this operation, its "use" must be "${expected}" when present`);
+    }
+  }
+  if (key.alg !== void 0 && key.alg !== alg) {
+    throw new TypeError(`Invalid key for this operation, its "alg" must be "${alg}" when present`);
+  }
+  if (Array.isArray(key.key_ops)) {
+    let expectedKeyOp;
+    switch (true) {
+      case (usage === "sign" || usage === "verify"):
+      case alg === "dir":
+      case alg.includes("CBC-HS"):
+        expectedKeyOp = usage;
+        break;
+      case alg.startsWith("PBES2"):
+        expectedKeyOp = "deriveBits";
+        break;
+      case /^A\d{3}(?:GCM)?(?:KW)?$/.test(alg):
+        if (!alg.includes("GCM") && alg.endsWith("KW")) {
+          expectedKeyOp = usage === "encrypt" ? "wrapKey" : "unwrapKey";
+        } else {
+          expectedKeyOp = usage;
+        }
+        break;
+      case (usage === "encrypt" && alg.startsWith("RSA")):
+        expectedKeyOp = "wrapKey";
+        break;
+      case usage === "decrypt":
+        expectedKeyOp = alg.startsWith("RSA") ? "unwrapKey" : "deriveBits";
+        break;
+    }
+    if (expectedKeyOp && key.key_ops?.includes?.(expectedKeyOp) === false) {
+      throw new TypeError(`Invalid key for this operation, its "key_ops" must include "${expectedKeyOp}" when present`);
+    }
+  }
+  return true;
+};
+var symmetricTypeCheck = (alg, key, usage) => {
+  if (key instanceof Uint8Array)
+    return;
+  if (isJWK(key)) {
+    if (isSecretJWK(key) && jwkMatchesOp(alg, key, usage))
+      return;
+    throw new TypeError(`JSON Web Key for symmetric algorithms must have JWK "kty" (Key Type) equal to "oct" and the JWK "k" (Key Value) present`);
+  }
+  if (!isKeyLike(key)) {
+    throw new TypeError(withAlg(alg, key, "CryptoKey", "KeyObject", "JSON Web Key", "Uint8Array"));
+  }
+  if (key.type !== "secret") {
+    throw new TypeError(`${tag(key)} instances for symmetric algorithms must be of type "secret"`);
+  }
+};
+var asymmetricTypeCheck = (alg, key, usage) => {
+  if (isJWK(key)) {
+    switch (usage) {
+      case "decrypt":
+      case "sign":
+        if (isPrivateJWK(key) && jwkMatchesOp(alg, key, usage))
+          return;
+        throw new TypeError(`JSON Web Key for this operation must be a private JWK`);
+      case "encrypt":
+      case "verify":
+        if (isPublicJWK(key) && jwkMatchesOp(alg, key, usage))
+          return;
+        throw new TypeError(`JSON Web Key for this operation must be a public JWK`);
+    }
+  }
+  if (!isKeyLike(key)) {
+    throw new TypeError(withAlg(alg, key, "CryptoKey", "KeyObject", "JSON Web Key"));
+  }
+  if (key.type === "secret") {
+    throw new TypeError(`${tag(key)} instances for asymmetric algorithms must not be of type "secret"`);
+  }
+  if (key.type === "public") {
+    switch (usage) {
+      case "sign":
+        throw new TypeError(`${tag(key)} instances for asymmetric algorithm signing must be of type "private"`);
+      case "decrypt":
+        throw new TypeError(`${tag(key)} instances for asymmetric algorithm decryption must be of type "private"`);
+    }
+  }
+  if (key.type === "private") {
+    switch (usage) {
+      case "verify":
+        throw new TypeError(`${tag(key)} instances for asymmetric algorithm verifying must be of type "public"`);
+      case "encrypt":
+        throw new TypeError(`${tag(key)} instances for asymmetric algorithm encryption must be of type "public"`);
+    }
+  }
+};
+function checkKeyType(alg, key, usage) {
+  switch (alg.substring(0, 2)) {
+    case "A1":
+    case "A2":
+    case "di":
+    case "HS":
+    case "PB":
+      symmetricTypeCheck(alg, key, usage);
+      break;
+    default:
+      asymmetricTypeCheck(alg, key, usage);
+  }
+}
+
+// ../../node_modules/.pnpm/jose@6.2.2/node_modules/jose/dist/webapi/jws/flattened/verify.js
+async function flattenedVerify(jws, key, options) {
+  if (!isObject2(jws)) {
+    throw new JWSInvalid("Flattened JWS must be an object");
+  }
+  if (jws.protected === void 0 && jws.header === void 0) {
+    throw new JWSInvalid('Flattened JWS must have either of the "protected" or "header" members');
+  }
+  if (jws.protected !== void 0 && typeof jws.protected !== "string") {
+    throw new JWSInvalid("JWS Protected Header incorrect type");
+  }
+  if (jws.payload === void 0) {
+    throw new JWSInvalid("JWS Payload missing");
+  }
+  if (typeof jws.signature !== "string") {
+    throw new JWSInvalid("JWS Signature missing or incorrect type");
+  }
+  if (jws.header !== void 0 && !isObject2(jws.header)) {
+    throw new JWSInvalid("JWS Unprotected Header incorrect type");
+  }
+  let parsedProt = {};
+  if (jws.protected) {
+    try {
+      const protectedHeader = decode(jws.protected);
+      parsedProt = JSON.parse(decoder.decode(protectedHeader));
+    } catch {
+      throw new JWSInvalid("JWS Protected Header is invalid");
+    }
+  }
+  if (!isDisjoint(parsedProt, jws.header)) {
+    throw new JWSInvalid("JWS Protected and JWS Unprotected Header Parameter names must be disjoint");
+  }
+  const joseHeader = {
+    ...parsedProt,
+    ...jws.header
+  };
+  const extensions = validateCrit(JWSInvalid, /* @__PURE__ */ new Map([["b64", true]]), options?.crit, parsedProt, joseHeader);
+  let b64 = true;
+  if (extensions.has("b64")) {
+    b64 = parsedProt.b64;
+    if (typeof b64 !== "boolean") {
+      throw new JWSInvalid('The "b64" (base64url-encode payload) Header Parameter must be a boolean');
+    }
+  }
+  const { alg } = joseHeader;
+  if (typeof alg !== "string" || !alg) {
+    throw new JWSInvalid('JWS "alg" (Algorithm) Header Parameter missing or invalid');
+  }
+  const algorithms = options && validateAlgorithms("algorithms", options.algorithms);
+  if (algorithms && !algorithms.has(alg)) {
+    throw new JOSEAlgNotAllowed('"alg" (Algorithm) Header Parameter value not allowed');
+  }
+  if (b64) {
+    if (typeof jws.payload !== "string") {
+      throw new JWSInvalid("JWS Payload must be a string");
+    }
+  } else if (typeof jws.payload !== "string" && !(jws.payload instanceof Uint8Array)) {
+    throw new JWSInvalid("JWS Payload must be a string or an Uint8Array instance");
+  }
+  let resolvedKey = false;
+  if (typeof key === "function") {
+    key = await key(parsedProt, jws);
+    resolvedKey = true;
+  }
+  checkKeyType(alg, key, "verify");
+  const data = concat(jws.protected !== void 0 ? encode(jws.protected) : new Uint8Array(), encode("."), typeof jws.payload === "string" ? b64 ? encode(jws.payload) : encoder.encode(jws.payload) : jws.payload);
+  const signature = decodeBase64url(jws.signature, "signature", JWSInvalid);
+  const k = await normalizeKey(key, alg);
+  const verified = await verify(alg, k, signature, data);
+  if (!verified) {
+    throw new JWSSignatureVerificationFailed();
+  }
+  let payload;
+  if (b64) {
+    payload = decodeBase64url(jws.payload, "payload", JWSInvalid);
+  } else if (typeof jws.payload === "string") {
+    payload = encoder.encode(jws.payload);
+  } else {
+    payload = jws.payload;
+  }
+  const result = { payload };
+  if (jws.protected !== void 0) {
+    result.protectedHeader = parsedProt;
+  }
+  if (jws.header !== void 0) {
+    result.unprotectedHeader = jws.header;
+  }
+  if (resolvedKey) {
+    return { ...result, key: k };
+  }
+  return result;
+}
+
+// ../../node_modules/.pnpm/jose@6.2.2/node_modules/jose/dist/webapi/jws/compact/verify.js
+async function compactVerify(jws, key, options) {
+  if (jws instanceof Uint8Array) {
+    jws = decoder.decode(jws);
+  }
+  if (typeof jws !== "string") {
+    throw new JWSInvalid("Compact JWS must be a string or Uint8Array");
+  }
+  const { 0: protectedHeader, 1: payload, 2: signature, length } = jws.split(".");
+  if (length !== 3) {
+    throw new JWSInvalid("Invalid Compact JWS");
+  }
+  const verified = await flattenedVerify({ payload, protected: protectedHeader, signature }, key, options);
+  const result = { payload: verified.payload, protectedHeader: verified.protectedHeader };
+  if (typeof key === "function") {
+    return { ...result, key: verified.key };
+  }
+  return result;
+}
+
+// ../../node_modules/.pnpm/jose@6.2.2/node_modules/jose/dist/webapi/lib/jwt_claims_set.js
+var epoch = (date6) => Math.floor(date6.getTime() / 1e3);
+var minute = 60;
+var hour = minute * 60;
+var day = hour * 24;
+var week = day * 7;
+var year = day * 365.25;
+var REGEX = /^(\+|\-)? ?(\d+|\d+\.\d+) ?(seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|w|years?|yrs?|y)(?: (ago|from now))?$/i;
+function secs(str) {
+  const matched = REGEX.exec(str);
+  if (!matched || matched[4] && matched[1]) {
+    throw new TypeError("Invalid time period format");
+  }
+  const value = parseFloat(matched[2]);
+  const unit = matched[3].toLowerCase();
+  let numericDate;
+  switch (unit) {
+    case "sec":
+    case "secs":
+    case "second":
+    case "seconds":
+    case "s":
+      numericDate = Math.round(value);
+      break;
+    case "minute":
+    case "minutes":
+    case "min":
+    case "mins":
+    case "m":
+      numericDate = Math.round(value * minute);
+      break;
+    case "hour":
+    case "hours":
+    case "hr":
+    case "hrs":
+    case "h":
+      numericDate = Math.round(value * hour);
+      break;
+    case "day":
+    case "days":
+    case "d":
+      numericDate = Math.round(value * day);
+      break;
+    case "week":
+    case "weeks":
+    case "w":
+      numericDate = Math.round(value * week);
+      break;
+    default:
+      numericDate = Math.round(value * year);
+      break;
+  }
+  if (matched[1] === "-" || matched[4] === "ago") {
+    return -numericDate;
+  }
+  return numericDate;
+}
+var normalizeTyp = (value) => {
+  if (value.includes("/")) {
+    return value.toLowerCase();
+  }
+  return `application/${value.toLowerCase()}`;
+};
+var checkAudiencePresence = (audPayload, audOption) => {
+  if (typeof audPayload === "string") {
+    return audOption.includes(audPayload);
+  }
+  if (Array.isArray(audPayload)) {
+    return audOption.some(Set.prototype.has.bind(new Set(audPayload)));
+  }
+  return false;
+};
+function validateClaimsSet(protectedHeader, encodedPayload, options = {}) {
+  let payload;
+  try {
+    payload = JSON.parse(decoder.decode(encodedPayload));
+  } catch {
+  }
+  if (!isObject2(payload)) {
+    throw new JWTInvalid("JWT Claims Set must be a top-level JSON object");
+  }
+  const { typ } = options;
+  if (typ && (typeof protectedHeader.typ !== "string" || normalizeTyp(protectedHeader.typ) !== normalizeTyp(typ))) {
+    throw new JWTClaimValidationFailed('unexpected "typ" JWT header value', payload, "typ", "check_failed");
+  }
+  const { requiredClaims = [], issuer, subject, audience, maxTokenAge } = options;
+  const presenceCheck = [...requiredClaims];
+  if (maxTokenAge !== void 0)
+    presenceCheck.push("iat");
+  if (audience !== void 0)
+    presenceCheck.push("aud");
+  if (subject !== void 0)
+    presenceCheck.push("sub");
+  if (issuer !== void 0)
+    presenceCheck.push("iss");
+  for (const claim of new Set(presenceCheck.reverse())) {
+    if (!(claim in payload)) {
+      throw new JWTClaimValidationFailed(`missing required "${claim}" claim`, payload, claim, "missing");
+    }
+  }
+  if (issuer && !(Array.isArray(issuer) ? issuer : [issuer]).includes(payload.iss)) {
+    throw new JWTClaimValidationFailed('unexpected "iss" claim value', payload, "iss", "check_failed");
+  }
+  if (subject && payload.sub !== subject) {
+    throw new JWTClaimValidationFailed('unexpected "sub" claim value', payload, "sub", "check_failed");
+  }
+  if (audience && !checkAudiencePresence(payload.aud, typeof audience === "string" ? [audience] : audience)) {
+    throw new JWTClaimValidationFailed('unexpected "aud" claim value', payload, "aud", "check_failed");
+  }
+  let tolerance;
+  switch (typeof options.clockTolerance) {
+    case "string":
+      tolerance = secs(options.clockTolerance);
+      break;
+    case "number":
+      tolerance = options.clockTolerance;
+      break;
+    case "undefined":
+      tolerance = 0;
+      break;
+    default:
+      throw new TypeError("Invalid clockTolerance option type");
+  }
+  const { currentDate } = options;
+  const now = epoch(currentDate || /* @__PURE__ */ new Date());
+  if ((payload.iat !== void 0 || maxTokenAge) && typeof payload.iat !== "number") {
+    throw new JWTClaimValidationFailed('"iat" claim must be a number', payload, "iat", "invalid");
+  }
+  if (payload.nbf !== void 0) {
+    if (typeof payload.nbf !== "number") {
+      throw new JWTClaimValidationFailed('"nbf" claim must be a number', payload, "nbf", "invalid");
+    }
+    if (payload.nbf > now + tolerance) {
+      throw new JWTClaimValidationFailed('"nbf" claim timestamp check failed', payload, "nbf", "check_failed");
+    }
+  }
+  if (payload.exp !== void 0) {
+    if (typeof payload.exp !== "number") {
+      throw new JWTClaimValidationFailed('"exp" claim must be a number', payload, "exp", "invalid");
+    }
+    if (payload.exp <= now - tolerance) {
+      throw new JWTExpired('"exp" claim timestamp check failed', payload, "exp", "check_failed");
+    }
+  }
+  if (maxTokenAge) {
+    const age = now - payload.iat;
+    const max = typeof maxTokenAge === "number" ? maxTokenAge : secs(maxTokenAge);
+    if (age - tolerance > max) {
+      throw new JWTExpired('"iat" claim timestamp check failed (too far in the past)', payload, "iat", "check_failed");
+    }
+    if (age < 0 - tolerance) {
+      throw new JWTClaimValidationFailed('"iat" claim timestamp check failed (it should be in the past)', payload, "iat", "check_failed");
+    }
+  }
+  return payload;
+}
+
+// ../../node_modules/.pnpm/jose@6.2.2/node_modules/jose/dist/webapi/jwt/verify.js
+async function jwtVerify(jwt2, key, options) {
+  const verified = await compactVerify(jwt2, key, options);
+  if (verified.protectedHeader.crit?.includes("b64") && verified.protectedHeader.b64 === false) {
+    throw new JWTInvalid("JWTs MUST NOT use unencoded payload");
+  }
+  const payload = validateClaimsSet(verified.protectedHeader, verified.payload, options);
+  const result = { payload, protectedHeader: verified.protectedHeader };
+  if (typeof key === "function") {
+    return { ...result, key: verified.key };
+  }
+  return result;
+}
+
+// src/middlewares/requireAuth.ts
+var JWT_SECRET = new TextEncoder().encode(
+  process.env.JWT_SECRET ?? "portal-municipal-secret-key-change-in-production"
+);
+async function requireAuth(req, res, next) {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader?.startsWith("Bearer ")) {
+      return res.status(401).json({ error: "Token de autentica\xE7\xE3o ausente." });
+    }
+    const token = authHeader.slice(7);
+    const { payload } = await jwtVerify(token, JWT_SECRET);
+    req.user = payload;
+    return next();
+  } catch {
+    return res.status(401).json({ error: "Token inv\xE1lido ou expirado." });
+  }
+}
+
+// src/routes/servidor/contracheques.ts
 var router41 = (0, import_express41.Router)();
-router41.use(health_default);
-router41.use(tenant_default);
-router41.use(noticias_default);
-router41.use(servicos_default);
-router41.use(secretarias_default);
-router41.use(transparencia_default);
-router41.use(licitacoes_default);
-router41.use(legislacao_default);
-router41.use(agenda_default);
-router41.use(galeria_default);
-router41.use(concursos_default);
-router41.use(busca_default);
-router41.use(sic_default);
-router41.use(noticias_default2);
-router41.use(banners_default);
-router41.use(paginas_default);
-router41.use(documentos_default);
-router41.use(menus_default);
-router41.use(site_config_default);
-router41.use(licitacoes_default2);
-router41.use(galeria_default2);
-router41.use(agenda_default2);
-router41.use(legislacao_default2);
-router41.use(config_default);
-router41.use(banners_default2);
-router41.use(news_default);
-router41.use(agenda_default3);
-router41.use(gallery_default);
-router41.use(legislation_default);
-router41.use(bids_default);
-router41.use(transparency_default);
-router41.use(secretarias_pub_default);
-router41.use(search_default);
-router41.use(pages_default);
-router41.use(news_default2);
-router41.use(banners_default3);
-router41.use(transparency_default2);
-router41.use(bids_default2);
-router41.use(agenda_default4);
-router41.use(config_default2);
-var routes_default = router41;
+router41.get("/servidor/contracheques", requireAuth, async (req, res) => {
+  try {
+    const servidorId = req.user.id;
+    const ano = req.query["ano"] ? parseInt(req.query["ano"]) : void 0;
+    const conditions = [eq(contrachequeTable.servidorId, servidorId)];
+    if (ano) conditions.push(eq(contrachequeTable.ano, ano));
+    const contracheques = await db.select().from(contrachequeTable).where(and(...conditions)).orderBy(desc(contrachequeTable.ano), desc(contrachequeTable.mes)).limit(24);
+    res.json({ data: contracheques });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Erro interno" });
+  }
+});
+router41.get("/servidor/contracheques/:mes/:ano", requireAuth, async (req, res) => {
+  try {
+    const servidorId = req.user.id;
+    const mes = parseInt(req.params["mes"]);
+    const ano = parseInt(req.params["ano"]);
+    const [contracheque] = await db.select().from(contrachequeTable).where(
+      and(
+        eq(contrachequeTable.servidorId, servidorId),
+        eq(contrachequeTable.mes, mes),
+        eq(contrachequeTable.ano, ano)
+      )
+    ).limit(1);
+    if (!contracheque) return res.status(404).json({ error: "Contracheque n\xE3o encontrado" });
+    const linhas = await db.select().from(contrachequeLinhasTable).where(eq(contrachequeLinhasTable.contrachequeId, contracheque.id)).orderBy(contrachequeLinhasTable.sortOrder);
+    const [servidor] = await db.select().from(servidoresCadastroTable).where(eq(servidoresCadastroTable.id, servidorId)).limit(1);
+    res.json({
+      contracheque,
+      linhas,
+      servidor: servidor ? {
+        nome: servidor.nome,
+        cpf: servidor.cpf,
+        matricula: servidor.matricula,
+        cargo: servidor.cargo,
+        nivel: servidor.nivel,
+        secretaria: servidor.secretaria,
+        localTrabalho: servidor.localTrabalho,
+        dataIngresso: servidor.dataIngresso,
+        vinculo: servidor.vinculo
+      } : null
+    });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Erro interno" });
+  }
+});
+router41.get("/servidor/contracheques/:mes/:ano/pdf", requireAuth, async (req, res) => {
+  try {
+    const servidorId = req.user.id;
+    const mes = parseInt(req.params["mes"]);
+    const ano = parseInt(req.params["ano"]);
+    const [contracheque] = await db.select().from(contrachequeTable).where(
+      and(
+        eq(contrachequeTable.servidorId, servidorId),
+        eq(contrachequeTable.mes, mes),
+        eq(contrachequeTable.ano, ano)
+      )
+    ).limit(1);
+    if (!contracheque) return res.status(404).json({ error: "Contracheque n\xE3o encontrado" });
+    res.json({
+      message: "PDF mockado \u2014 integra\xE7\xE3o com gerador de PDF ser\xE1 implementada no frontend",
+      contrachequeId: contracheque.id,
+      competencia: contracheque.competencia,
+      downloadUrl: `/api/servidor/contracheques/${mes}/${ano}/pdf/download`
+    });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Erro interno" });
+  }
+});
+router41.get("/servidor/rendimentos/:ano", requireAuth, async (req, res) => {
+  try {
+    const servidorId = req.user.id;
+    const ano = parseInt(req.params["ano"]);
+    const contracheques = await db.select().from(contrachequeTable).where(
+      and(
+        eq(contrachequeTable.servidorId, servidorId),
+        eq(contrachequeTable.ano, ano)
+      )
+    ).orderBy(contrachequeTable.mes);
+    const [servidor] = await db.select().from(servidoresCadastroTable).where(eq(servidoresCadastroTable.id, servidorId)).limit(1);
+    const totalBruto = contracheques.reduce((s, c) => s + c.totalBruto, 0);
+    const totalDescontos = contracheques.reduce((s, c) => s + c.totalDescontos, 0);
+    const totalLiquido = contracheques.reduce((s, c) => s + c.totalLiquido, 0);
+    res.json({
+      ano,
+      servidor: servidor ? { nome: servidor.nome, cpf: servidor.cpf, matricula: servidor.matricula } : null,
+      totalBruto,
+      totalDescontos,
+      totalLiquido,
+      meses: contracheques.map((c) => ({
+        mes: c.mes,
+        competencia: c.competencia,
+        bruto: c.totalBruto,
+        descontos: c.totalDescontos,
+        liquido: c.totalLiquido
+      }))
+    });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Erro interno" });
+  }
+});
+var contracheques_default = router41;
+
+// src/routes/servidor/ferias.ts
+var import_express42 = __toESM(require_express2(), 1);
+init_schema2();
+init_drizzle_orm();
+import { randomUUID as randomUUID18 } from "crypto";
+var router42 = (0, import_express42.Router)();
+router42.get("/servidor/ferias/saldo", requireAuth, async (req, res) => {
+  try {
+    const servidorId = req.user.id;
+    const periodos = await db.select().from(periodosAquisitivosTable).where(eq(periodosAquisitivosTable.servidorId, servidorId)).orderBy(desc(periodosAquisitivosTable.dataInicio));
+    const periodoAtual = periodos.find((p) => p.status === "disponivel") ?? periodos[0] ?? null;
+    const saldoTotal = periodos.filter((p) => p.status === "disponivel").reduce((s, p) => s + p.diasSaldo, 0);
+    const hoje = /* @__PURE__ */ new Date();
+    let progressoAquisitivo = 0;
+    let diasTrabalhados = 0;
+    if (periodoAtual) {
+      const inicio = new Date(periodoAtual.dataInicio);
+      const fim = new Date(periodoAtual.dataFim);
+      const totalDias = Math.ceil((fim.getTime() - inicio.getTime()) / 864e5);
+      diasTrabalhados = Math.max(0, Math.min(totalDias, Math.ceil((hoje.getTime() - inicio.getTime()) / 864e5)));
+      progressoAquisitivo = totalDias > 0 ? Math.round(diasTrabalhados / totalDias * 100) : 0;
+    }
+    const prazoVencido = periodoAtual?.prazoLimite ? new Date(periodoAtual.prazoLimite) < hoje : false;
+    res.json({
+      saldoTotal,
+      periodoAtual,
+      progressoAquisitivo,
+      diasTrabalhados,
+      prazoVencido,
+      periodos
+    });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Erro interno" });
+  }
+});
+router42.get("/servidor/ferias/historico", requireAuth, async (req, res) => {
+  try {
+    const servidorId = req.user.id;
+    const solicitacoes = await db.select().from(solicitacoesFeriasTable).where(eq(solicitacoesFeriasTable.servidorId, servidorId)).orderBy(desc(solicitacoesFeriasTable.createdAt));
+    res.json({ data: solicitacoes });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Erro interno" });
+  }
+});
+router42.post("/servidor/ferias/solicitar", requireAuth, async (req, res) => {
+  try {
+    const servidorId = req.user.id;
+    const tenantId = req.user.tenantId;
+    const b = req.body;
+    if (!b.periodoAquisitivoId) return res.status(400).json({ error: "periodoAquisitivoId \xE9 obrigat\xF3rio" });
+    if (!b.dataInicio) return res.status(400).json({ error: "dataInicio \xE9 obrigat\xF3rio" });
+    if (!b.qtdDias || b.qtdDias < 5) return res.status(400).json({ error: "qtdDias m\xEDnimo \xE9 5" });
+    const [periodo] = await db.select().from(periodosAquisitivosTable).where(
+      and(
+        eq(periodosAquisitivosTable.id, b.periodoAquisitivoId),
+        eq(periodosAquisitivosTable.servidorId, servidorId)
+      )
+    ).limit(1);
+    if (!periodo) return res.status(404).json({ error: "Per\xEDodo aquisitivo n\xE3o encontrado" });
+    if (periodo.diasSaldo < b.qtdDias) {
+      return res.status(400).json({ error: "Saldo insuficiente de dias de f\xE9rias" });
+    }
+    const inicio = new Date(b.dataInicio);
+    const fim = new Date(inicio);
+    fim.setDate(fim.getDate() + b.qtdDias - 1);
+    const retorno = new Date(fim);
+    retorno.setDate(retorno.getDate() + 1);
+    const protocolo = `FER-${(/* @__PURE__ */ new Date()).getFullYear()}-${String(Date.now()).slice(-6)}`;
+    const id = randomUUID18();
+    const timeline = [
+      {
+        status: "protocolado",
+        descricao: "Solicita\xE7\xE3o registrada pelo servidor",
+        data: (/* @__PURE__ */ new Date()).toISOString(),
+        responsavel: req.user.nome
+      }
+    ];
+    const nova = {
+      id,
+      tenantId,
+      servidorId,
+      periodoAquisitivoId: b.periodoAquisitivoId,
+      protocolo,
+      dataInicio: b.dataInicio,
+      dataFim: fim.toISOString().split("T")[0],
+      dataRetorno: retorno.toISOString().split("T")[0],
+      qtdDias: b.qtdDias,
+      parcelamento: b.parcelamento ?? 1,
+      adiantamento13: b.adiantamento13 ?? false,
+      abonoPecuniario: b.abonoPecuniario ?? false,
+      diasAbono: b.diasAbono ?? 0,
+      status: "aguardando_chefia",
+      timeline
+    };
+    await db.insert(solicitacoesFeriasTable).values(nova);
+    res.status(201).json({ protocolo, id, status: "aguardando_chefia" });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Erro interno" });
+  }
+});
+router42.get("/servidor/ferias/:id", requireAuth, async (req, res) => {
+  try {
+    const servidorId = req.user.id;
+    const [sol] = await db.select().from(solicitacoesFeriasTable).where(
+      and(
+        eq(solicitacoesFeriasTable.id, req.params["id"]),
+        eq(solicitacoesFeriasTable.servidorId, servidorId)
+      )
+    ).limit(1);
+    if (!sol) return res.status(404).json({ error: "Solicita\xE7\xE3o n\xE3o encontrada" });
+    const [periodo] = await db.select().from(periodosAquisitivosTable).where(eq(periodosAquisitivosTable.id, sol.periodoAquisitivoId)).limit(1);
+    res.json({ solicitacao: sol, periodo });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Erro interno" });
+  }
+});
+var ferias_default = router42;
+
+// src/routes/servidor/requerimentos.ts
+var import_express43 = __toESM(require_express2(), 1);
+init_schema2();
+init_drizzle_orm();
+import { randomUUID as randomUUID19 } from "crypto";
+var router43 = (0, import_express43.Router)();
+var TIPOS_REQUERIMENTO = [
+  "licenca-interesses-particulares",
+  "licenca-acompanhar-conjuge",
+  "licenca-maternidade",
+  "licenca-paternidade",
+  "licenca-doenca-familiar",
+  "licenca-saude",
+  "averbacao-tempo-servico",
+  "certidao-tempo-servico",
+  "revisao-enquadramento",
+  "progressao-funcional",
+  "remocao-lotacao",
+  "insalubridade-periculosidade",
+  "afastamento-capacitacao",
+  "outros"
+];
+router43.get("/servidor/requerimentos", requireAuth, async (req, res) => {
+  try {
+    const servidorId = req.user.id;
+    const conditions = [eq(requerimentosTable.servidorId, servidorId)];
+    if (req.query["tipo"]) conditions.push(eq(requerimentosTable.tipo, req.query["tipo"]));
+    if (req.query["status"]) conditions.push(eq(requerimentosTable.status, req.query["status"]));
+    const reqs = await db.select().from(requerimentosTable).where(and(...conditions)).orderBy(desc(requerimentosTable.createdAt)).limit(100);
+    res.json({ data: reqs, tipos: TIPOS_REQUERIMENTO });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Erro interno" });
+  }
+});
+router43.post("/servidor/requerimentos", requireAuth, async (req, res) => {
+  try {
+    const servidorId = req.user.id;
+    const tenantId = req.user.tenantId;
+    const b = req.body;
+    if (!b.tipo) return res.status(400).json({ error: "tipo \xE9 obrigat\xF3rio" });
+    if (!TIPOS_REQUERIMENTO.includes(b.tipo)) return res.status(400).json({ error: "Tipo de requerimento inv\xE1lido" });
+    if (!b.justificativa || b.justificativa.length < 100) {
+      return res.status(400).json({ error: "justificativa deve ter no m\xEDnimo 100 caracteres" });
+    }
+    const protocolo = `REQ-${(/* @__PURE__ */ new Date()).getFullYear()}-${String(Date.now()).slice(-6)}`;
+    const id = randomUUID19();
+    const timeline = [
+      {
+        status: "protocolado",
+        descricao: "Requerimento protocolado pelo servidor",
+        data: (/* @__PURE__ */ new Date()).toISOString(),
+        responsavel: req.user.nome
+      }
+    ];
+    const novo = {
+      id,
+      tenantId,
+      servidorId,
+      protocolo,
+      tipo: b.tipo,
+      assunto: b.assunto || b.tipo,
+      justificativa: b.justificativa,
+      camposEspecificos: b.camposEspecificos ?? {},
+      documentos: b.documentos ?? [],
+      status: "protocolado",
+      timeline
+    };
+    await db.insert(requerimentosTable).values(novo);
+    res.status(201).json({ protocolo, id, status: "protocolado" });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Erro interno" });
+  }
+});
+router43.get("/servidor/requerimentos/:id", requireAuth, async (req, res) => {
+  try {
+    const servidorId = req.user.id;
+    const [req_] = await db.select().from(requerimentosTable).where(
+      and(
+        eq(requerimentosTable.id, req.params["id"]),
+        eq(requerimentosTable.servidorId, servidorId)
+      )
+    ).limit(1);
+    if (!req_) return res.status(404).json({ error: "Requerimento n\xE3o encontrado" });
+    res.json(req_);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Erro interno" });
+  }
+});
+router43.post("/servidor/requerimentos/:id/recurso", requireAuth, async (req, res) => {
+  try {
+    const servidorId = req.user.id;
+    const [req_] = await db.select().from(requerimentosTable).where(
+      and(
+        eq(requerimentosTable.id, req.params["id"]),
+        eq(requerimentosTable.servidorId, servidorId)
+      )
+    ).limit(1);
+    if (!req_) return res.status(404).json({ error: "Requerimento n\xE3o encontrado" });
+    if (req_.status !== "indeferido") {
+      return res.status(400).json({ error: "Recurso s\xF3 pode ser apresentado para requerimentos indeferidos" });
+    }
+    if (req_.recursoPresentado) {
+      return res.status(400).json({ error: "Recurso j\xE1 foi apresentado para este requerimento" });
+    }
+    if (req_.prazoRecurso && new Date(req_.prazoRecurso) < /* @__PURE__ */ new Date()) {
+      return res.status(400).json({ error: "Prazo para recurso encerrado" });
+    }
+    const novaTimeline = Array.isArray(req_.timeline) ? [...req_.timeline] : [];
+    novaTimeline.push({
+      status: "recurso_apresentado",
+      descricao: "Recurso apresentado pelo servidor",
+      data: (/* @__PURE__ */ new Date()).toISOString(),
+      responsavel: req.user.nome
+    });
+    await db.update(requerimentosTable).set({
+      recursoPresentado: true,
+      status: "em_analise",
+      timeline: novaTimeline,
+      updatedAt: /* @__PURE__ */ new Date()
+    }).where(eq(requerimentosTable.id, req_.id));
+    res.json({ message: "Recurso apresentado com sucesso", status: "em_analise" });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Erro interno" });
+  }
+});
+var requerimentos_default = router43;
+
+// src/routes/servidor/perfil.ts
+var import_express44 = __toESM(require_express2(), 1);
+init_schema2();
+init_drizzle_orm();
+var router44 = (0, import_express44.Router)();
+router44.get("/servidor/perfil", requireAuth, async (req, res) => {
+  try {
+    const servidorId = req.user.id;
+    const [servidor] = await db.select().from(servidoresCadastroTable).where(eq(servidoresCadastroTable.id, servidorId)).limit(1);
+    if (!servidor) return res.status(404).json({ error: "Servidor n\xE3o encontrado" });
+    const perfil = {
+      ...servidor,
+      cpf: servidor.cpf.replace(/(\d{3})\d{3}(\d{3})(\d{2})/, "$1.***.$2-$3"),
+      conta: servidor.conta ? `****${servidor.conta.slice(-4)}` : null,
+      agencia: servidor.agencia,
+      banco: servidor.banco
+    };
+    res.json(perfil);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Erro interno" });
+  }
+});
+router44.put("/servidor/perfil", requireAuth, async (req, res) => {
+  try {
+    const servidorId = req.user.id;
+    const b = req.body;
+    const camposPermitidos = {};
+    if (b.emailPessoal !== void 0) camposPermitidos.emailPessoal = b.emailPessoal;
+    if (b.telefone !== void 0) camposPermitidos.telefone = b.telefone;
+    if (b.endereco !== void 0) camposPermitidos.endereco = b.endereco;
+    if (b.numero !== void 0) camposPermitidos.numero = b.numero;
+    if (b.complemento !== void 0) camposPermitidos.complemento = b.complemento;
+    if (b.bairro !== void 0) camposPermitidos.bairro = b.bairro;
+    if (b.cidade !== void 0) camposPermitidos.cidade = b.cidade;
+    if (b.estado !== void 0) camposPermitidos.estado = b.estado;
+    if (b.cep !== void 0) camposPermitidos.cep = b.cep;
+    if (Object.keys(camposPermitidos).length === 0) {
+      return res.status(400).json({ error: "Nenhum campo edit\xE1vel fornecido" });
+    }
+    camposPermitidos.updatedAt = /* @__PURE__ */ new Date();
+    await db.update(servidoresCadastroTable).set(camposPermitidos).where(eq(servidoresCadastroTable.id, servidorId));
+    const [updated] = await db.select().from(servidoresCadastroTable).where(eq(servidoresCadastroTable.id, servidorId)).limit(1);
+    res.json(updated);
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Erro interno" });
+  }
+});
+router44.get("/servidor/historico-funcional", requireAuth, async (req, res) => {
+  try {
+    const servidorId = req.user.id;
+    const historico = await db.select().from(historicoFuncionalTable).where(eq(historicoFuncionalTable.servidorId, servidorId)).orderBy(asc(historicoFuncionalTable.data));
+    res.json({ data: historico });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Erro interno" });
+  }
+});
+router44.get("/servidor/tempo-servico", requireAuth, async (req, res) => {
+  try {
+    const servidorId = req.user.id;
+    const [servidor] = await db.select().from(servidoresCadastroTable).where(eq(servidoresCadastroTable.id, servidorId)).limit(1);
+    if (!servidor) return res.status(404).json({ error: "Servidor n\xE3o encontrado" });
+    const hoje = /* @__PURE__ */ new Date();
+    const ingresso = new Date(servidor.dataIngresso);
+    const diffMs = hoje.getTime() - ingresso.getTime();
+    const totalDias = Math.floor(diffMs / 864e5);
+    const anos = Math.floor(totalDias / 365);
+    const meses = Math.floor(totalDias % 365 / 30);
+    const dias = totalDias % 30;
+    const ANOS_PARA_APOSENTADORIA = 35;
+    const anosRestantes = Math.max(0, ANOS_PARA_APOSENTADORIA - anos);
+    const dataProjecao = new Date(ingresso);
+    dataProjecao.setFullYear(dataProjecao.getFullYear() + ANOS_PARA_APOSENTADORIA);
+    res.json({
+      dataIngresso: servidor.dataIngresso,
+      totalDias,
+      anos,
+      meses,
+      dias,
+      descricao: `${anos} anos, ${meses} meses e ${dias} dias`,
+      projecaoAposentadoria: {
+        dataEstimada: dataProjecao.toISOString().split("T")[0],
+        anosRestantes,
+        regra: `${ANOS_PARA_APOSENTADORIA} anos de contribui\xE7\xE3o (estimativa)`
+      }
+    });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Erro interno" });
+  }
+});
+var perfil_default = router44;
+
+// src/routes/servidor/index.ts
+var router45 = (0, import_express45.Router)();
+router45.use(contracheques_default);
+router45.use(ferias_default);
+router45.use(requerimentos_default);
+router45.use(perfil_default);
+var servidor_default = router45;
+
+// src/routes/rh/index.ts
+var import_express47 = __toESM(require_express2(), 1);
+
+// src/routes/rh/dashboard.ts
+var import_express46 = __toESM(require_express2(), 1);
+init_schema2();
+init_drizzle_orm();
+var router46 = (0, import_express46.Router)();
+router46.get("/rh/dashboard", requireAuth, async (req, res) => {
+  try {
+    const tenantId = req.user.tenantId;
+    const hoje = (/* @__PURE__ */ new Date()).toISOString().split("T")[0];
+    const [servidoresAtivos, feriasVencidas, reqPendentes] = await Promise.all([
+      // Servidores ativos agrupados por secretaria
+      db.select({
+        secretaria: servidoresCadastroTable.secretaria,
+        total: sql`count(*)::int`
+      }).from(servidoresCadastroTable).where(
+        and(
+          eq(servidoresCadastroTable.tenantId, tenantId),
+          eq(servidoresCadastroTable.status, "ativo")
+        )
+      ).groupBy(servidoresCadastroTable.secretaria),
+      // Férias vencidas (prazo_limite < hoje e ainda disponível)
+      db.select({
+        periodo: periodosAquisitivosTable,
+        servidor: {
+          id: servidoresCadastroTable.id,
+          nome: servidoresCadastroTable.nome,
+          matricula: servidoresCadastroTable.matricula,
+          secretaria: servidoresCadastroTable.secretaria
+        }
+      }).from(periodosAquisitivosTable).innerJoin(
+        servidoresCadastroTable,
+        eq(periodosAquisitivosTable.servidorId, servidoresCadastroTable.id)
+      ).where(
+        and(
+          eq(servidoresCadastroTable.tenantId, tenantId),
+          eq(periodosAquisitivosTable.status, "disponivel"),
+          lt(periodosAquisitivosTable.prazoLimite, hoje)
+        )
+      ),
+      // Requerimentos pendentes
+      db.select().from(requerimentosTable).where(
+        and(
+          eq(requerimentosTable.tenantId, tenantId),
+          eq(requerimentosTable.status, "em_analise")
+        )
+      ).limit(50)
+    ]);
+    const mesAtual = (/* @__PURE__ */ new Date()).getMonth() + 1;
+    const aniversariantes = await db.select({
+      id: servidoresCadastroTable.id,
+      nome: servidoresCadastroTable.nome,
+      dataNascimento: servidoresCadastroTable.dataNascimento,
+      secretaria: servidoresCadastroTable.secretaria,
+      cargo: servidoresCadastroTable.cargo
+    }).from(servidoresCadastroTable).where(
+      and(
+        eq(servidoresCadastroTable.tenantId, tenantId),
+        eq(servidoresCadastroTable.status, "ativo"),
+        sql`EXTRACT(MONTH FROM data_nascimento) = ${mesAtual}`
+      )
+    );
+    const feriasPendentes = await db.select().from(solicitacoesFeriasTable).where(
+      and(
+        eq(solicitacoesFeriasTable.tenantId, tenantId),
+        eq(solicitacoesFeriasTable.status, "aguardando_chefia")
+      )
+    ).limit(20);
+    const mesHoje = (/* @__PURE__ */ new Date()).getMonth() + 1;
+    const anoHoje = (/* @__PURE__ */ new Date()).getFullYear();
+    const folhaDoMes = await db.select({
+      totalBruto: sql`sum(total_bruto)::numeric`,
+      totalLiquido: sql`sum(total_liquido)::numeric`,
+      totalDescontos: sql`sum(total_descontos)::numeric`,
+      qtdServidores: sql`count(*)::int`
+    }).from(contrachequeTable).innerJoin(
+      servidoresCadastroTable,
+      eq(contrachequeTable.servidorId, servidoresCadastroTable.id)
+    ).where(
+      and(
+        eq(servidoresCadastroTable.tenantId, tenantId),
+        eq(contrachequeTable.mes, mesHoje),
+        eq(contrachequeTable.ano, anoHoje)
+      )
+    );
+    res.json({
+      servidoresPorSecretaria: servidoresAtivos,
+      feriasVencidas,
+      requerimentosPendentes: reqPendentes,
+      aniversariantes,
+      feriasPendentesAprovacao: feriasPendentes,
+      folhaDoMes: folhaDoMes[0] ?? { totalBruto: 0, totalLiquido: 0, totalDescontos: 0, qtdServidores: 0 }
+    });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Erro interno" });
+  }
+});
+router46.get("/rh/ferias/pendentes", requireAuth, async (req, res) => {
+  try {
+    const tenantId = req.user.tenantId;
+    const pendentes = await db.select({
+      solicitacao: solicitacoesFeriasTable,
+      servidor: {
+        id: servidoresCadastroTable.id,
+        nome: servidoresCadastroTable.nome,
+        matricula: servidoresCadastroTable.matricula,
+        cargo: servidoresCadastroTable.cargo,
+        secretaria: servidoresCadastroTable.secretaria
+      }
+    }).from(solicitacoesFeriasTable).innerJoin(
+      servidoresCadastroTable,
+      eq(solicitacoesFeriasTable.servidorId, servidoresCadastroTable.id)
+    ).where(
+      and(
+        eq(solicitacoesFeriasTable.tenantId, tenantId),
+        eq(solicitacoesFeriasTable.status, "aguardando_chefia")
+      )
+    );
+    res.json({ data: pendentes });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Erro interno" });
+  }
+});
+router46.patch("/rh/ferias/:id/aprovar", requireAuth, async (req, res) => {
+  try {
+    const tenantId = req.user.tenantId;
+    const [sol] = await db.select().from(solicitacoesFeriasTable).where(
+      and(
+        eq(solicitacoesFeriasTable.id, req.params["id"]),
+        eq(solicitacoesFeriasTable.tenantId, tenantId)
+      )
+    ).limit(1);
+    if (!sol) return res.status(404).json({ error: "Solicita\xE7\xE3o n\xE3o encontrada" });
+    const novaTimeline = Array.isArray(sol.timeline) ? [...sol.timeline] : [];
+    novaTimeline.push({
+      status: "aprovado",
+      descricao: "F\xE9rias aprovadas pelo RH",
+      data: (/* @__PURE__ */ new Date()).toISOString(),
+      responsavel: req.user.nome
+    });
+    await db.update(solicitacoesFeriasTable).set({
+      status: "aprovado",
+      aprovadoPor: req.user.nome,
+      aprovadoEm: /* @__PURE__ */ new Date(),
+      timeline: novaTimeline,
+      updatedAt: /* @__PURE__ */ new Date()
+    }).where(eq(solicitacoesFeriasTable.id, sol.id));
+    res.json({ message: "F\xE9rias aprovadas", id: sol.id });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Erro interno" });
+  }
+});
+router46.patch("/rh/ferias/:id/rejeitar", requireAuth, async (req, res) => {
+  try {
+    const tenantId = req.user.tenantId;
+    const { motivo } = req.body;
+    if (!motivo) return res.status(400).json({ error: "motivo \xE9 obrigat\xF3rio" });
+    const [sol] = await db.select().from(solicitacoesFeriasTable).where(
+      and(
+        eq(solicitacoesFeriasTable.id, req.params["id"]),
+        eq(solicitacoesFeriasTable.tenantId, tenantId)
+      )
+    ).limit(1);
+    if (!sol) return res.status(404).json({ error: "Solicita\xE7\xE3o n\xE3o encontrada" });
+    const novaTimeline = Array.isArray(sol.timeline) ? [...sol.timeline] : [];
+    novaTimeline.push({
+      status: "rejeitado",
+      descricao: `F\xE9rias rejeitadas: ${motivo}`,
+      data: (/* @__PURE__ */ new Date()).toISOString(),
+      responsavel: req.user.nome
+    });
+    await db.update(solicitacoesFeriasTable).set({
+      status: "rejeitado",
+      motivoRejeicao: motivo,
+      timeline: novaTimeline,
+      updatedAt: /* @__PURE__ */ new Date()
+    }).where(eq(solicitacoesFeriasTable.id, sol.id));
+    res.json({ message: "F\xE9rias rejeitadas", id: sol.id });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Erro interno" });
+  }
+});
+router46.get("/rh/requerimentos/pendentes", requireAuth, async (req, res) => {
+  try {
+    const tenantId = req.user.tenantId;
+    const pendentes = await db.select({
+      requerimento: requerimentosTable,
+      servidor: {
+        id: servidoresCadastroTable.id,
+        nome: servidoresCadastroTable.nome,
+        matricula: servidoresCadastroTable.matricula,
+        cargo: servidoresCadastroTable.cargo,
+        secretaria: servidoresCadastroTable.secretaria
+      }
+    }).from(requerimentosTable).innerJoin(
+      servidoresCadastroTable,
+      eq(requerimentosTable.servidorId, servidoresCadastroTable.id)
+    ).where(
+      and(
+        eq(requerimentosTable.tenantId, tenantId),
+        eq(requerimentosTable.status, "em_analise")
+      )
+    );
+    res.json({ data: pendentes });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Erro interno" });
+  }
+});
+router46.patch("/rh/requerimentos/:id/deferir", requireAuth, async (req, res) => {
+  try {
+    const tenantId = req.user.tenantId;
+    const { parecer, decisao } = req.body;
+    const [req_] = await db.select().from(requerimentosTable).where(
+      and(
+        eq(requerimentosTable.id, req.params["id"]),
+        eq(requerimentosTable.tenantId, tenantId)
+      )
+    ).limit(1);
+    if (!req_) return res.status(404).json({ error: "Requerimento n\xE3o encontrado" });
+    const novaTimeline = Array.isArray(req_.timeline) ? [...req_.timeline] : [];
+    novaTimeline.push({
+      status: "deferido",
+      descricao: "Requerimento deferido pelo RH",
+      data: (/* @__PURE__ */ new Date()).toISOString(),
+      responsavel: req.user.nome
+    });
+    await db.update(requerimentosTable).set({
+      status: "deferido",
+      parecerTecnico: parecer,
+      decisao: decisao ?? "Deferido",
+      decisorNome: req.user.nome,
+      decidoEm: /* @__PURE__ */ new Date(),
+      timeline: novaTimeline,
+      updatedAt: /* @__PURE__ */ new Date()
+    }).where(eq(requerimentosTable.id, req_.id));
+    res.json({ message: "Requerimento deferido", id: req_.id });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Erro interno" });
+  }
+});
+router46.patch("/rh/requerimentos/:id/indeferir", requireAuth, async (req, res) => {
+  try {
+    const tenantId = req.user.tenantId;
+    const { parecer, motivo } = req.body;
+    if (!motivo) return res.status(400).json({ error: "motivo \xE9 obrigat\xF3rio" });
+    const [req_] = await db.select().from(requerimentosTable).where(
+      and(
+        eq(requerimentosTable.id, req.params["id"]),
+        eq(requerimentosTable.tenantId, tenantId)
+      )
+    ).limit(1);
+    if (!req_) return res.status(404).json({ error: "Requerimento n\xE3o encontrado" });
+    const prazoRecurso = /* @__PURE__ */ new Date();
+    prazoRecurso.setDate(prazoRecurso.getDate() + 15);
+    const novaTimeline = Array.isArray(req_.timeline) ? [...req_.timeline] : [];
+    novaTimeline.push({
+      status: "indeferido",
+      descricao: `Requerimento indeferido: ${motivo}`,
+      data: (/* @__PURE__ */ new Date()).toISOString(),
+      responsavel: req.user.nome
+    });
+    await db.update(requerimentosTable).set({
+      status: "indeferido",
+      parecerTecnico: parecer,
+      decisao: "Indeferido",
+      motivoDecisao: motivo,
+      decisorNome: req.user.nome,
+      decidoEm: /* @__PURE__ */ new Date(),
+      prazoRecurso: prazoRecurso.toISOString().split("T")[0],
+      timeline: novaTimeline,
+      updatedAt: /* @__PURE__ */ new Date()
+    }).where(eq(requerimentosTable.id, req_.id));
+    res.json({
+      message: "Requerimento indeferido",
+      id: req_.id,
+      prazoRecurso: prazoRecurso.toISOString().split("T")[0]
+    });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Erro interno" });
+  }
+});
+router46.get("/rh/folha-resumo", requireAuth, async (req, res) => {
+  try {
+    const tenantId = req.user.tenantId;
+    const mes = req.query["mes"] ? parseInt(req.query["mes"]) : (/* @__PURE__ */ new Date()).getMonth() + 1;
+    const ano = req.query["ano"] ? parseInt(req.query["ano"]) : (/* @__PURE__ */ new Date()).getFullYear();
+    const resumo = await db.select({
+      totalBruto: sql`sum(c.total_bruto)::numeric`,
+      totalLiquido: sql`sum(c.total_liquido)::numeric`,
+      totalDescontos: sql`sum(c.total_descontos)::numeric`,
+      qtdServidores: sql`count(*)::int`
+    }).from(sql`contracheques c`).innerJoin(
+      servidoresCadastroTable,
+      sql`c.servidor_id = ${servidoresCadastroTable.id}`
+    ).where(
+      and(
+        eq(servidoresCadastroTable.tenantId, tenantId),
+        sql`c.mes = ${mes}`,
+        sql`c.ano = ${ano}`
+      )
+    );
+    res.json({
+      mes,
+      ano,
+      ...resumo[0]
+    });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "Erro interno" });
+  }
+});
+var dashboard_default = router46;
+
+// src/routes/rh/index.ts
+var router47 = (0, import_express47.Router)();
+router47.use(dashboard_default);
+var rh_default = router47;
+
+// src/routes/index.ts
+var router48 = (0, import_express48.Router)();
+router48.use(health_default);
+router48.use(tenant_default);
+router48.use(noticias_default);
+router48.use(servicos_default);
+router48.use(secretarias_default);
+router48.use(transparencia_default);
+router48.use(licitacoes_default);
+router48.use(legislacao_default);
+router48.use(agenda_default);
+router48.use(galeria_default);
+router48.use(concursos_default);
+router48.use(busca_default);
+router48.use(sic_default);
+router48.use(noticias_default2);
+router48.use(banners_default);
+router48.use(paginas_default);
+router48.use(documentos_default);
+router48.use(menus_default);
+router48.use(site_config_default);
+router48.use(licitacoes_default2);
+router48.use(galeria_default2);
+router48.use(agenda_default2);
+router48.use(legislacao_default2);
+router48.use(config_default);
+router48.use(banners_default2);
+router48.use(news_default);
+router48.use(agenda_default3);
+router48.use(gallery_default);
+router48.use(legislation_default);
+router48.use(bids_default);
+router48.use(transparency_default);
+router48.use(secretarias_pub_default);
+router48.use(search_default);
+router48.use(pages_default);
+router48.use(news_default2);
+router48.use(banners_default3);
+router48.use(transparency_default2);
+router48.use(bids_default2);
+router48.use(agenda_default4);
+router48.use(config_default2);
+router48.use(servidor_default);
+router48.use(rh_default);
+var routes_default = router48;
 
 // src/app.ts
-var app = (0, import_express42.default)();
+var app = (0, import_express49.default)();
 app.use(
   (0, import_pino_http.default)({
     logger,
@@ -103011,8 +105080,8 @@ app.use(
   })
 );
 app.use((0, import_cors.default)());
-app.use(import_express42.default.json());
-app.use(import_express42.default.urlencoded({ extended: true }));
+app.use(import_express49.default.json());
+app.use(import_express49.default.urlencoded({ extended: true }));
 app.use("/api", routes_default);
 var app_default = app;
 

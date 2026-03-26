@@ -46,6 +46,12 @@ import siteAdminBidsRouter from "./site-admin/bids";
 import siteAdminAgendaRouter from "./site-admin/agenda";
 import siteAdminConfigRouter from "./site-admin/config";
 
+// Portal do Servidor (/servidor/*)
+import servidorRouter from "./servidor/index";
+
+// Painel RH (/rh/*)
+import rhRouter from "./rh/index";
+
 const router: IRouter = Router();
 
 // ─── Health ───────────────────────────────────────────────────────────────────
@@ -97,5 +103,11 @@ router.use(siteAdminTransparencyRouter);
 router.use(siteAdminBidsRouter);
 router.use(siteAdminAgendaRouter);
 router.use(siteAdminConfigRouter);
+
+// ─── Portal do Servidor (/servidor/*) ────────────────────────────────────────
+router.use(servidorRouter);
+
+// ─── Painel RH (/rh/*) ───────────────────────────────────────────────────────
+router.use(rhRouter);
 
 export default router;
