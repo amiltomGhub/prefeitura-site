@@ -1,0 +1,426 @@
+Continuando o backend do SaaS Municipal. Adicione ao schema tenant existente
+(prisma/tenant-schema.prisma) os models do módulo Site Institucional.
+
+## TAREFA DESTA ETAPA
+
+### Adicionar ao tenant-schema.prisma:
+
+// ─── ENUMS DO SITE ───────────────────────────
+
+enum ContentStatus {
+  DRAFT       // Rascunho
+  SCHEDULED   // Agendado para publicação
+  PUBLISHED   // Publicado
+  ARCHIVED    // Arquivado
+  @@schema("TENANT_SCHEMA_PLACEHOLDER")
+}
+
+enum NewsCategory {
+  // Configurável por tenant — guardado em tabela categories_news
+  @@schema("TENANT_SCHEMA_PLACEHOLDER")
+}
+
+enum LegislationType {
+  LEI | DECRETO | PORTARIA | RESOLUCAO | INSTRUCAO_NORMATIVA
+  COMUNICADO | EDITAL | ATA
+  @@schema("TENANT_SCHEMA_PLACEHOLDER")
+}
+
+enum BidModalidade {
+  PREGAO_ELETRONICO | PREGAO_PRESENCIAL | TOMADA_DE_PRECOS
+  CONCORRENCIA | CONVITE | DISPENSA | INEXIGIBILIDADE | LEILAO
+  @@schema("TENANT_SCHEMA_PLACEHOLDER")
+}
+
+enum BidStatus {
+  ABERTA | EM_ANDAMENTO | SUSPENSA | HOMOLOGADA | ANULADA | REVOGADA | ENCERRADA
+  @@schema("TENANT_SCHEMA_PLACEHOLDER")
+}
+
+enum EventType {
+  REUNIAO | EVENTO | AUDIENCIA_PUBLICA | LICITACAO | SESSAO | VISITA | OUTRO
+  @@schema("TENANT_SCHEMA_PLACEHOLDER")
+}
+
+enum PageBlockType {
+  TEXT | IMAGE | GALLERY | TABLE | IFRAME | HIGHLIGHT | ACCORDION | CONTACT_FORM
+  @@schema("TENANT_SCHEMA_PLACEHOLDER")
+}
+
+// ─── NEWS — Notícias e comunicados ───────────
+
+model News {
+  id              String        @id @default(uuid()) @db.Uuid
+  title           String        @db.VarChar(255)
+  slug            String        @unique @db.VarChar(300)
+  excerpt         String?       @db.Text          // Resumo (gerado ou manual)
+  content         String        @db.Text          // HTML do TipTap
+  coverImageUrl   String?       @db.Text
+  coverImageAlt   String?       @db.VarChar(255)  // Obrigatório se tiver imagem
+  status          ContentStatus @default(DRAFT)
+  isFeatured      Boolean       @default(false)
+  categoryId      String?       @db.Uuid
+  category        NewsCategory_Model? @relation(fields: [categoryId], references: [id])
+  secretariaId    String?       @db.Uuid
+  secretaria      Secretaria?   @relation(fields: [secretariaId], references: [id])
+  authorId        String        @db.Uuid
+  author          User          @relation(fields: [authorId], references: [id])
+  tags            String[]
+  viewCount       Int           @default(0)
+  // SEO
+  metaTitle       String?       @db.VarChar(70)
+  metaDescription String?       @db.VarChar(160)
+  ogImageUrl      String?       @db.Text
+  publishedAt     DateTime?     @db.Timestamptz   // null = rascunho
+  scheduledAt     DateTime?     @db.Timestamptz   // para publicação agendada
+  createdAt       DateTime      @default(now()) @db.Timestamptz
+  updatedAt       DateTime      @updatedAt @db.Timestamptz
+  deletedAt       DateTime?     @db.Timestamptz
+
+  versions        NewsVersion[]
+
+  @@index([slug])
+  @@index([status])
+  @@index([isFeatured])
+  @@index([publishedAt])
+  @@index([categoryId])
+  @@map("news")
+  @@schema("TENANT_SCHEMA_PLACEHOLDER")
+}
+
+model NewsVersion {
+  id        String   @id @default(uuid()) @db.Uuid
+  newsId    String   @db.Uuid
+  news      News     @relation(fields: [newsId], references: [id], onDelete: Cascade)
+  content   String   @db.Text
+  savedById String   @db.Uuid
+  savedBy   User     @relation(fields: [savedById], references: [id])
+  createdAt DateTime @default(now()) @db.Timestamptz
+  @@map("news_versions")
+  @@schema("TENANT_SCHEMA_PLACEHOLDER")
+}
+
+model NewsCategory_Model {
+  id        String @id @default(uuid()) @db.Uuid
+  name      String @db.VarChar(100)
+  slug      String @unique @db.VarChar(100)
+  color     String? @db.VarChar(7)
+  news      News[]
+  @@map("news_categories")
+  @@schema("TENANT_SCHEMA_PLACEHOLDER")
+}
+
+// ─── PAGES — Páginas estáticas ───────────────
+
+model Page {
+  id          String        @id @default(uuid()) @db.Uuid
+  title       String        @db.VarChar(255)
+  slug        String        @unique @db.VarChar(300)
+  status      ContentStatus @default(DRAFT)
+  isProtected Boolean       @default(false)  // true = não pode ser deletada
+  authorId    String        @db.Uuid
+  author      User          @relation(fields: [authorId], references: [id])
+  metaTitle   String?       @db.VarChar(70)
+  metaDescription String?   @db.VarChar(160)
+  createdAt   DateTime      @default(now()) @db.Timestamptz
+  updatedAt   DateTime      @updatedAt @db.Timestamptz
+
+  blocks      PageBlock[]
+
+  @@map("pages")
+  @@schema("TENANT_SCHEMA_PLACEHOLDER")
+}
+
+model PageBlock {
+  id        String        @id @default(uuid()) @db.Uuid
+  pageId    String        @db.Uuid
+  page      Page          @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  type      PageBlockType
+  content   Json          // Estrutura específica por tipo de bloco
+  sortOrder Int           @default(0)
+  createdAt DateTime      @default(now()) @db.Timestamptz
+  updatedAt DateTime      @updatedAt @db.Timestamptz
+
+  @@index([pageId])
+  @@map("page_blocks")
+  @@schema("TENANT_SCHEMA_PLACEHOLDER")
+}
+
+// ─── BANNERS — Carrossel da homepage ─────────
+
+model Banner {
+  id              String   @id @default(uuid()) @db.Uuid
+  title           String   @db.VarChar(200)
+  subtitle        String?  @db.VarChar(300)
+  imageDesktopUrl String   @db.Text
+  imageMobileUrl  String?  @db.Text
+  imageAlt        String   @db.VarChar(255)  // Obrigatório
+  ctaLabel        String?  @db.VarChar(50)
+  ctaUrl          String?  @db.Text
+  ctaOpenNewTab   Boolean  @default(false)
+  overlayColor    String?  @db.VarChar(7)
+  overlayOpacity  Float    @default(0.4)
+  isActive        Boolean  @default(true)
+  sortOrder       Int      @default(0)
+  startsAt        DateTime? @db.Timestamptz
+  endsAt          DateTime? @db.Timestamptz
+  createdAt       DateTime @default(now()) @db.Timestamptz
+  updatedAt       DateTime @updatedAt @db.Timestamptz
+
+  @@index([isActive])
+  @@map("banners")
+  @@schema("TENANT_SCHEMA_PLACEHOLDER")
+}
+
+// ─── AGENDA — Eventos da prefeitura ──────────
+
+model AgendaEvent {
+  id          String    @id @default(uuid()) @db.Uuid
+  title       String    @db.VarChar(255)
+  description String?   @db.Text
+  type        EventType @default(EVENTO)
+  location    String?   @db.VarChar(255)
+  address     String?   @db.VarChar(500)
+  isOnline    Boolean   @default(false)
+  onlineUrl   String?   @db.Text
+  startsAt    DateTime  @db.Timestamptz
+  endsAt      DateTime? @db.Timestamptz
+  isAllDay    Boolean   @default(false)
+  secretariaId String?  @db.Uuid
+  secretaria  Secretaria? @relation(fields: [secretariaId], references: [id])
+  isPublic    Boolean   @default(true)
+  attachmentUrl String? @db.Text
+  createdById String    @db.Uuid
+  createdBy   User      @relation(fields: [createdById], references: [id])
+  createdAt   DateTime  @default(now()) @db.Timestamptz
+  updatedAt   DateTime  @updatedAt @db.Timestamptz
+
+  @@index([startsAt])
+  @@index([type])
+  @@map("agenda_events")
+  @@schema("TENANT_SCHEMA_PLACEHOLDER")
+}
+
+// ─── GALLERY — Galeria de fotos e vídeos ─────
+
+model GalleryAlbum {
+  id          String   @id @default(uuid()) @db.Uuid
+  title       String   @db.VarChar(255)
+  description String?  @db.Text
+  coverUrl    String?  @db.Text
+  isPublic    Boolean  @default(true)
+  createdById String   @db.Uuid
+  createdBy   User     @relation(fields: [createdById], references: [id])
+  createdAt   DateTime @default(now()) @db.Timestamptz
+  updatedAt   DateTime @updatedAt @db.Timestamptz
+
+  items       GalleryItem[]
+  @@map("gallery_albums")
+  @@schema("TENANT_SCHEMA_PLACEHOLDER")
+}
+
+model GalleryItem {
+  id        String   @id @default(uuid()) @db.Uuid
+  albumId   String   @db.Uuid
+  album     GalleryAlbum @relation(fields: [albumId], references: [id], onDelete: Cascade)
+  type      String   @default("image") @db.VarChar(10) // image | video
+  url       String   @db.Text
+  thumbUrl  String?  @db.Text
+  altText   String   @db.VarChar(255)  // Obrigatório — acessibilidade
+  caption   String?  @db.VarChar(500)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now()) @db.Timestamptz
+
+  @@index([albumId])
+  @@map("gallery_items")
+  @@schema("TENANT_SCHEMA_PLACEHOLDER")
+}
+
+// ─── LEGISLATION — Atos normativos ───────────
+
+model Legislation {
+  id          String          @id @default(uuid()) @db.Uuid
+  type        LegislationType
+  number      String          @db.VarChar(50)   // "Decreto nº 1.234"
+  year        Int
+  summary     String          @db.Text          // Ementa
+  content     String?         @db.Text          // Texto completo (opcional)
+  fileUrl     String?         @db.Text          // PDF
+  fileName    String?         @db.VarChar(255)
+  status      ContentStatus   @default(PUBLISHED)
+  publishedAt DateTime        @db.Timestamptz
+  signedAt    DateTime?       @db.Timestamptz   // Data de assinatura
+  revokedAt   DateTime?       @db.Timestamptz   // Se revogado
+  revokedById String?         @db.Uuid          // Revogado pelo ato ID
+  tags        String[]
+  viewCount   Int             @default(0)
+  downloadCount Int           @default(0)
+  createdById String          @db.Uuid
+  createdBy   User            @relation(fields: [createdById], references: [id])
+  createdAt   DateTime        @default(now()) @db.Timestamptz
+  updatedAt   DateTime        @updatedAt @db.Timestamptz
+
+  @@unique([type, number, year])
+  @@index([type])
+  @@index([year])
+  @@index([publishedAt])
+  @@map("legislation")
+  @@schema("TENANT_SCHEMA_PLACEHOLDER")
+}
+
+// ─── BIDS — Licitações e contratos ───────────
+
+model Bid {
+  id              String       @id @default(uuid()) @db.Uuid
+  number          String       @db.VarChar(50)   // "PE 001/2026"
+  modalidade      BidModalidade
+  status          BidStatus    @default(ABERTA)
+  object          String       @db.Text           // Objeto da licitação
+  secretariaId    String?      @db.Uuid
+  secretaria      Secretaria?  @relation(fields: [secretariaId], references: [id])
+  estimatedValue  Decimal?     @db.Decimal(15,2)
+  finalValue      Decimal?     @db.Decimal(15,2)
+  openingDate     DateTime     @db.Timestamptz    // Data de abertura
+  closingDate     DateTime?    @db.Timestamptz    // Data de encerramento
+  winner          String?      @db.VarChar(255)   // Vencedor
+  winnerCnpj      String?      @db.VarChar(18)
+  editalUrl       String?      @db.Text           // PDF do edital
+  resultUrl       String?      @db.Text           // PDF do resultado
+  pncpId          String?      @db.VarChar(100)   // ID no Portal Nacional de Compras
+  downloadCount   Int          @default(0)
+  createdById     String       @db.Uuid
+  createdBy       User         @relation(fields: [createdById], references: [id])
+  createdAt       DateTime     @default(now()) @db.Timestamptz
+  updatedAt       DateTime     @updatedAt @db.Timestamptz
+
+  events          BidEvent[]
+  contracts       Contract[]
+
+  @@index([modalidade])
+  @@index([status])
+  @@index([openingDate])
+  @@map("bids")
+  @@schema("TENANT_SCHEMA_PLACEHOLDER")
+}
+
+model BidEvent {
+  id        String   @id @default(uuid()) @db.Uuid
+  bidId     String   @db.Uuid
+  bid       Bid      @relation(fields: [bidId], references: [id], onDelete: Cascade)
+  title     String   @db.VarChar(255)
+  description String? @db.Text
+  fileUrl   String?  @db.Text
+  occurredAt DateTime @db.Timestamptz
+  createdAt DateTime @default(now()) @db.Timestamptz
+  @@map("bid_events")
+  @@schema("TENANT_SCHEMA_PLACEHOLDER")
+}
+
+model Contract {
+  id              String   @id @default(uuid()) @db.Uuid
+  bidId           String?  @db.Uuid
+  bid             Bid?     @relation(fields: [bidId], references: [id])
+  number          String   @db.VarChar(50)
+  object          String   @db.Text
+  contractor      String   @db.VarChar(255)
+  contractorCnpj  String   @db.VarChar(18)
+  value           Decimal  @db.Decimal(15,2)
+  startDate       DateTime @db.Date
+  endDate         DateTime @db.Date
+  fileUrl         String?  @db.Text
+  isActive        Boolean  @default(true)
+  fiscalId        String?  @db.Uuid   // Fiscal do contrato (User)
+  fiscal          User?    @relation(fields: [fiscalId], references: [id])
+  createdAt       DateTime @default(now()) @db.Timestamptz
+  updatedAt       DateTime @updatedAt @db.Timestamptz
+
+  @@index([contractor])
+  @@index([startDate, endDate])
+  @@map("contracts")
+  @@schema("TENANT_SCHEMA_PLACEHOLDER")
+}
+
+// ─── SITE CONFIG — Configurações do portal ───
+
+model SiteConfig {
+  id                String   @id @default(uuid()) @db.Uuid
+  // Homepage
+  heroType          String   @default("carousel") @db.VarChar(20)
+  heroVideoUrl      String?  @db.Text
+  heroSections      Json     @default("[]")  // Ordem e visibilidade das seções
+  // SEO
+  siteTitle         String?  @db.VarChar(100)
+  siteDescription   String?  @db.VarChar(300)
+  googleAnalyticsId String?  @db.VarChar(20)
+  googleTagManagerId String? @db.VarChar(20)
+  // Redes sociais
+  socialFacebook    String?  @db.Text
+  socialInstagram   String?  @db.Text
+  socialYoutube     String?  @db.Text
+  socialTwitter     String?  @db.Text
+  socialLinkedin    String?  @db.Text
+  // Widget flutuante
+  floatingWidgetEnabled Boolean @default(true)
+  floatingWidgetPosition String @default("right") @db.VarChar(10)
+  // Menus (JSON da estrutura de menus)
+  menuHeader        Json     @default("[]")
+  menuFooterCol1    Json     @default("[]")
+  menuFooterCol2    Json     @default("[]")
+  menuFooterCol3    Json     @default("[]")
+  // Acessibilidade
+  vlibrasEnabled    Boolean  @default(true)
+  updatedAt         DateTime @updatedAt @db.Timestamptz
+
+  @@map("site_config")
+  @@schema("TENANT_SCHEMA_PLACEHOLDER")
+}
+
+// ─── TRANSPARENCY DOCS — Documentos LAI ──────
+
+model TransparencyDocument {
+  id              String   @id @default(uuid()) @db.Uuid
+  category        String   @db.VarChar(100)  // orcamento | despesas | servidores...
+  subcategory     String?  @db.VarChar(100)
+  title           String   @db.VarChar(255)
+  description     String?  @db.Text
+  referenceYear   Int
+  referencePeriod String?  @db.VarChar(50)   // "Janeiro/2026" | "1º Trimestre"
+  fileUrl         String   @db.Text
+  fileName        String   @db.VarChar(255)
+  fileSizeBytes   Int
+  downloadCount   Int      @default(0)
+  publishedById   String   @db.Uuid
+  publishedBy     User     @relation(fields: [publishedById], references: [id])
+  publishedAt     DateTime @db.Timestamptz
+  expiresAt       DateTime? @db.Timestamptz  // Quando deve ser substituído
+  createdAt       DateTime @default(now()) @db.Timestamptz
+
+  @@index([category])
+  @@index([referenceYear])
+  @@index([publishedAt])
+  @@map("transparency_documents")
+  @@schema("TENANT_SCHEMA_PLACEHOLDER")
+}
+
+// ─── MENU NAVIGATION ─────────────────────────
+
+model MenuItem {
+  id          String    @id @default(uuid()) @db.Uuid
+  menuSlot    String    @db.VarChar(50)  // header | footer_col1 | footer_col2...
+  label       String    @db.VarChar(100)
+  url         String?   @db.Text
+  pageId      String?   @db.Uuid
+  openNewTab  Boolean   @default(false)
+  iconName    String?   @db.VarChar(100)
+  parentId    String?   @db.Uuid
+  parent      MenuItem? @relation("MenuNesting", fields: [parentId], references: [id])
+  children    MenuItem[] @relation("MenuNesting")
+  sortOrder   Int       @default(0)
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now()) @db.Timestamptz
+  updatedAt   DateTime  @updatedAt @db.Timestamptz
+
+  @@index([menuSlot])
+  @@index([parentId])
+  @@map("menu_items")
+  @@schema("TENANT_SCHEMA_PLACEHOLDER")

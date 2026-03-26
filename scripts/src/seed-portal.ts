@@ -3,7 +3,9 @@ import {
   tenantsTable, municipioInfoTable, gestoresTable,
   noticiasTable, servicosTable, secretariasTable,
   despesasTable, receitasTable, servidoresTable, orcamentosTable,
-  licitacoesTable, legislacaoTable, agendaTable, galeriaTable, concursosTable
+  licitacoesTable, legislacaoTable, agendaTable, galeriaTable, concursosTable,
+  newsCategoriesTable, bannersTable, pagesTable, menuItemsTable, siteConfigTable,
+  galleryAlbumsTable, galleryItemsTable, transparencyDocsTable,
 } from "@workspace/db/schema";
 import { randomUUID } from "crypto";
 
@@ -355,6 +357,154 @@ async function seed() {
       remuneracao: 2800,
     },
   ]).onConflictDoNothing();
+
+  // ─── News Categories ───────────────────────────────────────────────────────
+  const categorias = [
+    { name: "Saúde", slug: "saude", color: "#168821" },
+    { name: "Educação", slug: "educacao", color: "#1351B4" },
+    { name: "Obras", slug: "obras", color: "#FFCD07" },
+    { name: "Meio Ambiente", slug: "meio-ambiente", color: "#2E7D32" },
+    { name: "Concursos", slug: "concursos", color: "#7B1FA2" },
+    { name: "Social", slug: "social", color: "#E64A19" },
+  ];
+  for (const c of categorias) {
+    await db.insert(newsCategoriesTable).values({ id: randomUUID(), tenantId: TENANT_ID, ...c }).onConflictDoNothing();
+  }
+
+  // ─── Banners ───────────────────────────────────────────────────────────────
+  const banners = [
+    {
+      titulo: "Semana de Prevenção ao Câncer de Mama",
+      subtitulo: "Outubro Rosa — Cuide-se!",
+      imageDesktopUrl: "https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?w=1920&h=600&fit=crop",
+      imageMobileUrl: "https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?w=768&h=400&fit=crop",
+      imageAlt: "Banner Outubro Rosa — prevenção ao câncer de mama",
+      ctaLabel: "Saiba mais", ctaUrl: "/saude/outubro-rosa",
+      isAtivo: true, sortOrder: 0,
+      iniciaEm: new Date("2026-10-01"), expiraEm: new Date("2026-10-31"),
+    },
+    {
+      titulo: "Concurso Público Municipal 2026",
+      subtitulo: "Inscrições abertas! 450 vagas.",
+      imageDesktopUrl: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=1920&h=600&fit=crop",
+      imageMobileUrl: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=768&h=400&fit=crop",
+      imageAlt: "Banner Concurso Público 2026",
+      ctaLabel: "Inscreva-se", ctaUrl: "/concursos/2026",
+      isAtivo: true, sortOrder: 1,
+    },
+    {
+      titulo: "Nova UBS Rio Verde inaugurada",
+      subtitulo: "Mais saúde para todos os moradores",
+      imageDesktopUrl: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=1920&h=600&fit=crop",
+      imageMobileUrl: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=768&h=400&fit=crop",
+      imageAlt: "Banner UBS Rio Verde",
+      ctaLabel: "Ver notícia", ctaUrl: "/noticias/ubs-rio-verde",
+      isAtivo: false, sortOrder: 2,
+    },
+    {
+      titulo: "Semana do Meio Ambiente 2026",
+      subtitulo: "Parauapebas sustentável",
+      imageDesktopUrl: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1920&h=600&fit=crop",
+      imageMobileUrl: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=768&h=400&fit=crop",
+      imageAlt: "Banner Semana do Meio Ambiente",
+      ctaLabel: "Programação", ctaUrl: "/eventos/meio-ambiente-2026",
+      isAtivo: true, sortOrder: 3,
+      iniciaEm: new Date("2026-06-01"), expiraEm: new Date("2026-06-07"),
+    },
+  ];
+  for (const b of banners) {
+    await db.insert(bannersTable).values({ id: randomUUID(), tenantId: TENANT_ID, ...b }).onConflictDoNothing();
+  }
+
+  // ─── Páginas Estáticas (protegidas — obrigatórias LAI/e-MAG) ──────────────
+  const paginas = [
+    { titulo: "Política de Acessibilidade", slug: "acessibilidade", isProtegida: true, status: "publicado" },
+    { titulo: "Mapa do Site", slug: "mapa-do-site", isProtegida: true, status: "publicado" },
+    { titulo: "Política de Privacidade", slug: "politica-de-privacidade", isProtegida: true, status: "publicado" },
+    { titulo: "O Município", slug: "municipio", isProtegida: false, status: "publicado" },
+    { titulo: "O Prefeito", slug: "governo/prefeito", isProtegida: false, status: "publicado" },
+    { titulo: "Histórico da Cidade", slug: "municipio/historico", isProtegida: false, status: "publicado" },
+  ];
+  for (const p of paginas) {
+    await db.insert(pagesTable).values({
+      id: randomUUID(), tenantId: TENANT_ID,
+      titulo: p.titulo, slug: p.slug, status: p.status,
+      isProtegida: p.isProtegida, autor: "Admin",
+    }).onConflictDoNothing();
+  }
+
+  // ─── Menu Items ────────────────────────────────────────────────────────────
+  const menuHeader = [
+    { label: "Início", url: "/", tipo: "pagina", sortOrder: 0 },
+    { label: "O Município", url: "/municipio", tipo: "pagina", sortOrder: 1 },
+    { label: "Governo", url: null, tipo: "dropdown", sortOrder: 2 },
+    { label: "Notícias", url: "/noticias", tipo: "pagina", sortOrder: 3 },
+    { label: "Transparência", url: "/transparencia", tipo: "dropdown", sortOrder: 4 },
+    { label: "Serviços", url: "/servicos", tipo: "pagina", sortOrder: 5 },
+    { label: "Contato", url: "/contato", tipo: "pagina", sortOrder: 6 },
+  ];
+  for (const item of menuHeader) {
+    await db.insert(menuItemsTable).values({ id: randomUUID(), tenantId: TENANT_ID, menuSlot: "header", isAtivo: true, ...item }).onConflictDoNothing();
+  }
+
+  // ─── Site Config ───────────────────────────────────────────────────────────
+  await db.insert(siteConfigTable).values({
+    id: randomUUID(),
+    tenantId: TENANT_ID,
+    heroType: "carousel",
+    siteTitle: "Prefeitura Municipal de Parauapebas",
+    siteDescription: "Portal oficial da Prefeitura Municipal de Parauapebas — Pará",
+    socialFacebook: "https://facebook.com/prefeituraparauapebas",
+    socialInstagram: "https://instagram.com/prefeituraparauapebas",
+    socialYoutube: "https://youtube.com/@prefeituraparauapebas",
+    floatingWidgetEnabled: true,
+    floatingWidgetPosition: "right",
+    vlibrasEnabled: true,
+    rodapeTexto: "Prefeitura Municipal de Parauapebas — CNPJ: 34.070.421/0001-60 — Av. Presidente Médici, 1246 - Centro — (94) 3346-0000",
+    sicPrazoResposta: 20,
+    sicEmail: "sic@parauapebas.pa.gov.br",
+    modoManutencao: false,
+    heroSections: [
+      { id: "hero", label: "Hero / Carrossel", visible: true, sortOrder: 0 },
+      { id: "servicos", label: "Serviços Rápidos", visible: true, sortOrder: 1 },
+      { id: "noticias", label: "Últimas Notícias", visible: true, sortOrder: 2 },
+      { id: "agenda", label: "Agenda", visible: true, sortOrder: 3 },
+      { id: "obras", label: "Obras em Destaque", visible: true, sortOrder: 4 },
+      { id: "transparencia", label: "Transparência", visible: true, sortOrder: 5 },
+      { id: "secretarias", label: "Secretarias", visible: true, sortOrder: 6 },
+      { id: "galeria", label: "Galeria", visible: false, sortOrder: 7 },
+    ],
+  }).onConflictDoNothing();
+
+  // ─── Gallery Albums ────────────────────────────────────────────────────────
+  const albumId1 = randomUUID();
+  const albumId2 = randomUUID();
+  await db.insert(galleryAlbumsTable).values([
+    { id: albumId1, tenantId: TENANT_ID, titulo: "Inauguração UBS Rio Verde", descricao: "Fotos da inauguração da nova Unidade Básica de Saúde do bairro Rio Verde.", coverUrl: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=400&h=300&fit=crop", isPublico: true, sortOrder: 0 },
+    { id: albumId2, tenantId: TENANT_ID, titulo: "Obras de Pavimentação 2026", descricao: "Registro fotográfico das obras de pavimentação no centro da cidade.", coverUrl: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop", isPublico: true, sortOrder: 1 },
+  ]).onConflictDoNothing();
+
+  await db.insert(galleryItemsTable).values([
+    { id: randomUUID(), albumId: albumId1, tipo: "image", url: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=800", thumbUrl: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=300", altText: "Fachada da UBS Rio Verde", sortOrder: 0 },
+    { id: randomUUID(), albumId: albumId1, tipo: "image", url: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800", thumbUrl: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=300", altText: "Interior da unidade de saúde", sortOrder: 1 },
+    { id: randomUUID(), albumId: albumId2, tipo: "image", url: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800", thumbUrl: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=300", altText: "Obras de pavimentação na Avenida Central", sortOrder: 0 },
+  ]).onConflictDoNothing();
+
+  // ─── Documentos de Transparência (LAI) ────────────────────────────────────
+  const docLAI = [
+    { categoria: "orcamento", titulo: "LOA 2026 — Lei Orçamentária Anual", anoReferencia: 2026, periodoReferencia: "Exercício 2026", nomeArquivo: "LOA-2026.pdf", tamanhoBytes: 2048000 },
+    { categoria: "despesas", titulo: "Folha de Pagamento — Março/2026", anoReferencia: 2026, periodoReferencia: "Março/2026", nomeArquivo: "Folha-Marco-2026.pdf", tamanhoBytes: 512000 },
+    { categoria: "contratos", titulo: "Contratos Vigentes — 1º Trimestre 2026", anoReferencia: 2026, periodoReferencia: "1º Trimestre", nomeArquivo: "Contratos-Q1-2026.pdf", tamanhoBytes: 1024000 },
+  ];
+  for (const d of docLAI) {
+    await db.insert(transparencyDocsTable).values({
+      id: randomUUID(), tenantId: TENANT_ID,
+      fileUrl: `/documentos/${d.nomeArquivo}`,
+      publicadoPor: "Admin Municipal",
+      publicadoEm: new Date(),
+      ...d,
+    }).onConflictDoNothing();
+  }
 
   console.log("✅ Seed concluído com sucesso!");
   process.exit(0);

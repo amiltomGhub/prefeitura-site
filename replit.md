@@ -7,6 +7,18 @@ Portal público principal do município, integrado ao Módulo 1 (Ouvidoria) via 
 
 ## Implementação — Status Atual
 
+### ✅ Parte VI — Backend Schema Site Institucional (COMPLETO)
+- **Schemas expandidos** — `noticias.ts` (+status/SEO/agendamento/deletadoEm/categoriaId/secretariaId) + `news_categories` + `news_versions`
+- **`licitacoes.ts`** expandido (+vencedor/pncpId/downloadCount/editalUrl/resultUrl/secretariaId) + novas tabelas `bid_events` + `contracts`
+- **`legislacao.ts`** expandido (+visualizacoes/downloads/assinadoEm/revogadoEm/status/nomeArquivo)
+- **`agenda.ts`** expandido (+tipo/isOnline/onlineUrl/diaInteiro/isPublico/secretariaId/endereco/anexoUrl/updatedAt)
+- **`galeria.ts`** mantida + novas tabelas `gallery_albums` + `gallery_items` (com altText obrigatório para e-MAG)
+- **`site.ts`** novo — `pages` + `page_blocks` (8 tipos de bloco) + `banners` + `transparency_docs` + `menu_items` + `site_config`
+- **DB push** — `drizzle-kit push --force` aplicado; 16 tabelas totais no banco
+- **10 arquivos de rotas CMS** criados em `routes/cms/`: noticias, banners, paginas, documentos, menus, site-config, licitacoes, galeria, agenda, legislacao
+- **42+ endpoints CMS** `/api/cms/*` com CRUD completo, filtros, paginação, soft-delete (notícias), validação de páginas protegidas (LAI), reordenação por array de IDs
+- **Seed atualizado** — 4 banners, 6 categorias de notícias, 6 páginas (3 protegidas), 7 itens de menu header, site_config completo, 2 álbuns + 3 fotos, 3 documentos LAI
+
 ### ✅ Parte I — Backend + Geração de API (COMPLETO)
 - 25+ endpoints Express 5, 10 tabelas Drizzle, seed Parauapebas
 

@@ -8,3 +8,4 @@ export * from "./legislacao";
 export * from "./agenda";
 export * from "./galeria";
 export * from "./concursos";
+export * from "./site";
