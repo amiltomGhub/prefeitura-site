@@ -97,7 +97,7 @@ export function SiteHeader() {
                       <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.18em]">
                         Prefeitura Municipal de
                       </span>
-                      <span className="text-[26px] sm:text-[28px] font-black text-foreground group-hover:text-primary transition-colors leading-none mt-0.5 tracking-tight">
+                      <span className="text-[35px] font-black text-foreground group-hover:text-primary transition-colors leading-none mt-0.5 tracking-tight">
                         {(tenant?.nome ?? "Parauapebas").replace("Prefeitura Municipal de ", "")}
                       </span>
                     </div>
