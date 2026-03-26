@@ -20,39 +20,58 @@ import type {
   AgendaListResponse,
   BuscaResponse,
   ConcursoListResponse,
+  ContrachequeDetalhe,
+  ContrachequeListResponse,
   CreateNoticia,
+  CriarRequerimentoBody,
+  DeferirRequerimentoBody,
   DespesaListResponse,
+  FeriasSaldo,
   GaleriaListResponse,
   Gestor,
   GetOrcamentoParams,
+  GetRhFolhaResumoParams,
   GetTenantConfigParams,
   GlobalSearchParams,
   HealthStatus,
+  IndeferirRequerimentoBody,
   Legislacao,
   LegislacaoListResponse,
   Licitacao,
   LicitacaoListResponse,
   ListAgendaParams,
   ListConcursosParams,
+  ListContrachequesParams,
   ListDespesasParams,
+  ListFeriasHistorico200,
   ListGaleriaParams,
   ListLegislacaoParams,
   ListLicitacoesParams,
   ListNoticiasParams,
   ListReceitasParams,
+  ListRequerimentos200,
+  ListRequerimentosParams,
   ListServicosParams,
   ListServidoresParams,
   MunicipioInfo,
   Noticia,
   NoticiaListResponse,
   OrcamentoResponse,
+  PerfilServidor,
   ReceitaListResponse,
+  RejeitarFeriasBody,
+  RendimentosAnuais,
+  Requerimento,
+  RhDashboard,
   Secretaria,
   SecretariaListResponse,
   Servico,
   ServicoListResponse,
   ServidorListResponse,
+  SolicitarFeriasBody,
+  TempoServico,
   TenantConfig,
+  UpdatePerfilServidorBody,
 } from "./api.schemas";
 
 import { customFetch } from "../custom-fetch";
@@ -2351,6 +2370,2043 @@ export function useGetVicePrefeito<
   request?: SecondParameter<typeof customFetch>;
 }): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getGetVicePrefeitoQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Listar contracheques do servidor
+ */
+export const getListContrachequesUrl = (params?: ListContrachequesParams) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/api/servidor/contracheques?${stringifiedParams}`
+    : `/api/servidor/contracheques`;
+};
+
+export const listContracheques = async (
+  params?: ListContrachequesParams,
+  options?: RequestInit,
+): Promise<ContrachequeListResponse> => {
+  return customFetch<ContrachequeListResponse>(
+    getListContrachequesUrl(params),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+export const getListContrachequesQueryKey = (
+  params?: ListContrachequesParams,
+) => {
+  return [`/api/servidor/contracheques`, ...(params ? [params] : [])] as const;
+};
+
+export const getListContrachequesQueryOptions = <
+  TData = Awaited<ReturnType<typeof listContracheques>>,
+  TError = ErrorType<void>,
+>(
+  params?: ListContrachequesParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof listContracheques>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getListContrachequesQueryKey(params);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof listContracheques>>
+  > = ({ signal }) => listContracheques(params, { signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof listContracheques>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ListContrachequesQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listContracheques>>
+>;
+export type ListContrachequesQueryError = ErrorType<void>;
+
+/**
+ * @summary Listar contracheques do servidor
+ */
+
+export function useListContracheques<
+  TData = Awaited<ReturnType<typeof listContracheques>>,
+  TError = ErrorType<void>,
+>(
+  params?: ListContrachequesParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof listContracheques>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getListContrachequesQueryOptions(params, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Detalhes do contracheque por mês e ano
+ */
+export const getGetContrachequeUrl = (mes: number, ano: number) => {
+  return `/api/servidor/contracheques/${mes}/${ano}`;
+};
+
+export const getContracheque = async (
+  mes: number,
+  ano: number,
+  options?: RequestInit,
+): Promise<ContrachequeDetalhe> => {
+  return customFetch<ContrachequeDetalhe>(getGetContrachequeUrl(mes, ano), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetContrachequeQueryKey = (mes: number, ano: number) => {
+  return [`/api/servidor/contracheques/${mes}/${ano}`] as const;
+};
+
+export const getGetContrachequeQueryOptions = <
+  TData = Awaited<ReturnType<typeof getContracheque>>,
+  TError = ErrorType<void>,
+>(
+  mes: number,
+  ano: number,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getContracheque>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getGetContrachequeQueryKey(mes, ano);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getContracheque>>> = ({
+    signal,
+  }) => getContracheque(mes, ano, { signal, ...requestOptions });
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!(mes && ano),
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof getContracheque>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetContrachequeQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getContracheque>>
+>;
+export type GetContrachequeQueryError = ErrorType<void>;
+
+/**
+ * @summary Detalhes do contracheque por mês e ano
+ */
+
+export function useGetContracheque<
+  TData = Awaited<ReturnType<typeof getContracheque>>,
+  TError = ErrorType<void>,
+>(
+  mes: number,
+  ano: number,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getContracheque>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetContrachequeQueryOptions(mes, ano, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Download do contracheque em PDF
+ */
+export const getDownloadContrachequePdfUrl = (mes: number, ano: number) => {
+  return `/api/servidor/contracheques/${mes}/${ano}/pdf`;
+};
+
+export const downloadContrachequePdf = async (
+  mes: number,
+  ano: number,
+  options?: RequestInit,
+): Promise<Blob> => {
+  return customFetch<Blob>(getDownloadContrachequePdfUrl(mes, ano), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getDownloadContrachequePdfQueryKey = (
+  mes: number,
+  ano: number,
+) => {
+  return [`/api/servidor/contracheques/${mes}/${ano}/pdf`] as const;
+};
+
+export const getDownloadContrachequePdfQueryOptions = <
+  TData = Awaited<ReturnType<typeof downloadContrachequePdf>>,
+  TError = ErrorType<void>,
+>(
+  mes: number,
+  ano: number,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof downloadContrachequePdf>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getDownloadContrachequePdfQueryKey(mes, ano);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof downloadContrachequePdf>>
+  > = ({ signal }) =>
+    downloadContrachequePdf(mes, ano, { signal, ...requestOptions });
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!(mes && ano),
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof downloadContrachequePdf>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type DownloadContrachequePdfQueryResult = NonNullable<
+  Awaited<ReturnType<typeof downloadContrachequePdf>>
+>;
+export type DownloadContrachequePdfQueryError = ErrorType<void>;
+
+/**
+ * @summary Download do contracheque em PDF
+ */
+
+export function useDownloadContrachequePdf<
+  TData = Awaited<ReturnType<typeof downloadContrachequePdf>>,
+  TError = ErrorType<void>,
+>(
+  mes: number,
+  ano: number,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof downloadContrachequePdf>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getDownloadContrachequePdfQueryOptions(
+    mes,
+    ano,
+    options,
+  );
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Declaração de rendimentos anual (IRRF)
+ */
+export const getGetRendimentosAnuaisUrl = (ano: number) => {
+  return `/api/servidor/rendimentos/${ano}`;
+};
+
+export const getRendimentosAnuais = async (
+  ano: number,
+  options?: RequestInit,
+): Promise<RendimentosAnuais> => {
+  return customFetch<RendimentosAnuais>(getGetRendimentosAnuaisUrl(ano), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetRendimentosAnuaisQueryKey = (ano: number) => {
+  return [`/api/servidor/rendimentos/${ano}`] as const;
+};
+
+export const getGetRendimentosAnuaisQueryOptions = <
+  TData = Awaited<ReturnType<typeof getRendimentosAnuais>>,
+  TError = ErrorType<void>,
+>(
+  ano: number,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getRendimentosAnuais>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getGetRendimentosAnuaisQueryKey(ano);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getRendimentosAnuais>>
+  > = ({ signal }) => getRendimentosAnuais(ano, { signal, ...requestOptions });
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!ano,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof getRendimentosAnuais>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetRendimentosAnuaisQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getRendimentosAnuais>>
+>;
+export type GetRendimentosAnuaisQueryError = ErrorType<void>;
+
+/**
+ * @summary Declaração de rendimentos anual (IRRF)
+ */
+
+export function useGetRendimentosAnuais<
+  TData = Awaited<ReturnType<typeof getRendimentosAnuais>>,
+  TError = ErrorType<void>,
+>(
+  ano: number,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getRendimentosAnuais>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetRendimentosAnuaisQueryOptions(ano, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Saldo de férias e períodos aquisitivos
+ */
+export const getGetFeriasSaldoUrl = () => {
+  return `/api/servidor/ferias/saldo`;
+};
+
+export const getFeriasSaldo = async (
+  options?: RequestInit,
+): Promise<FeriasSaldo> => {
+  return customFetch<FeriasSaldo>(getGetFeriasSaldoUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetFeriasSaldoQueryKey = () => {
+  return [`/api/servidor/ferias/saldo`] as const;
+};
+
+export const getGetFeriasSaldoQueryOptions = <
+  TData = Awaited<ReturnType<typeof getFeriasSaldo>>,
+  TError = ErrorType<void>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getFeriasSaldo>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetFeriasSaldoQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getFeriasSaldo>>> = ({
+    signal,
+  }) => getFeriasSaldo({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getFeriasSaldo>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetFeriasSaldoQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getFeriasSaldo>>
+>;
+export type GetFeriasSaldoQueryError = ErrorType<void>;
+
+/**
+ * @summary Saldo de férias e períodos aquisitivos
+ */
+
+export function useGetFeriasSaldo<
+  TData = Awaited<ReturnType<typeof getFeriasSaldo>>,
+  TError = ErrorType<void>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getFeriasSaldo>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetFeriasSaldoQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Histórico de solicitações de férias
+ */
+export const getListFeriasHistoricoUrl = () => {
+  return `/api/servidor/ferias/historico`;
+};
+
+export const listFeriasHistorico = async (
+  options?: RequestInit,
+): Promise<ListFeriasHistorico200> => {
+  return customFetch<ListFeriasHistorico200>(getListFeriasHistoricoUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getListFeriasHistoricoQueryKey = () => {
+  return [`/api/servidor/ferias/historico`] as const;
+};
+
+export const getListFeriasHistoricoQueryOptions = <
+  TData = Awaited<ReturnType<typeof listFeriasHistorico>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listFeriasHistorico>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getListFeriasHistoricoQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof listFeriasHistorico>>
+  > = ({ signal }) => listFeriasHistorico({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof listFeriasHistorico>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ListFeriasHistoricoQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listFeriasHistorico>>
+>;
+export type ListFeriasHistoricoQueryError = ErrorType<unknown>;
+
+/**
+ * @summary Histórico de solicitações de férias
+ */
+
+export function useListFeriasHistorico<
+  TData = Awaited<ReturnType<typeof listFeriasHistorico>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listFeriasHistorico>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getListFeriasHistoricoQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Solicitar férias
+ */
+export const getSolicitarFeriasUrl = () => {
+  return `/api/servidor/ferias/solicitar`;
+};
+
+export const solicitarFerias = async (
+  solicitarFeriasBody: SolicitarFeriasBody,
+  options?: RequestInit,
+): Promise<void> => {
+  return customFetch<void>(getSolicitarFeriasUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(solicitarFeriasBody),
+  });
+};
+
+export const getSolicitarFeriasMutationOptions = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof solicitarFerias>>,
+    TError,
+    { data: BodyType<SolicitarFeriasBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof solicitarFerias>>,
+  TError,
+  { data: BodyType<SolicitarFeriasBody> },
+  TContext
+> => {
+  const mutationKey = ["solicitarFerias"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof solicitarFerias>>,
+    { data: BodyType<SolicitarFeriasBody> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return solicitarFerias(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type SolicitarFeriasMutationResult = NonNullable<
+  Awaited<ReturnType<typeof solicitarFerias>>
+>;
+export type SolicitarFeriasMutationBody = BodyType<SolicitarFeriasBody>;
+export type SolicitarFeriasMutationError = ErrorType<void>;
+
+/**
+ * @summary Solicitar férias
+ */
+export const useSolicitarFerias = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof solicitarFerias>>,
+    TError,
+    { data: BodyType<SolicitarFeriasBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof solicitarFerias>>,
+  TError,
+  { data: BodyType<SolicitarFeriasBody> },
+  TContext
+> => {
+  return useMutation(getSolicitarFeriasMutationOptions(options));
+};
+
+/**
+ * @summary Detalhe da solicitação de férias
+ */
+export const getGetFeriasDetalheUrl = (id: string) => {
+  return `/api/servidor/ferias/${id}`;
+};
+
+export const getFeriasDetalhe = async (
+  id: string,
+  options?: RequestInit,
+): Promise<void> => {
+  return customFetch<void>(getGetFeriasDetalheUrl(id), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetFeriasDetalheQueryKey = (id: string) => {
+  return [`/api/servidor/ferias/${id}`] as const;
+};
+
+export const getGetFeriasDetalheQueryOptions = <
+  TData = Awaited<ReturnType<typeof getFeriasDetalhe>>,
+  TError = ErrorType<void>,
+>(
+  id: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getFeriasDetalhe>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetFeriasDetalheQueryKey(id);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getFeriasDetalhe>>
+  > = ({ signal }) => getFeriasDetalhe(id, { signal, ...requestOptions });
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!id,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof getFeriasDetalhe>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetFeriasDetalheQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getFeriasDetalhe>>
+>;
+export type GetFeriasDetalheQueryError = ErrorType<void>;
+
+/**
+ * @summary Detalhe da solicitação de férias
+ */
+
+export function useGetFeriasDetalhe<
+  TData = Awaited<ReturnType<typeof getFeriasDetalhe>>,
+  TError = ErrorType<void>,
+>(
+  id: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getFeriasDetalhe>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetFeriasDetalheQueryOptions(id, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Listar requerimentos do servidor
+ */
+export const getListRequerimentosUrl = (params?: ListRequerimentosParams) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/api/servidor/requerimentos?${stringifiedParams}`
+    : `/api/servidor/requerimentos`;
+};
+
+export const listRequerimentos = async (
+  params?: ListRequerimentosParams,
+  options?: RequestInit,
+): Promise<ListRequerimentos200> => {
+  return customFetch<ListRequerimentos200>(getListRequerimentosUrl(params), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getListRequerimentosQueryKey = (
+  params?: ListRequerimentosParams,
+) => {
+  return [`/api/servidor/requerimentos`, ...(params ? [params] : [])] as const;
+};
+
+export const getListRequerimentosQueryOptions = <
+  TData = Awaited<ReturnType<typeof listRequerimentos>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: ListRequerimentosParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof listRequerimentos>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getListRequerimentosQueryKey(params);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof listRequerimentos>>
+  > = ({ signal }) => listRequerimentos(params, { signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof listRequerimentos>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ListRequerimentosQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listRequerimentos>>
+>;
+export type ListRequerimentosQueryError = ErrorType<unknown>;
+
+/**
+ * @summary Listar requerimentos do servidor
+ */
+
+export function useListRequerimentos<
+  TData = Awaited<ReturnType<typeof listRequerimentos>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: ListRequerimentosParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof listRequerimentos>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getListRequerimentosQueryOptions(params, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Protocolar novo requerimento
+ */
+export const getCriarRequerimentoUrl = () => {
+  return `/api/servidor/requerimentos`;
+};
+
+export const criarRequerimento = async (
+  criarRequerimentoBody: CriarRequerimentoBody,
+  options?: RequestInit,
+): Promise<void> => {
+  return customFetch<void>(getCriarRequerimentoUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(criarRequerimentoBody),
+  });
+};
+
+export const getCriarRequerimentoMutationOptions = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof criarRequerimento>>,
+    TError,
+    { data: BodyType<CriarRequerimentoBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof criarRequerimento>>,
+  TError,
+  { data: BodyType<CriarRequerimentoBody> },
+  TContext
+> => {
+  const mutationKey = ["criarRequerimento"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof criarRequerimento>>,
+    { data: BodyType<CriarRequerimentoBody> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return criarRequerimento(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CriarRequerimentoMutationResult = NonNullable<
+  Awaited<ReturnType<typeof criarRequerimento>>
+>;
+export type CriarRequerimentoMutationBody = BodyType<CriarRequerimentoBody>;
+export type CriarRequerimentoMutationError = ErrorType<void>;
+
+/**
+ * @summary Protocolar novo requerimento
+ */
+export const useCriarRequerimento = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof criarRequerimento>>,
+    TError,
+    { data: BodyType<CriarRequerimentoBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof criarRequerimento>>,
+  TError,
+  { data: BodyType<CriarRequerimentoBody> },
+  TContext
+> => {
+  return useMutation(getCriarRequerimentoMutationOptions(options));
+};
+
+/**
+ * @summary Detalhe do requerimento com tramitação
+ */
+export const getGetRequerimentoUrl = (id: string) => {
+  return `/api/servidor/requerimentos/${id}`;
+};
+
+export const getRequerimento = async (
+  id: string,
+  options?: RequestInit,
+): Promise<Requerimento> => {
+  return customFetch<Requerimento>(getGetRequerimentoUrl(id), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetRequerimentoQueryKey = (id: string) => {
+  return [`/api/servidor/requerimentos/${id}`] as const;
+};
+
+export const getGetRequerimentoQueryOptions = <
+  TData = Awaited<ReturnType<typeof getRequerimento>>,
+  TError = ErrorType<void>,
+>(
+  id: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getRequerimento>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetRequerimentoQueryKey(id);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getRequerimento>>> = ({
+    signal,
+  }) => getRequerimento(id, { signal, ...requestOptions });
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!id,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof getRequerimento>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetRequerimentoQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getRequerimento>>
+>;
+export type GetRequerimentoQueryError = ErrorType<void>;
+
+/**
+ * @summary Detalhe do requerimento com tramitação
+ */
+
+export function useGetRequerimento<
+  TData = Awaited<ReturnType<typeof getRequerimento>>,
+  TError = ErrorType<void>,
+>(
+  id: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getRequerimento>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetRequerimentoQueryOptions(id, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Apresentar recurso para requerimento indeferido
+ */
+export const getApresentarRecursoUrl = (id: string) => {
+  return `/api/servidor/requerimentos/${id}/recurso`;
+};
+
+export const apresentarRecurso = async (
+  id: string,
+  options?: RequestInit,
+): Promise<void> => {
+  return customFetch<void>(getApresentarRecursoUrl(id), {
+    ...options,
+    method: "POST",
+  });
+};
+
+export const getApresentarRecursoMutationOptions = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof apresentarRecurso>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof apresentarRecurso>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationKey = ["apresentarRecurso"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof apresentarRecurso>>,
+    { id: string }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return apresentarRecurso(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type ApresentarRecursoMutationResult = NonNullable<
+  Awaited<ReturnType<typeof apresentarRecurso>>
+>;
+
+export type ApresentarRecursoMutationError = ErrorType<void>;
+
+/**
+ * @summary Apresentar recurso para requerimento indeferido
+ */
+export const useApresentarRecurso = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof apresentarRecurso>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof apresentarRecurso>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  return useMutation(getApresentarRecursoMutationOptions(options));
+};
+
+/**
+ * @summary Dados cadastrais do servidor (CPF e conta mascarados)
+ */
+export const getGetPerfilServidorUrl = () => {
+  return `/api/servidor/perfil`;
+};
+
+export const getPerfilServidor = async (
+  options?: RequestInit,
+): Promise<PerfilServidor> => {
+  return customFetch<PerfilServidor>(getGetPerfilServidorUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetPerfilServidorQueryKey = () => {
+  return [`/api/servidor/perfil`] as const;
+};
+
+export const getGetPerfilServidorQueryOptions = <
+  TData = Awaited<ReturnType<typeof getPerfilServidor>>,
+  TError = ErrorType<void>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getPerfilServidor>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetPerfilServidorQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getPerfilServidor>>
+  > = ({ signal }) => getPerfilServidor({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getPerfilServidor>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetPerfilServidorQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getPerfilServidor>>
+>;
+export type GetPerfilServidorQueryError = ErrorType<void>;
+
+/**
+ * @summary Dados cadastrais do servidor (CPF e conta mascarados)
+ */
+
+export function useGetPerfilServidor<
+  TData = Awaited<ReturnType<typeof getPerfilServidor>>,
+  TError = ErrorType<void>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getPerfilServidor>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetPerfilServidorQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Atualizar dados pessoais editáveis (endereço, email pessoal, telefone)
+ */
+export const getUpdatePerfilServidorUrl = () => {
+  return `/api/servidor/perfil`;
+};
+
+export const updatePerfilServidor = async (
+  updatePerfilServidorBody: UpdatePerfilServidorBody,
+  options?: RequestInit,
+): Promise<void> => {
+  return customFetch<void>(getUpdatePerfilServidorUrl(), {
+    ...options,
+    method: "PUT",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(updatePerfilServidorBody),
+  });
+};
+
+export const getUpdatePerfilServidorMutationOptions = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updatePerfilServidor>>,
+    TError,
+    { data: BodyType<UpdatePerfilServidorBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof updatePerfilServidor>>,
+  TError,
+  { data: BodyType<UpdatePerfilServidorBody> },
+  TContext
+> => {
+  const mutationKey = ["updatePerfilServidor"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof updatePerfilServidor>>,
+    { data: BodyType<UpdatePerfilServidorBody> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return updatePerfilServidor(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type UpdatePerfilServidorMutationResult = NonNullable<
+  Awaited<ReturnType<typeof updatePerfilServidor>>
+>;
+export type UpdatePerfilServidorMutationBody =
+  BodyType<UpdatePerfilServidorBody>;
+export type UpdatePerfilServidorMutationError = ErrorType<void>;
+
+/**
+ * @summary Atualizar dados pessoais editáveis (endereço, email pessoal, telefone)
+ */
+export const useUpdatePerfilServidor = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updatePerfilServidor>>,
+    TError,
+    { data: BodyType<UpdatePerfilServidorBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof updatePerfilServidor>>,
+  TError,
+  { data: BodyType<UpdatePerfilServidorBody> },
+  TContext
+> => {
+  return useMutation(getUpdatePerfilServidorMutationOptions(options));
+};
+
+/**
+ * @summary Timeline de eventos da vida funcional
+ */
+export const getGetHistoricoFuncionalUrl = () => {
+  return `/api/servidor/historico-funcional`;
+};
+
+export const getHistoricoFuncional = async (
+  options?: RequestInit,
+): Promise<void> => {
+  return customFetch<void>(getGetHistoricoFuncionalUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetHistoricoFuncionalQueryKey = () => {
+  return [`/api/servidor/historico-funcional`] as const;
+};
+
+export const getGetHistoricoFuncionalQueryOptions = <
+  TData = Awaited<ReturnType<typeof getHistoricoFuncional>>,
+  TError = ErrorType<void>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getHistoricoFuncional>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetHistoricoFuncionalQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getHistoricoFuncional>>
+  > = ({ signal }) => getHistoricoFuncional({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getHistoricoFuncional>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetHistoricoFuncionalQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getHistoricoFuncional>>
+>;
+export type GetHistoricoFuncionalQueryError = ErrorType<void>;
+
+/**
+ * @summary Timeline de eventos da vida funcional
+ */
+
+export function useGetHistoricoFuncional<
+  TData = Awaited<ReturnType<typeof getHistoricoFuncional>>,
+  TError = ErrorType<void>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getHistoricoFuncional>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetHistoricoFuncionalQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Tempo de serviço com projeção de aposentadoria
+ */
+export const getGetTempoServicoUrl = () => {
+  return `/api/servidor/tempo-servico`;
+};
+
+export const getTempoServico = async (
+  options?: RequestInit,
+): Promise<TempoServico> => {
+  return customFetch<TempoServico>(getGetTempoServicoUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetTempoServicoQueryKey = () => {
+  return [`/api/servidor/tempo-servico`] as const;
+};
+
+export const getGetTempoServicoQueryOptions = <
+  TData = Awaited<ReturnType<typeof getTempoServico>>,
+  TError = ErrorType<void>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getTempoServico>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetTempoServicoQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getTempoServico>>> = ({
+    signal,
+  }) => getTempoServico({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getTempoServico>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetTempoServicoQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getTempoServico>>
+>;
+export type GetTempoServicoQueryError = ErrorType<void>;
+
+/**
+ * @summary Tempo de serviço com projeção de aposentadoria
+ */
+
+export function useGetTempoServico<
+  TData = Awaited<ReturnType<typeof getTempoServico>>,
+  TError = ErrorType<void>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getTempoServico>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetTempoServicoQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Dashboard do Painel RH (requer role admin ou rh)
+ */
+export const getGetRhDashboardUrl = () => {
+  return `/api/rh/dashboard`;
+};
+
+export const getRhDashboard = async (
+  options?: RequestInit,
+): Promise<RhDashboard> => {
+  return customFetch<RhDashboard>(getGetRhDashboardUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetRhDashboardQueryKey = () => {
+  return [`/api/rh/dashboard`] as const;
+};
+
+export const getGetRhDashboardQueryOptions = <
+  TData = Awaited<ReturnType<typeof getRhDashboard>>,
+  TError = ErrorType<void>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getRhDashboard>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetRhDashboardQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getRhDashboard>>> = ({
+    signal,
+  }) => getRhDashboard({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getRhDashboard>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetRhDashboardQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getRhDashboard>>
+>;
+export type GetRhDashboardQueryError = ErrorType<void>;
+
+/**
+ * @summary Dashboard do Painel RH (requer role admin ou rh)
+ */
+
+export function useGetRhDashboard<
+  TData = Awaited<ReturnType<typeof getRhDashboard>>,
+  TError = ErrorType<void>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getRhDashboard>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetRhDashboardQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Solicitações de férias aguardando aprovação
+ */
+export const getGetRhFeriasPendentesUrl = () => {
+  return `/api/rh/ferias/pendentes`;
+};
+
+export const getRhFeriasPendentes = async (
+  options?: RequestInit,
+): Promise<void> => {
+  return customFetch<void>(getGetRhFeriasPendentesUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetRhFeriasPendentesQueryKey = () => {
+  return [`/api/rh/ferias/pendentes`] as const;
+};
+
+export const getGetRhFeriasPendentesQueryOptions = <
+  TData = Awaited<ReturnType<typeof getRhFeriasPendentes>>,
+  TError = ErrorType<void>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getRhFeriasPendentes>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetRhFeriasPendentesQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getRhFeriasPendentes>>
+  > = ({ signal }) => getRhFeriasPendentes({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getRhFeriasPendentes>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetRhFeriasPendentesQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getRhFeriasPendentes>>
+>;
+export type GetRhFeriasPendentesQueryError = ErrorType<void>;
+
+/**
+ * @summary Solicitações de férias aguardando aprovação
+ */
+
+export function useGetRhFeriasPendentes<
+  TData = Awaited<ReturnType<typeof getRhFeriasPendentes>>,
+  TError = ErrorType<void>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getRhFeriasPendentes>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetRhFeriasPendentesQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Aprovar solicitação de férias
+ */
+export const getAprovarFeriasUrl = (id: string) => {
+  return `/api/rh/ferias/${id}/aprovar`;
+};
+
+export const aprovarFerias = async (
+  id: string,
+  options?: RequestInit,
+): Promise<void> => {
+  return customFetch<void>(getAprovarFeriasUrl(id), {
+    ...options,
+    method: "PATCH",
+  });
+};
+
+export const getAprovarFeriasMutationOptions = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof aprovarFerias>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof aprovarFerias>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationKey = ["aprovarFerias"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof aprovarFerias>>,
+    { id: string }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return aprovarFerias(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type AprovarFeriasMutationResult = NonNullable<
+  Awaited<ReturnType<typeof aprovarFerias>>
+>;
+
+export type AprovarFeriasMutationError = ErrorType<void>;
+
+/**
+ * @summary Aprovar solicitação de férias
+ */
+export const useAprovarFerias = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof aprovarFerias>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof aprovarFerias>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  return useMutation(getAprovarFeriasMutationOptions(options));
+};
+
+/**
+ * @summary Rejeitar solicitação de férias
+ */
+export const getRejeitarFeriasUrl = (id: string) => {
+  return `/api/rh/ferias/${id}/rejeitar`;
+};
+
+export const rejeitarFerias = async (
+  id: string,
+  rejeitarFeriasBody: RejeitarFeriasBody,
+  options?: RequestInit,
+): Promise<void> => {
+  return customFetch<void>(getRejeitarFeriasUrl(id), {
+    ...options,
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(rejeitarFeriasBody),
+  });
+};
+
+export const getRejeitarFeriasMutationOptions = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof rejeitarFerias>>,
+    TError,
+    { id: string; data: BodyType<RejeitarFeriasBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof rejeitarFerias>>,
+  TError,
+  { id: string; data: BodyType<RejeitarFeriasBody> },
+  TContext
+> => {
+  const mutationKey = ["rejeitarFerias"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof rejeitarFerias>>,
+    { id: string; data: BodyType<RejeitarFeriasBody> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return rejeitarFerias(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type RejeitarFeriasMutationResult = NonNullable<
+  Awaited<ReturnType<typeof rejeitarFerias>>
+>;
+export type RejeitarFeriasMutationBody = BodyType<RejeitarFeriasBody>;
+export type RejeitarFeriasMutationError = ErrorType<void>;
+
+/**
+ * @summary Rejeitar solicitação de férias
+ */
+export const useRejeitarFerias = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof rejeitarFerias>>,
+    TError,
+    { id: string; data: BodyType<RejeitarFeriasBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof rejeitarFerias>>,
+  TError,
+  { id: string; data: BodyType<RejeitarFeriasBody> },
+  TContext
+> => {
+  return useMutation(getRejeitarFeriasMutationOptions(options));
+};
+
+/**
+ * @summary Requerimentos em análise aguardando decisão
+ */
+export const getGetRhRequerimentosPendentesUrl = () => {
+  return `/api/rh/requerimentos/pendentes`;
+};
+
+export const getRhRequerimentosPendentes = async (
+  options?: RequestInit,
+): Promise<void> => {
+  return customFetch<void>(getGetRhRequerimentosPendentesUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetRhRequerimentosPendentesQueryKey = () => {
+  return [`/api/rh/requerimentos/pendentes`] as const;
+};
+
+export const getGetRhRequerimentosPendentesQueryOptions = <
+  TData = Awaited<ReturnType<typeof getRhRequerimentosPendentes>>,
+  TError = ErrorType<void>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getRhRequerimentosPendentes>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getGetRhRequerimentosPendentesQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getRhRequerimentosPendentes>>
+  > = ({ signal }) =>
+    getRhRequerimentosPendentes({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getRhRequerimentosPendentes>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetRhRequerimentosPendentesQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getRhRequerimentosPendentes>>
+>;
+export type GetRhRequerimentosPendentesQueryError = ErrorType<void>;
+
+/**
+ * @summary Requerimentos em análise aguardando decisão
+ */
+
+export function useGetRhRequerimentosPendentes<
+  TData = Awaited<ReturnType<typeof getRhRequerimentosPendentes>>,
+  TError = ErrorType<void>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getRhRequerimentosPendentes>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetRhRequerimentosPendentesQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Deferir requerimento com parecer técnico
+ */
+export const getDeferirRequerimentoUrl = (id: string) => {
+  return `/api/rh/requerimentos/${id}/deferir`;
+};
+
+export const deferirRequerimento = async (
+  id: string,
+  deferirRequerimentoBody: DeferirRequerimentoBody,
+  options?: RequestInit,
+): Promise<void> => {
+  return customFetch<void>(getDeferirRequerimentoUrl(id), {
+    ...options,
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(deferirRequerimentoBody),
+  });
+};
+
+export const getDeferirRequerimentoMutationOptions = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deferirRequerimento>>,
+    TError,
+    { id: string; data: BodyType<DeferirRequerimentoBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof deferirRequerimento>>,
+  TError,
+  { id: string; data: BodyType<DeferirRequerimentoBody> },
+  TContext
+> => {
+  const mutationKey = ["deferirRequerimento"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof deferirRequerimento>>,
+    { id: string; data: BodyType<DeferirRequerimentoBody> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return deferirRequerimento(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type DeferirRequerimentoMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deferirRequerimento>>
+>;
+export type DeferirRequerimentoMutationBody = BodyType<DeferirRequerimentoBody>;
+export type DeferirRequerimentoMutationError = ErrorType<void>;
+
+/**
+ * @summary Deferir requerimento com parecer técnico
+ */
+export const useDeferirRequerimento = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deferirRequerimento>>,
+    TError,
+    { id: string; data: BodyType<DeferirRequerimentoBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof deferirRequerimento>>,
+  TError,
+  { id: string; data: BodyType<DeferirRequerimentoBody> },
+  TContext
+> => {
+  return useMutation(getDeferirRequerimentoMutationOptions(options));
+};
+
+/**
+ * @summary Indeferir requerimento (gera prazo de recurso de 15 dias)
+ */
+export const getIndeferirRequerimentoUrl = (id: string) => {
+  return `/api/rh/requerimentos/${id}/indeferir`;
+};
+
+export const indeferirRequerimento = async (
+  id: string,
+  indeferirRequerimentoBody: IndeferirRequerimentoBody,
+  options?: RequestInit,
+): Promise<void> => {
+  return customFetch<void>(getIndeferirRequerimentoUrl(id), {
+    ...options,
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(indeferirRequerimentoBody),
+  });
+};
+
+export const getIndeferirRequerimentoMutationOptions = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof indeferirRequerimento>>,
+    TError,
+    { id: string; data: BodyType<IndeferirRequerimentoBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof indeferirRequerimento>>,
+  TError,
+  { id: string; data: BodyType<IndeferirRequerimentoBody> },
+  TContext
+> => {
+  const mutationKey = ["indeferirRequerimento"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof indeferirRequerimento>>,
+    { id: string; data: BodyType<IndeferirRequerimentoBody> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return indeferirRequerimento(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type IndeferirRequerimentoMutationResult = NonNullable<
+  Awaited<ReturnType<typeof indeferirRequerimento>>
+>;
+export type IndeferirRequerimentoMutationBody =
+  BodyType<IndeferirRequerimentoBody>;
+export type IndeferirRequerimentoMutationError = ErrorType<void>;
+
+/**
+ * @summary Indeferir requerimento (gera prazo de recurso de 15 dias)
+ */
+export const useIndeferirRequerimento = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof indeferirRequerimento>>,
+    TError,
+    { id: string; data: BodyType<IndeferirRequerimentoBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof indeferirRequerimento>>,
+  TError,
+  { id: string; data: BodyType<IndeferirRequerimentoBody> },
+  TContext
+> => {
+  return useMutation(getIndeferirRequerimentoMutationOptions(options));
+};
+
+/**
+ * @summary Resumo da folha de pagamento por mês/ano
+ */
+export const getGetRhFolhaResumoUrl = (params?: GetRhFolhaResumoParams) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/api/rh/folha-resumo?${stringifiedParams}`
+    : `/api/rh/folha-resumo`;
+};
+
+export const getRhFolhaResumo = async (
+  params?: GetRhFolhaResumoParams,
+  options?: RequestInit,
+): Promise<void> => {
+  return customFetch<void>(getGetRhFolhaResumoUrl(params), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetRhFolhaResumoQueryKey = (
+  params?: GetRhFolhaResumoParams,
+) => {
+  return [`/api/rh/folha-resumo`, ...(params ? [params] : [])] as const;
+};
+
+export const getGetRhFolhaResumoQueryOptions = <
+  TData = Awaited<ReturnType<typeof getRhFolhaResumo>>,
+  TError = ErrorType<void>,
+>(
+  params?: GetRhFolhaResumoParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getRhFolhaResumo>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getGetRhFolhaResumoQueryKey(params);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getRhFolhaResumo>>
+  > = ({ signal }) => getRhFolhaResumo(params, { signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getRhFolhaResumo>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetRhFolhaResumoQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getRhFolhaResumo>>
+>;
+export type GetRhFolhaResumoQueryError = ErrorType<void>;
+
+/**
+ * @summary Resumo da folha de pagamento por mês/ano
+ */
+
+export function useGetRhFolhaResumo<
+  TData = Awaited<ReturnType<typeof getRhFolhaResumo>>,
+  TError = ErrorType<void>,
+>(
+  params?: GetRhFolhaResumoParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getRhFolhaResumo>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetRhFolhaResumoQueryOptions(params, options);
 
   const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
     queryKey: QueryKey;

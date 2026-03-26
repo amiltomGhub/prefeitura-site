@@ -379,6 +379,210 @@ export interface BuscaResponse {
   totalPages: number;
 }
 
+export type ContrachequeCardStatus =
+  (typeof ContrachequeCardStatus)[keyof typeof ContrachequeCardStatus];
+
+export const ContrachequeCardStatus = {
+  pago: "pago",
+  pendente: "pendente",
+  processando: "processando",
+} as const;
+
+export interface ContrachequeCard {
+  id: string;
+  mes: number;
+  ano: number;
+  competencia: string;
+  totalBruto: number;
+  totalDescontos: number;
+  totalLiquido: number;
+  status: ContrachequeCardStatus;
+}
+
+export type ContrachequeLinhaTipo =
+  (typeof ContrachequeLinhaTipo)[keyof typeof ContrachequeLinhaTipo];
+
+export const ContrachequeLinhaTipo = {
+  vencimento: "vencimento",
+  desconto: "desconto",
+  informativo: "informativo",
+} as const;
+
+export interface ContrachequeLinha {
+  id: string;
+  tipo: ContrachequeLinhaTipo;
+  codigo: string;
+  descricao: string;
+  valor: number;
+}
+
+export type ContrachequeDetalheLinhas = {
+  vencimentos?: ContrachequeLinha[];
+  descontos?: ContrachequeLinha[];
+  informativos?: ContrachequeLinha[];
+};
+
+export type ContrachequeDetalheServidor = { [key: string]: unknown } | null;
+
+export interface ContrachequeDetalhe {
+  contracheque?: ContrachequeCard;
+  linhas?: ContrachequeDetalheLinhas;
+  servidor?: ContrachequeDetalheServidor;
+}
+
+export interface ContrachequeListResponse {
+  data: ContrachequeCard[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
+export type FeriasSaldoPeriodoAtual = { [key: string]: unknown } | null;
+
+export type FeriasSaldoPeriodosItem = { [key: string]: unknown };
+
+export interface FeriasSaldo {
+  saldoTotal: number;
+  periodoAtual?: FeriasSaldoPeriodoAtual;
+  progressoAquisitivo: number;
+  diasTrabalhados: number;
+  prazoVencido: boolean;
+  periodos: FeriasSaldoPeriodosItem[];
+}
+
+export type SolicitacaoFeriasStatus =
+  (typeof SolicitacaoFeriasStatus)[keyof typeof SolicitacaoFeriasStatus];
+
+export const SolicitacaoFeriasStatus = {
+  aguardando_chefia: "aguardando_chefia",
+  em_analise_rh: "em_analise_rh",
+  aprovado: "aprovado",
+  rejeitado: "rejeitado",
+  cancelado: "cancelado",
+} as const;
+
+export type SolicitacaoFeriasTimelineItem = { [key: string]: unknown };
+
+export interface SolicitacaoFerias {
+  id: string;
+  protocolo: string;
+  dataInicio: string;
+  dataFim: string;
+  dataRetorno?: string;
+  qtdDias: number;
+  parcelamento?: number;
+  adiantamento13?: boolean;
+  abonoPecuniario?: boolean;
+  status: SolicitacaoFeriasStatus;
+  timeline?: SolicitacaoFeriasTimelineItem[];
+}
+
+export type RequerimentoStatus =
+  (typeof RequerimentoStatus)[keyof typeof RequerimentoStatus];
+
+export const RequerimentoStatus = {
+  rascunho: "rascunho",
+  protocolado: "protocolado",
+  em_analise: "em_analise",
+  deferido: "deferido",
+  indeferido: "indeferido",
+  arquivado: "arquivado",
+} as const;
+
+export type RequerimentoDocumentosItem = { [key: string]: unknown };
+
+export type RequerimentoTimelineItem = { [key: string]: unknown };
+
+export interface Requerimento {
+  id: string;
+  protocolo: string;
+  tipo: string;
+  assunto: string;
+  justificativa: string;
+  status: RequerimentoStatus;
+  documentos?: RequerimentoDocumentosItem[];
+  timeline?: RequerimentoTimelineItem[];
+  parecerTecnico?: string | null;
+  decisao?: string | null;
+  prazoRecurso?: string | null;
+}
+
+export interface PerfilServidor {
+  id: string;
+  nome: string;
+  cpf: string;
+  matricula: string;
+  cargo: string;
+  nivel?: string | null;
+  secretaria: string;
+  localTrabalho?: string | null;
+  dataIngresso: string;
+  vinculo: string;
+  status: string;
+  banco?: string | null;
+  agencia?: string | null;
+  conta?: string | null;
+}
+
+export type TempoServicoProjecaoAposentadoria = {
+  dataEstimada?: string;
+  anosRestantes?: number;
+  regra?: string;
+};
+
+export interface TempoServico {
+  dataIngresso: string;
+  totalDias: number;
+  anos: number;
+  meses: number;
+  dias: number;
+  descricao: string;
+  projecaoAposentadoria?: TempoServicoProjecaoAposentadoria;
+}
+
+export type RhDashboardServidoresPorSecretariaItem = {
+  secretaria?: string;
+  total?: number;
+};
+
+export type RhDashboardFeriasVencidasItem = { [key: string]: unknown };
+
+export type RhDashboardRequerimentosPendentesItem = { [key: string]: unknown };
+
+export type RhDashboardAniversariantesItem = { [key: string]: unknown };
+
+export type RhDashboardFeriasPendentesAprovacaoItem = {
+  [key: string]: unknown;
+};
+
+export type RhDashboardFolhaDoMes = {
+  totalBruto?: number;
+  totalLiquido?: number;
+  totalDescontos?: number;
+  qtdServidores?: number;
+};
+
+export interface RhDashboard {
+  servidoresPorSecretaria?: RhDashboardServidoresPorSecretariaItem[];
+  feriasVencidas?: RhDashboardFeriasVencidasItem[];
+  requerimentosPendentes?: RhDashboardRequerimentosPendentesItem[];
+  aniversariantes?: RhDashboardAniversariantesItem[];
+  feriasPendentesAprovacao?: RhDashboardFeriasPendentesAprovacaoItem[];
+  folhaDoMes?: RhDashboardFolhaDoMes;
+}
+
+export type RendimentosAnuaisMesesItem = { [key: string]: unknown };
+
+export interface RendimentosAnuais {
+  ano: number;
+  totalBruto: number;
+  totalDescontos: number;
+  totalLiquido: number;
+  orgao?: string;
+  meses?: RendimentosAnuaisMesesItem[];
+}
+
 export type GetTenantConfigParams = {
   tenant?: string;
 };
@@ -502,3 +706,92 @@ export const GlobalSearchTipo = {
   legislacao: "legislacao",
   secretaria: "secretaria",
 } as const;
+
+export type ListContrachequesParams = {
+  ano?: number;
+  page?: number;
+  limit?: number;
+};
+
+export type ListFeriasHistorico200 = {
+  data?: SolicitacaoFerias[];
+};
+
+export type SolicitarFeriasBodyParcelamento =
+  (typeof SolicitarFeriasBodyParcelamento)[keyof typeof SolicitarFeriasBodyParcelamento];
+
+export const SolicitarFeriasBodyParcelamento = {
+  NUMBER_1: 1,
+  NUMBER_2: 2,
+  NUMBER_3: 3,
+} as const;
+
+export type SolicitarFeriasBody = {
+  periodoAquisitivoId: string;
+  dataInicio: string;
+  /** @minimum 5 */
+  qtdDias: number;
+  parcelamento?: SolicitarFeriasBodyParcelamento;
+  adiantamento13?: boolean;
+  abonoPecuniario?: boolean;
+  diasAbono?: number;
+};
+
+export type ListRequerimentosParams = {
+  tipo?: string;
+  status?: string;
+};
+
+export type ListRequerimentos200 = {
+  data?: Requerimento[];
+  tipos?: string[];
+};
+
+export type CriarRequerimentoBodyCamposEspecificos = { [key: string]: unknown };
+
+export type CriarRequerimentoBodyDocumentosItem = {
+  nome: string;
+  url: string;
+  tamanho?: number;
+};
+
+export type CriarRequerimentoBody = {
+  tipo: string;
+  assunto?: string;
+  /** @minLength 100 */
+  justificativa: string;
+  camposEspecificos?: CriarRequerimentoBodyCamposEspecificos;
+  /** URLs de arquivos previamente enviados via upload */
+  documentos?: CriarRequerimentoBodyDocumentosItem[];
+};
+
+export type UpdatePerfilServidorBody = {
+  emailPessoal?: string;
+  telefone?: string;
+  endereco?: string;
+  numero?: string;
+  complemento?: string;
+  bairro?: string;
+  cidade?: string;
+  estado?: string;
+  cep?: string;
+};
+
+export type RejeitarFeriasBody = {
+  motivo: string;
+};
+
+export type DeferirRequerimentoBody = {
+  parecer?: string;
+  decisao?: string;
+};
+
+export type IndeferirRequerimentoBody = {
+  parecer?: string;
+  motivo: string;
+};
+
+export type GetRhFolhaResumoParams = {
+  mes?: number;
+  ano?: number;
+};

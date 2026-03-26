@@ -44,3 +44,17 @@ export async function requireModule(modulo: string) {
     return next();
   };
 }
+
+/**
+ * Guarda para rotas do Painel RH.
+ * Requer que o usuário autenticado seja admin ou possua o módulo "rh".
+ */
+export function requireRH(req: AuthRequest, res: Response, next: NextFunction) {
+  if (!req.user) {
+    return res.status(401).json({ error: "Não autenticado." });
+  }
+  if (!req.user.isAdmin && !req.user.modulosPermitidos.includes("rh")) {
+    return res.status(403).json({ error: "Acesso restrito ao Painel RH." });
+  }
+  return next();
+}

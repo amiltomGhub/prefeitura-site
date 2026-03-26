@@ -8,12 +8,12 @@ import {
   contrachequeTable,
 } from "@workspace/db/schema";
 import { eq, and, sql, lt } from "drizzle-orm";
-import { requireAuth, requireModule, type AuthRequest } from "../../middlewares/requireAuth";
+import { requireAuth, requireRH, type AuthRequest } from "../../middlewares/requireAuth";
 
 const router: IRouter = Router();
 
-// GET /api/rh/dashboard
-router.get("/rh/dashboard", requireAuth, async (req: AuthRequest, res) => {
+// GET /api/rh/dashboard — Painel RH (admin ou módulo "rh" obrigatório)
+router.get("/rh/dashboard", requireAuth, requireRH, async (req: AuthRequest, res) => {
   try {
     const tenantId = req.user!.tenantId;
     const hoje = new Date().toISOString().split("T")[0]!;
@@ -107,9 +107,9 @@ router.get("/rh/dashboard", requireAuth, async (req: AuthRequest, res) => {
     const anoHoje = new Date().getFullYear();
     const folhaDoMes = await db
       .select({
-        totalBruto: sql<number>`sum(total_bruto)::numeric`,
-        totalLiquido: sql<number>`sum(total_liquido)::numeric`,
-        totalDescontos: sql<number>`sum(total_descontos)::numeric`,
+        totalBruto: sql<number>`COALESCE(sum(c.total_bruto), 0)::numeric`,
+        totalLiquido: sql<number>`COALESCE(sum(c.total_liquido), 0)::numeric`,
+        totalDescontos: sql<number>`COALESCE(sum(c.total_descontos), 0)::numeric`,
         qtdServidores: sql<number>`count(*)::int`,
       })
       .from(contrachequeTable)
@@ -140,7 +140,7 @@ router.get("/rh/dashboard", requireAuth, async (req: AuthRequest, res) => {
 });
 
 // GET /api/rh/ferias/pendentes
-router.get("/rh/ferias/pendentes", requireAuth, async (req: AuthRequest, res) => {
+router.get("/rh/ferias/pendentes", requireAuth, requireRH, async (req: AuthRequest, res) => {
   try {
     const tenantId = req.user!.tenantId;
 
@@ -175,7 +175,7 @@ router.get("/rh/ferias/pendentes", requireAuth, async (req: AuthRequest, res) =>
 });
 
 // PATCH /api/rh/ferias/:id/aprovar
-router.patch("/rh/ferias/:id/aprovar", requireAuth, async (req: AuthRequest, res) => {
+router.patch("/rh/ferias/:id/aprovar", requireAuth, requireRH, async (req: AuthRequest, res) => {
   try {
     const tenantId = req.user!.tenantId;
 
@@ -219,7 +219,7 @@ router.patch("/rh/ferias/:id/aprovar", requireAuth, async (req: AuthRequest, res
 });
 
 // PATCH /api/rh/ferias/:id/rejeitar
-router.patch("/rh/ferias/:id/rejeitar", requireAuth, async (req: AuthRequest, res) => {
+router.patch("/rh/ferias/:id/rejeitar", requireAuth, requireRH, async (req: AuthRequest, res) => {
   try {
     const tenantId = req.user!.tenantId;
     const { motivo } = req.body as { motivo?: string };
@@ -264,7 +264,7 @@ router.patch("/rh/ferias/:id/rejeitar", requireAuth, async (req: AuthRequest, re
 });
 
 // GET /api/rh/requerimentos/pendentes
-router.get("/rh/requerimentos/pendentes", requireAuth, async (req: AuthRequest, res) => {
+router.get("/rh/requerimentos/pendentes", requireAuth, requireRH, async (req: AuthRequest, res) => {
   try {
     const tenantId = req.user!.tenantId;
 
@@ -299,7 +299,7 @@ router.get("/rh/requerimentos/pendentes", requireAuth, async (req: AuthRequest, 
 });
 
 // PATCH /api/rh/requerimentos/:id/deferir
-router.patch("/rh/requerimentos/:id/deferir", requireAuth, async (req: AuthRequest, res) => {
+router.patch("/rh/requerimentos/:id/deferir", requireAuth, requireRH, async (req: AuthRequest, res) => {
   try {
     const tenantId = req.user!.tenantId;
     const { parecer, decisao } = req.body as { parecer?: string; decisao?: string };
@@ -346,7 +346,7 @@ router.patch("/rh/requerimentos/:id/deferir", requireAuth, async (req: AuthReque
 });
 
 // PATCH /api/rh/requerimentos/:id/indeferir
-router.patch("/rh/requerimentos/:id/indeferir", requireAuth, async (req: AuthRequest, res) => {
+router.patch("/rh/requerimentos/:id/indeferir", requireAuth, requireRH, async (req: AuthRequest, res) => {
   try {
     const tenantId = req.user!.tenantId;
     const { parecer, motivo } = req.body as { parecer?: string; motivo?: string };
@@ -403,7 +403,7 @@ router.patch("/rh/requerimentos/:id/indeferir", requireAuth, async (req: AuthReq
 });
 
 // GET /api/rh/folha-resumo?mes=&ano=
-router.get("/rh/folha-resumo", requireAuth, async (req: AuthRequest, res) => {
+router.get("/rh/folha-resumo", requireAuth, requireRH, async (req: AuthRequest, res) => {
   try {
     const tenantId = req.user!.tenantId;
     const mes = req.query["mes"] ? parseInt(req.query["mes"] as string) : new Date().getMonth() + 1;
@@ -411,21 +411,21 @@ router.get("/rh/folha-resumo", requireAuth, async (req: AuthRequest, res) => {
 
     const resumo = await db
       .select({
-        totalBruto: sql<number>`sum(c.total_bruto)::numeric`,
-        totalLiquido: sql<number>`sum(c.total_liquido)::numeric`,
-        totalDescontos: sql<number>`sum(c.total_descontos)::numeric`,
+        totalBruto: sql<number>`COALESCE(sum(c.total_bruto), 0)::numeric`,
+        totalLiquido: sql<number>`COALESCE(sum(c.total_liquido), 0)::numeric`,
+        totalDescontos: sql<number>`COALESCE(sum(c.total_descontos), 0)::numeric`,
         qtdServidores: sql<number>`count(*)::int`,
       })
-      .from(sql`contracheques c`)
+      .from(contrachequeTable)
       .innerJoin(
         servidoresCadastroTable,
-        sql`c.servidor_id = ${servidoresCadastroTable.id}`
+        eq(contrachequeTable.servidorId, servidoresCadastroTable.id)
       )
       .where(
         and(
           eq(servidoresCadastroTable.tenantId, tenantId),
-          sql`c.mes = ${mes}`,
-          sql`c.ano = ${ano}`
+          eq(contrachequeTable.mes, mes),
+          eq(contrachequeTable.ano, ano)
         )
       );
 

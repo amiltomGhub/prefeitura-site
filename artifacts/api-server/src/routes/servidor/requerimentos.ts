@@ -47,6 +47,11 @@ router.get("/servidor/requerimentos", requireAuth, async (req: AuthRequest, res)
 });
 
 // POST /api/servidor/requerimentos
+// Body (JSON): { tipo, assunto?, justificativa (min 100 chars), camposEspecificos?, documentos? }
+// documentos: array de { nome, url, tamanho } — arquivos já enviados via upload prévio (multipart)
+// ou enviados como base64 em { nome, conteudoBase64, mimeType } para integração futura.
+// O upload real de arquivos deve ser feito antes desta chamada usando uma rota de upload dedicada
+// (e.g. POST /api/upload), que retorna a URL pública do arquivo para compor o array documentos.
 router.post("/servidor/requerimentos", requireAuth, async (req: AuthRequest, res) => {
   try {
     const servidorId = req.user!.id;
@@ -57,6 +62,21 @@ router.post("/servidor/requerimentos", requireAuth, async (req: AuthRequest, res
     if (!TIPOS_REQUERIMENTO.includes(b.tipo)) return res.status(400).json({ error: "Tipo de requerimento inválido" });
     if (!b.justificativa || (b.justificativa as string).length < 100) {
       return res.status(400).json({ error: "justificativa deve ter no mínimo 100 caracteres" });
+    }
+
+    // Validar estrutura dos documentos (se fornecidos)
+    const documentos: Array<{ nome: string; url: string; tamanho: number }> = [];
+    if (Array.isArray(b.documentos)) {
+      for (const doc of b.documentos as unknown[]) {
+        if (typeof doc !== "object" || doc === null) continue;
+        const d = doc as Record<string, unknown>;
+        if (!d["nome"] || !d["url"]) continue;
+        documentos.push({
+          nome: String(d["nome"]),
+          url: String(d["url"]),
+          tamanho: Number(d["tamanho"] ?? 0),
+        });
+      }
     }
 
     const protocolo = `REQ-${new Date().getFullYear()}-${String(Date.now()).slice(-6)}`;
@@ -77,17 +97,17 @@ router.post("/servidor/requerimentos", requireAuth, async (req: AuthRequest, res
       servidorId,
       protocolo,
       tipo: b.tipo as string,
-      assunto: (b.assunto as string) || b.tipo,
+      assunto: (b.assunto as string) || (b.tipo as string),
       justificativa: b.justificativa as string,
       camposEspecificos: (b.camposEspecificos as object) ?? {},
-      documentos: (b.documentos as object[]) ?? [],
+      documentos,
       status: "protocolado",
       timeline,
     };
 
     await db.insert(requerimentosTable).values(novo);
 
-    res.status(201).json({ protocolo, id, status: "protocolado" });
+    res.status(201).json({ protocolo, id, status: "protocolado", documentosAnexados: documentos.length });
   } catch (err) {
     req.log.error(err);
     res.status(500).json({ error: "Erro interno" });

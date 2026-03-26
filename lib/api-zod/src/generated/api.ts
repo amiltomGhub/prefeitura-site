@@ -717,3 +717,418 @@ export const GetVicePrefeitoResponse = zod.object({
     })
     .nullish(),
 });
+
+/**
+ * @summary Listar contracheques do servidor
+ */
+export const listContrachequesQueryPageDefault = 1;
+export const listContrachequesQueryLimitDefault = 24;
+
+export const ListContrachequesQueryParams = zod.object({
+  ano: zod.coerce.number().optional(),
+  page: zod.coerce.number().default(listContrachequesQueryPageDefault),
+  limit: zod.coerce.number().default(listContrachequesQueryLimitDefault),
+});
+
+export const ListContrachequesResponse = zod.object({
+  data: zod.array(
+    zod.object({
+      id: zod.string(),
+      mes: zod.number(),
+      ano: zod.number(),
+      competencia: zod.string(),
+      totalBruto: zod.number(),
+      totalDescontos: zod.number(),
+      totalLiquido: zod.number(),
+      status: zod.enum(["pago", "pendente", "processando"]),
+    }),
+  ),
+  total: zod.number(),
+  page: zod.number(),
+  limit: zod.number(),
+  totalPages: zod.number(),
+});
+
+/**
+ * @summary Detalhes do contracheque por mês e ano
+ */
+export const getContrachequePathMesMax = 12;
+
+export const GetContrachequeParams = zod.object({
+  mes: zod.coerce.number().min(1).max(getContrachequePathMesMax),
+  ano: zod.coerce.number(),
+});
+
+export const GetContrachequeResponse = zod.object({
+  contracheque: zod
+    .object({
+      id: zod.string(),
+      mes: zod.number(),
+      ano: zod.number(),
+      competencia: zod.string(),
+      totalBruto: zod.number(),
+      totalDescontos: zod.number(),
+      totalLiquido: zod.number(),
+      status: zod.enum(["pago", "pendente", "processando"]),
+    })
+    .optional(),
+  linhas: zod
+    .object({
+      vencimentos: zod
+        .array(
+          zod.object({
+            id: zod.string(),
+            tipo: zod.enum(["vencimento", "desconto", "informativo"]),
+            codigo: zod.string(),
+            descricao: zod.string(),
+            valor: zod.number(),
+          }),
+        )
+        .optional(),
+      descontos: zod
+        .array(
+          zod.object({
+            id: zod.string(),
+            tipo: zod.enum(["vencimento", "desconto", "informativo"]),
+            codigo: zod.string(),
+            descricao: zod.string(),
+            valor: zod.number(),
+          }),
+        )
+        .optional(),
+      informativos: zod
+        .array(
+          zod.object({
+            id: zod.string(),
+            tipo: zod.enum(["vencimento", "desconto", "informativo"]),
+            codigo: zod.string(),
+            descricao: zod.string(),
+            valor: zod.number(),
+          }),
+        )
+        .optional(),
+    })
+    .optional(),
+  servidor: zod.object({}).passthrough().nullish(),
+});
+
+/**
+ * @summary Download do contracheque em PDF
+ */
+export const DownloadContrachequePdfParams = zod.object({
+  mes: zod.coerce.number(),
+  ano: zod.coerce.number(),
+});
+
+/**
+ * @summary Declaração de rendimentos anual (IRRF)
+ */
+export const GetRendimentosAnuaisParams = zod.object({
+  ano: zod.coerce.number(),
+});
+
+export const GetRendimentosAnuaisResponse = zod.object({
+  ano: zod.number(),
+  totalBruto: zod.number(),
+  totalDescontos: zod.number(),
+  totalLiquido: zod.number(),
+  orgao: zod.string().optional(),
+  meses: zod.array(zod.object({}).passthrough()).optional(),
+});
+
+/**
+ * @summary Saldo de férias e períodos aquisitivos
+ */
+export const GetFeriasSaldoResponse = zod.object({
+  saldoTotal: zod.number(),
+  periodoAtual: zod.object({}).passthrough().nullish(),
+  progressoAquisitivo: zod.number(),
+  diasTrabalhados: zod.number(),
+  prazoVencido: zod.boolean(),
+  periodos: zod.array(zod.object({}).passthrough()),
+});
+
+/**
+ * @summary Histórico de solicitações de férias
+ */
+export const ListFeriasHistoricoResponse = zod.object({
+  data: zod
+    .array(
+      zod.object({
+        id: zod.string(),
+        protocolo: zod.string(),
+        dataInicio: zod.date(),
+        dataFim: zod.date(),
+        dataRetorno: zod.date().optional(),
+        qtdDias: zod.number(),
+        parcelamento: zod.number().optional(),
+        adiantamento13: zod.boolean().optional(),
+        abonoPecuniario: zod.boolean().optional(),
+        status: zod.enum([
+          "aguardando_chefia",
+          "em_analise_rh",
+          "aprovado",
+          "rejeitado",
+          "cancelado",
+        ]),
+        timeline: zod.array(zod.object({}).passthrough()).optional(),
+      }),
+    )
+    .optional(),
+});
+
+/**
+ * @summary Solicitar férias
+ */
+export const solicitarFeriasBodyQtdDiasMin = 5;
+
+export const solicitarFeriasBodyParcelamentoDefault = 1;
+export const solicitarFeriasBodyAdiantamento13Default = false;
+export const solicitarFeriasBodyAbonoPecuniarioDefault = false;
+export const solicitarFeriasBodyDiasAbonoDefault = 0;
+
+export const SolicitarFeriasBody = zod.object({
+  periodoAquisitivoId: zod.string(),
+  dataInicio: zod.date(),
+  qtdDias: zod.number().min(solicitarFeriasBodyQtdDiasMin),
+  parcelamento: zod
+    .union([zod.literal(1), zod.literal(2), zod.literal(3)])
+    .default(solicitarFeriasBodyParcelamentoDefault),
+  adiantamento13: zod
+    .boolean()
+    .default(solicitarFeriasBodyAdiantamento13Default),
+  abonoPecuniario: zod
+    .boolean()
+    .default(solicitarFeriasBodyAbonoPecuniarioDefault),
+  diasAbono: zod.number().default(solicitarFeriasBodyDiasAbonoDefault),
+});
+
+/**
+ * @summary Detalhe da solicitação de férias
+ */
+export const GetFeriasDetalheParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+/**
+ * @summary Listar requerimentos do servidor
+ */
+export const ListRequerimentosQueryParams = zod.object({
+  tipo: zod.coerce.string().optional(),
+  status: zod.coerce.string().optional(),
+});
+
+export const ListRequerimentosResponse = zod.object({
+  data: zod
+    .array(
+      zod.object({
+        id: zod.string(),
+        protocolo: zod.string(),
+        tipo: zod.string(),
+        assunto: zod.string(),
+        justificativa: zod.string(),
+        status: zod.enum([
+          "rascunho",
+          "protocolado",
+          "em_analise",
+          "deferido",
+          "indeferido",
+          "arquivado",
+        ]),
+        documentos: zod.array(zod.object({}).passthrough()).optional(),
+        timeline: zod.array(zod.object({}).passthrough()).optional(),
+        parecerTecnico: zod.string().nullish(),
+        decisao: zod.string().nullish(),
+        prazoRecurso: zod.date().nullish(),
+      }),
+    )
+    .optional(),
+  tipos: zod.array(zod.string()).optional(),
+});
+
+/**
+ * @summary Protocolar novo requerimento
+ */
+export const criarRequerimentoBodyJustificativaMin = 100;
+
+export const CriarRequerimentoBody = zod.object({
+  tipo: zod.string(),
+  assunto: zod.string().optional(),
+  justificativa: zod.string().min(criarRequerimentoBodyJustificativaMin),
+  camposEspecificos: zod.object({}).passthrough().optional(),
+  documentos: zod
+    .array(
+      zod.object({
+        nome: zod.string(),
+        url: zod.string(),
+        tamanho: zod.number().optional(),
+      }),
+    )
+    .optional()
+    .describe("URLs de arquivos previamente enviados via upload"),
+});
+
+/**
+ * @summary Detalhe do requerimento com tramitação
+ */
+export const GetRequerimentoParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const GetRequerimentoResponse = zod.object({
+  id: zod.string(),
+  protocolo: zod.string(),
+  tipo: zod.string(),
+  assunto: zod.string(),
+  justificativa: zod.string(),
+  status: zod.enum([
+    "rascunho",
+    "protocolado",
+    "em_analise",
+    "deferido",
+    "indeferido",
+    "arquivado",
+  ]),
+  documentos: zod.array(zod.object({}).passthrough()).optional(),
+  timeline: zod.array(zod.object({}).passthrough()).optional(),
+  parecerTecnico: zod.string().nullish(),
+  decisao: zod.string().nullish(),
+  prazoRecurso: zod.date().nullish(),
+});
+
+/**
+ * @summary Apresentar recurso para requerimento indeferido
+ */
+export const ApresentarRecursoParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+/**
+ * @summary Dados cadastrais do servidor (CPF e conta mascarados)
+ */
+export const GetPerfilServidorResponse = zod.object({
+  id: zod.string(),
+  nome: zod.string(),
+  cpf: zod.string(),
+  matricula: zod.string(),
+  cargo: zod.string(),
+  nivel: zod.string().nullish(),
+  secretaria: zod.string(),
+  localTrabalho: zod.string().nullish(),
+  dataIngresso: zod.date(),
+  vinculo: zod.string(),
+  status: zod.string(),
+  banco: zod.string().nullish(),
+  agencia: zod.string().nullish(),
+  conta: zod.string().nullish(),
+});
+
+/**
+ * @summary Atualizar dados pessoais editáveis (endereço, email pessoal, telefone)
+ */
+export const UpdatePerfilServidorBody = zod.object({
+  emailPessoal: zod.string().optional(),
+  telefone: zod.string().optional(),
+  endereco: zod.string().optional(),
+  numero: zod.string().optional(),
+  complemento: zod.string().optional(),
+  bairro: zod.string().optional(),
+  cidade: zod.string().optional(),
+  estado: zod.string().optional(),
+  cep: zod.string().optional(),
+});
+
+/**
+ * @summary Tempo de serviço com projeção de aposentadoria
+ */
+export const GetTempoServicoResponse = zod.object({
+  dataIngresso: zod.date(),
+  totalDias: zod.number(),
+  anos: zod.number(),
+  meses: zod.number(),
+  dias: zod.number(),
+  descricao: zod.string(),
+  projecaoAposentadoria: zod
+    .object({
+      dataEstimada: zod.date().optional(),
+      anosRestantes: zod.number().optional(),
+      regra: zod.string().optional(),
+    })
+    .optional(),
+});
+
+/**
+ * @summary Dashboard do Painel RH (requer role admin ou rh)
+ */
+export const GetRhDashboardResponse = zod.object({
+  servidoresPorSecretaria: zod
+    .array(
+      zod.object({
+        secretaria: zod.string().optional(),
+        total: zod.number().optional(),
+      }),
+    )
+    .optional(),
+  feriasVencidas: zod.array(zod.object({}).passthrough()).optional(),
+  requerimentosPendentes: zod.array(zod.object({}).passthrough()).optional(),
+  aniversariantes: zod.array(zod.object({}).passthrough()).optional(),
+  feriasPendentesAprovacao: zod.array(zod.object({}).passthrough()).optional(),
+  folhaDoMes: zod
+    .object({
+      totalBruto: zod.number().optional(),
+      totalLiquido: zod.number().optional(),
+      totalDescontos: zod.number().optional(),
+      qtdServidores: zod.number().optional(),
+    })
+    .optional(),
+});
+
+/**
+ * @summary Aprovar solicitação de férias
+ */
+export const AprovarFeriasParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+/**
+ * @summary Rejeitar solicitação de férias
+ */
+export const RejeitarFeriasParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const RejeitarFeriasBody = zod.object({
+  motivo: zod.string(),
+});
+
+/**
+ * @summary Deferir requerimento com parecer técnico
+ */
+export const DeferirRequerimentoParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const DeferirRequerimentoBody = zod.object({
+  parecer: zod.string().optional(),
+  decisao: zod.string().optional(),
+});
+
+/**
+ * @summary Indeferir requerimento (gera prazo de recurso de 15 dias)
+ */
+export const IndeferirRequerimentoParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const IndeferirRequerimentoBody = zod.object({
+  parecer: zod.string().optional(),
+  motivo: zod.string(),
+});
+
+/**
+ * @summary Resumo da folha de pagamento por mês/ano
+ */
+export const GetRhFolhaResumoQueryParams = zod.object({
+  mes: zod.coerce.number().optional(),
+  ano: zod.coerce.number().optional(),
+});

@@ -31,6 +31,10 @@ tags:
     description: Busca global
   - name: concursos
     description: Concursos e processos seletivos
+  - name: servidor
+    description: Portal do Servidor — autoatendimento funcional (requer JWT)
+  - name: rh
+    description: Painel RH — gestão de servidores (requer JWT + role admin/rh)
 
 paths:
   /healthz:
@@ -644,6 +648,630 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Gestor"
+
+  # ── Portal do Servidor (/servidor/*) ─────────────────────────────────────────
+
+  /servidor/contracheques:
+    get:
+      operationId: listContracheques
+      tags: [servidor]
+      summary: Listar contracheques do servidor
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: ano
+          in: query
+          schema:
+            type: integer
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 24
+      responses:
+        "200":
+          description: Lista de contracheques paginada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContrachequeListResponse"
+        "401":
+          description: Não autenticado
+
+  /servidor/contracheques/{mes}/{ano}:
+    get:
+      operationId: getContracheque
+      tags: [servidor]
+      summary: Detalhes do contracheque por mês e ano
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: mes
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 12
+        - name: ano
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Contracheque com linhas detalhadas
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContrachequeDetalhe"
+        "401":
+          description: Não autenticado
+        "404":
+          description: Contracheque não encontrado
+
+  /servidor/contracheques/{mes}/{ano}/pdf:
+    get:
+      operationId: downloadContrachequePdf
+      tags: [servidor]
+      summary: Download do contracheque em PDF
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: mes
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: ano
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Arquivo PDF do contracheque
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        "401":
+          description: Não autenticado
+        "404":
+          description: Contracheque não encontrado
+
+  /servidor/rendimentos/{ano}:
+    get:
+      operationId: getRendimentosAnuais
+      tags: [servidor]
+      summary: Declaração de rendimentos anual (IRRF)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: ano
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Rendimentos anuais consolidados
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RendimentosAnuais"
+        "401":
+          description: Não autenticado
+
+  /servidor/ferias/saldo:
+    get:
+      operationId: getFeriasSaldo
+      tags: [servidor]
+      summary: Saldo de férias e períodos aquisitivos
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Saldo atual e progresso aquisitivo
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FeriasSaldo"
+        "401":
+          description: Não autenticado
+
+  /servidor/ferias/historico:
+    get:
+      operationId: listFeriasHistorico
+      tags: [servidor]
+      summary: Histórico de solicitações de férias
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Lista de solicitações
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/SolicitacaoFerias"
+
+  /servidor/ferias/solicitar:
+    post:
+      operationId: solicitarFerias
+      tags: [servidor]
+      summary: Solicitar férias
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                periodoAquisitivoId:
+                  type: string
+                dataInicio:
+                  type: string
+                  format: date
+                qtdDias:
+                  type: integer
+                  minimum: 5
+                parcelamento:
+                  type: integer
+                  enum: [1, 2, 3]
+                  default: 1
+                adiantamento13:
+                  type: boolean
+                  default: false
+                abonoPecuniario:
+                  type: boolean
+                  default: false
+                diasAbono:
+                  type: integer
+                  default: 0
+              required: [periodoAquisitivoId, dataInicio, qtdDias]
+      responses:
+        "201":
+          description: Solicitação criada com protocolo
+        "400":
+          description: Dados inválidos ou saldo insuficiente
+        "401":
+          description: Não autenticado
+
+  /servidor/ferias/{id}:
+    get:
+      operationId: getFeriasDetalhe
+      tags: [servidor]
+      summary: Detalhe da solicitação de férias
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Solicitação com timeline
+        "401":
+          description: Não autenticado
+        "404":
+          description: Solicitação não encontrada
+
+  /servidor/requerimentos:
+    get:
+      operationId: listRequerimentos
+      tags: [servidor]
+      summary: Listar requerimentos do servidor
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: tipo
+          in: query
+          schema:
+            type: string
+        - name: status
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Lista de requerimentos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Requerimento"
+                  tipos:
+                    type: array
+                    items:
+                      type: string
+    post:
+      operationId: criarRequerimento
+      tags: [servidor]
+      summary: Protocolar novo requerimento
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tipo:
+                  type: string
+                assunto:
+                  type: string
+                justificativa:
+                  type: string
+                  minLength: 100
+                camposEspecificos:
+                  type: object
+                documentos:
+                  type: array
+                  description: URLs de arquivos previamente enviados via upload
+                  items:
+                    type: object
+                    properties:
+                      nome:
+                        type: string
+                      url:
+                        type: string
+                      tamanho:
+                        type: integer
+                    required: [nome, url]
+              required: [tipo, justificativa]
+      responses:
+        "201":
+          description: Requerimento protocolado
+        "400":
+          description: Dados inválidos (justificativa mínimo 100 chars)
+        "401":
+          description: Não autenticado
+
+  /servidor/requerimentos/{id}:
+    get:
+      operationId: getRequerimento
+      tags: [servidor]
+      summary: Detalhe do requerimento com tramitação
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Requerimento com timeline
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Requerimento"
+        "401":
+          description: Não autenticado
+        "404":
+          description: Requerimento não encontrado
+
+  /servidor/requerimentos/{id}/recurso:
+    post:
+      operationId: apresentarRecurso
+      tags: [servidor]
+      summary: Apresentar recurso para requerimento indeferido
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Recurso aceito
+        "400":
+          description: Requerimento não indeferido ou prazo encerrado
+        "401":
+          description: Não autenticado
+
+  /servidor/perfil:
+    get:
+      operationId: getPerfilServidor
+      tags: [servidor]
+      summary: Dados cadastrais do servidor (CPF e conta mascarados)
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Perfil do servidor
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PerfilServidor"
+        "401":
+          description: Não autenticado
+    put:
+      operationId: updatePerfilServidor
+      tags: [servidor]
+      summary: Atualizar dados pessoais editáveis (endereço, email pessoal, telefone)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                emailPessoal:
+                  type: string
+                telefone:
+                  type: string
+                endereco:
+                  type: string
+                numero:
+                  type: string
+                complemento:
+                  type: string
+                bairro:
+                  type: string
+                cidade:
+                  type: string
+                estado:
+                  type: string
+                cep:
+                  type: string
+      responses:
+        "200":
+          description: Perfil atualizado
+        "401":
+          description: Não autenticado
+
+  /servidor/historico-funcional:
+    get:
+      operationId: getHistoricoFuncional
+      tags: [servidor]
+      summary: Timeline de eventos da vida funcional
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Lista de eventos funcionais
+        "401":
+          description: Não autenticado
+
+  /servidor/tempo-servico:
+    get:
+      operationId: getTempoServico
+      tags: [servidor]
+      summary: Tempo de serviço com projeção de aposentadoria
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Tempo de serviço calculado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TempoServico"
+        "401":
+          description: Não autenticado
+
+  # ── Painel RH (/rh/*) ────────────────────────────────────────────────────────
+
+  /rh/dashboard:
+    get:
+      operationId: getRhDashboard
+      tags: [rh]
+      summary: Dashboard do Painel RH (requer role admin ou rh)
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: KPIs e listas do painel RH
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RhDashboard"
+        "401":
+          description: Não autenticado
+        "403":
+          description: Acesso restrito ao Painel RH
+
+  /rh/ferias/pendentes:
+    get:
+      operationId: getRhFeriasPendentes
+      tags: [rh]
+      summary: Solicitações de férias aguardando aprovação
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Solicitações pendentes com dados do servidor
+        "401":
+          description: Não autenticado
+        "403":
+          description: Acesso restrito ao Painel RH
+
+  /rh/ferias/{id}/aprovar:
+    patch:
+      operationId: aprovarFerias
+      tags: [rh]
+      summary: Aprovar solicitação de férias
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Férias aprovadas
+        "401":
+          description: Não autenticado
+        "403":
+          description: Acesso restrito ao Painel RH
+        "404":
+          description: Solicitação não encontrada
+
+  /rh/ferias/{id}/rejeitar:
+    patch:
+      operationId: rejeitarFerias
+      tags: [rh]
+      summary: Rejeitar solicitação de férias
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                motivo:
+                  type: string
+              required: [motivo]
+      responses:
+        "200":
+          description: Férias rejeitadas
+        "400":
+          description: motivo é obrigatório
+        "401":
+          description: Não autenticado
+        "403":
+          description: Acesso restrito ao Painel RH
+
+  /rh/requerimentos/pendentes:
+    get:
+      operationId: getRhRequerimentosPendentes
+      tags: [rh]
+      summary: Requerimentos em análise aguardando decisão
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Requerimentos pendentes com dados do servidor
+        "401":
+          description: Não autenticado
+        "403":
+          description: Acesso restrito ao Painel RH
+
+  /rh/requerimentos/{id}/deferir:
+    patch:
+      operationId: deferirRequerimento
+      tags: [rh]
+      summary: Deferir requerimento com parecer técnico
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                parecer:
+                  type: string
+                decisao:
+                  type: string
+      responses:
+        "200":
+          description: Requerimento deferido
+        "401":
+          description: Não autenticado
+        "403":
+          description: Acesso restrito ao Painel RH
+
+  /rh/requerimentos/{id}/indeferir:
+    patch:
+      operationId: indeferirRequerimento
+      tags: [rh]
+      summary: Indeferir requerimento (gera prazo de recurso de 15 dias)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                parecer:
+                  type: string
+                motivo:
+                  type: string
+              required: [motivo]
+      responses:
+        "200":
+          description: Requerimento indeferido com prazo de recurso
+        "400":
+          description: motivo é obrigatório
+        "401":
+          description: Não autenticado
+        "403":
+          description: Acesso restrito ao Painel RH
+
+  /rh/folha-resumo:
+    get:
+      operationId: getRhFolhaResumo
+      tags: [rh]
+      summary: Resumo da folha de pagamento por mês/ano
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: mes
+          in: query
+          schema:
+            type: integer
+        - name: ano
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Totais da folha
+        "401":
+          description: Não autenticado
+        "403":
+          description: Acesso restrito ao Painel RH
 
 components:
   schemas:
@@ -1593,3 +2221,305 @@ components:
         - page
         - limit
         - totalPages
+
+    # ── Portal do Servidor ─────────────────────────────────────────────────────
+
+    ContrachequeCard:
+      type: object
+      properties:
+        id:
+          type: string
+        mes:
+          type: integer
+        ano:
+          type: integer
+        competencia:
+          type: string
+        totalBruto:
+          type: number
+        totalDescontos:
+          type: number
+        totalLiquido:
+          type: number
+        status:
+          type: string
+          enum: [pago, pendente, processando]
+      required: [id, mes, ano, competencia, totalBruto, totalDescontos, totalLiquido, status]
+
+    ContrachequeLinha:
+      type: object
+      properties:
+        id:
+          type: string
+        tipo:
+          type: string
+          enum: [vencimento, desconto, informativo]
+        codigo:
+          type: string
+        descricao:
+          type: string
+        valor:
+          type: number
+      required: [id, tipo, codigo, descricao, valor]
+
+    ContrachequeDetalhe:
+      type: object
+      properties:
+        contracheque:
+          $ref: "#/components/schemas/ContrachequeCard"
+        linhas:
+          type: object
+          properties:
+            vencimentos:
+              type: array
+              items:
+                $ref: "#/components/schemas/ContrachequeLinha"
+            descontos:
+              type: array
+              items:
+                $ref: "#/components/schemas/ContrachequeLinha"
+            informativos:
+              type: array
+              items:
+                $ref: "#/components/schemas/ContrachequeLinha"
+        servidor:
+          type: object
+          nullable: true
+
+    ContrachequeListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/ContrachequeCard"
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+        totalPages:
+          type: integer
+      required: [data, total, page, limit, totalPages]
+
+    FeriasSaldo:
+      type: object
+      properties:
+        saldoTotal:
+          type: integer
+        periodoAtual:
+          type: object
+          nullable: true
+        progressoAquisitivo:
+          type: integer
+        diasTrabalhados:
+          type: integer
+        prazoVencido:
+          type: boolean
+        periodos:
+          type: array
+          items:
+            type: object
+      required: [saldoTotal, progressoAquisitivo, diasTrabalhados, prazoVencido, periodos]
+
+    SolicitacaoFerias:
+      type: object
+      properties:
+        id:
+          type: string
+        protocolo:
+          type: string
+        dataInicio:
+          type: string
+          format: date
+        dataFim:
+          type: string
+          format: date
+        dataRetorno:
+          type: string
+          format: date
+        qtdDias:
+          type: integer
+        parcelamento:
+          type: integer
+        adiantamento13:
+          type: boolean
+        abonoPecuniario:
+          type: boolean
+        status:
+          type: string
+          enum: [aguardando_chefia, em_analise_rh, aprovado, rejeitado, cancelado]
+        timeline:
+          type: array
+          items:
+            type: object
+      required: [id, protocolo, dataInicio, dataFim, qtdDias, status]
+
+    Requerimento:
+      type: object
+      properties:
+        id:
+          type: string
+        protocolo:
+          type: string
+        tipo:
+          type: string
+        assunto:
+          type: string
+        justificativa:
+          type: string
+        status:
+          type: string
+          enum: [rascunho, protocolado, em_analise, deferido, indeferido, arquivado]
+        documentos:
+          type: array
+          items:
+            type: object
+        timeline:
+          type: array
+          items:
+            type: object
+        parecerTecnico:
+          type: string
+          nullable: true
+        decisao:
+          type: string
+          nullable: true
+        prazoRecurso:
+          type: string
+          format: date
+          nullable: true
+      required: [id, protocolo, tipo, assunto, justificativa, status]
+
+    PerfilServidor:
+      type: object
+      properties:
+        id:
+          type: string
+        nome:
+          type: string
+        cpf:
+          type: string
+        matricula:
+          type: string
+        cargo:
+          type: string
+        nivel:
+          type: string
+          nullable: true
+        secretaria:
+          type: string
+        localTrabalho:
+          type: string
+          nullable: true
+        dataIngresso:
+          type: string
+          format: date
+        vinculo:
+          type: string
+        status:
+          type: string
+        banco:
+          type: string
+          nullable: true
+        agencia:
+          type: string
+          nullable: true
+        conta:
+          type: string
+          nullable: true
+      required: [id, nome, cpf, matricula, cargo, secretaria, dataIngresso, vinculo, status]
+
+    TempoServico:
+      type: object
+      properties:
+        dataIngresso:
+          type: string
+          format: date
+        totalDias:
+          type: integer
+        anos:
+          type: integer
+        meses:
+          type: integer
+        dias:
+          type: integer
+        descricao:
+          type: string
+        projecaoAposentadoria:
+          type: object
+          properties:
+            dataEstimada:
+              type: string
+              format: date
+            anosRestantes:
+              type: integer
+            regra:
+              type: string
+      required: [dataIngresso, totalDias, anos, meses, dias, descricao]
+
+    RhDashboard:
+      type: object
+      properties:
+        servidoresPorSecretaria:
+          type: array
+          items:
+            type: object
+            properties:
+              secretaria:
+                type: string
+              total:
+                type: integer
+        feriasVencidas:
+          type: array
+          items:
+            type: object
+        requerimentosPendentes:
+          type: array
+          items:
+            type: object
+        aniversariantes:
+          type: array
+          items:
+            type: object
+        feriasPendentesAprovacao:
+          type: array
+          items:
+            type: object
+        folhaDoMes:
+          type: object
+          properties:
+            totalBruto:
+              type: number
+            totalLiquido:
+              type: number
+            totalDescontos:
+              type: number
+            qtdServidores:
+              type: integer
+
+    RendimentosAnuais:
+      type: object
+      properties:
+        ano:
+          type: integer
+        totalBruto:
+          type: number
+        totalDescontos:
+          type: number
+        totalLiquido:
+          type: number
+        orgao:
+          type: string
+        meses:
+          type: array
+          items:
+            type: object
+      required: [ano, totalBruto, totalDescontos, totalLiquido]
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
