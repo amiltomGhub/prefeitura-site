@@ -6,6 +6,16 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 // Contexts
 import { AccessibilityProvider } from "@/contexts/AccessibilityContext";
 import { ServidorProvider } from "@/contexts/ServidorContext";
+import { BiProvider } from "@/contexts/BiContext";
+
+// BI pages
+import BiCockpit from "@/pages/bi/BiCockpit";
+import BiOuvidoria from "@/pages/bi/BiOuvidoria";
+import BiFinanceiro from "@/pages/bi/BiFinanceiro";
+import BiPessoal from "@/pages/bi/BiPessoal";
+import BiObras from "@/pages/bi/BiObras";
+import BiSocial from "@/pages/bi/BiSocial";
+import BiTv from "@/pages/bi/BiTv";
 
 // Public pages
 import Home from "@/pages/Home";
@@ -158,6 +168,20 @@ function Router() {
       <Route path="/rh/ferias" component={RhFerias} />
       <Route path="/rh/requerimentos" component={RhRequerimentos} />
 
+      {/* ─────────────────────────────────────────
+          Dashboard BI — Sala de Situação — /bi/*
+      ───────────────────────────────────────── */}
+      <Route path="/bi">
+        {() => <Redirect to="/bi/cockpit" />}
+      </Route>
+      <Route path="/bi/cockpit" component={BiCockpit} />
+      <Route path="/bi/ouvidoria" component={BiOuvidoria} />
+      <Route path="/bi/financeiro" component={BiFinanceiro} />
+      <Route path="/bi/pessoal" component={BiPessoal} />
+      <Route path="/bi/obras" component={BiObras} />
+      <Route path="/bi/social" component={BiSocial} />
+      <Route path="/bi/tv" component={BiTv} />
+
       {/* 404 */}
       <Route component={NotFound} />
     </Switch>
@@ -169,12 +193,14 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <AccessibilityProvider>
         <ServidorProvider>
-          <TooltipProvider>
-            <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-              <Router />
-            </WouterRouter>
-            <Toaster />
-          </TooltipProvider>
+          <BiProvider>
+            <TooltipProvider>
+              <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+                <Router />
+              </WouterRouter>
+              <Toaster />
+            </TooltipProvider>
+          </BiProvider>
         </ServidorProvider>
       </AccessibilityProvider>
     </QueryClientProvider>

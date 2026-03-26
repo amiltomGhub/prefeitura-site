@@ -1,0 +1,167 @@
+FE-3C-01 — Dashboard BI: Sala de Situação do Gestor
+text
+Continuando o SaaS Municipal. Implemente o Dashboard de BI — a "Sala de Situação
+Digital" para prefeitos e secretários. É o módulo mais estratégico do sistema.
+
+## CONTEXTO
+Acesso via painel admin (Módulos 1 e 2) para: Prefeito, Vice, Secretários, Controlador.
+Dados em tempo real de todas as fontes: Ouvidoria + Site + Portal do Servidor + dados externos.
+URL: admin.portalmunicipal.com.br/bi OU municipio.portalmunicipal.com.br/admin/bi
+
+## STACK
+- Recharts (gráficos interativos — SSR-friendly)
+- React Table v8 (tabelas analíticas)
+- Leaflet.js (mapas analíticos)
+- date-fns (formatação de períodos)
+- jsPDF + html2canvas (exportação de relatórios)
+- Fuse.js (busca local nos dados)
+
+## TAREFA DESTA ETAPA
+
+### 1. Layout do BI (src/app/(admin)/bi/layout.tsx)
+  - Header específico do BI: título "Sala de Situação — [Nome do Município]"
+  - Seletor de período global (canto superior direito):
+    Hoje | Esta semana | Este mês | Este trimestre | Este ano | Período personalizado
+  - Botão "Modo TV" (fullscreen para painéis de monitoramento em TVs da prefeitura)
+  - Botão "Exportar relatório" (gera PDF do painel atual)
+  - Indicador de última atualização dos dados
+
+### 2. Visão Geral — Cockpit do Prefeito (src/app/(admin)/bi/page.tsx)
+Topo: Scorecard de 8 KPIs críticos (2 linhas x 4 colunas):
+
+  LINHA 1 — Finanças e Orçamento:
+  - 💰 Receita arrecadada vs meta (% do previsto)
+  - 💸 Despesas executadas vs dotação (% do orçado)
+  - 📊 Resultado (superávit/déficit do período)
+  - 🔒 Limite de gastos com pessoal (% da LRF)
+
+  LINHA 2 — Operacional:
+  - 📋 Manifestações abertas (ouvidoria) com variação %
+  - ⏱️ % resolvidas no prazo (SLA)
+  - 👥 Servidores ativos (total + afastamentos)
+  - ⭐ Índice de satisfação do cidadão (NPS médio)
+
+Cada KPI card tem:
+  - Valor principal (grande, legível)
+  - Variação vs período anterior (↑ verde / ↓ vermelho)
+  - Mini sparkline dos últimos 7 dias
+  - Clique → drill-down para o painel específico
+
+Seção central — Mapa da Cidade:
+  - Mapa coroplético (Leaflet) com intensidade de demandas por bairro
+  - Toggle de camadas: Ouvidoria | Obras | Saúde | Educação
+  - Clique no bairro → painel lateral com detalhes do bairro
+  - Top 5 bairros com mais demandas (lista ao lado do mapa)
+
+Seção inferior — Alertas e Ações Necessárias:
+  - Lista de alertas críticos que exigem atenção do gestor
+  - Exemplos: SLA vencido sem resposta, despesa acima do limite LRF,
+    documento LAI atrasado, servidor com férias vencidas há 60+ dias
+  - Cada alerta: ícone de urgência, descrição, link para ação
+
+### 3. Painel de Ouvidoria BI (src/app/(admin)/bi/ouvidoria/page.tsx)
+  Período: selecionado pelo filtro global
+
+  ROW 1 — Volume e Tendências:
+  - Gráfico de linha: volume diário de manifestações (atual vs período anterior)
+  - Gráfico de área: acumulado do período
+  
+  ROW 2 — Composição:
+  - Donut: distribuição por tipo (Reclamação/Denúncia/Sugestão/Elogio/Solicitação)
+  - Barras horizontais: top 10 categorias mais demandadas
+  
+  ROW 3 — Performance Operacional:
+  - Barras agrupadas: manifestações por secretaria (recebidas | no prazo | atrasadas)
+  - Gauge: taxa geral de resolução no prazo (meta configurável pelo admin)
+  - Boxplot: distribuição do tempo de resolução por secretaria
+  
+  ROW 4 — Satisfação e Qualidade:
+  - NPS Score (gauge -100 a +100)
+  - Distribuição de avaliações (1-5 estrelas — barras)
+  - Word cloud dos comentários de satisfação (palavras mais frequentes)
+  - Tendência do NPS ao longo do período
+  
+  ROW 5 — Canais de Entrada:
+  - Pizza: Web | WhatsApp | Instagram | Presencial | Email | Telefone
+  - Tendência de adoção de canais digitais vs presencial ao longo do tempo
+
+  TABELA DRILL-DOWN:
+  - "Top Manifestações Sem Resolução" (mais antigas abertas)
+  - Colunas: protocolo, secretaria, dias abertos, responsável, link para ação
+
+### 4. Painel Financeiro BI (src/app/(admin)/bi/financeiro/page.tsx)
+  Atenção: dados podem vir de integração externa (ERP municipal) ou de entrada manual.
+  Indicar claramente a fonte e a data de atualização de cada dado.
+
+  ROW 1 — Orçamento (LOA):
+  - Barras empilhadas: dotação inicial | suplementações | reduções | dotação atual
+  - Gauge: % de execução orçamentária global
+  - Cards por função (Saúde, Educação, Obras, Admin, Social...)
+
+  ROW 2 — Receitas vs Despesas:
+  - Gráfico de linha duplo (meses do ano): receita realizada vs despesa realizada
+  - Barras: receitas por fonte (impostos, transferências, convênios, outros)
+
+  ROW 3 — LRF — Lei de Responsabilidade Fiscal:
+  - 3 gauges críticos (alerta visual):
+    * Gastos com pessoal / RCL (limite: 54% — municípios)
+    * Dívida consolidada / RCL
+    * Operações de crédito / RCL
+  - Cada gauge: verde (ok) | amarelo (atenção 90%) | vermelho (limite atingido)
+
+  ROW 4 — Licitações e Contratos:
+  - Funil: licitações abertas → em andamento → homologadas → contratos ativos
+  - Barras: valor contratado por secretaria
+  - Tabela: contratos próximos do vencimento (60 dias)
+
+### 5. Painel de Pessoal BI (src/app/(admin)/bi/pessoal/page.tsx)
+  ROW 1 — Força de Trabalho:
+  - Cards: total servidores ativos | afastados | em férias | cargos vagos
+  - Pizza: distribuição por vínculo (efetivo | comissionado | contratado | CLT)
+  - Barras: servidores por secretaria
+
+  ROW 2 — Gestão de Férias:
+  - Calendário anual com blocos de férias por secretaria (heatmap)
+  - Alerta: servidores com férias vencidas (> 12 meses sem gozar)
+  - Projeção: impacto financeiro das férias a pagar
+
+  ROW 3 — Folha de Pagamento:
+  - Evolução mensal (linha): total bruto | total descontos | total líquido
+  - Comparativo: folha atual vs ano anterior
+  - Limite LRF de pessoal (gauge)
+
+  ROW 4 — Absenteísmo e Afastamentos:
+  - Taxa de absenteísmo por secretaria
+  - Motivos de afastamento (pizza): saúde | licença | férias | outros
+  - Tendência mensal
+
+### 6. Painel de Infraestrutura e Obras BI (src/app/(admin)/bi/obras/page.tsx)
+  - Mapa de obras ativas (marcadores por status: em andamento | paralisada | concluída)
+  - Cards: obras ativas | concluídas no período | paralisadas | % de execução física
+  - Timeline de obras por secretaria (Gantt chart — horizontal)
+  - Alertas: obras com execução abaixo do esperado vs contrato
+
+### 7. Painel de Saúde e Educação (src/app/(admin)/bi/social/page.tsx)
+  SAÚDE:
+  - Atendimentos nas UBS por mês (linha)
+  - Cobertura de vacinas (gauge por tipo)
+  - Internações e tempo médio de espera
+  
+  EDUCAÇÃO:
+  - Matrícula por escola/período (barras)
+  - Taxa de abandono escolar (comparativo anual)
+  - Infraestrutura escolar (% em bom estado)
+
+### 8. Modo TV e Exportação
+  Modo TV (/bi/tv):
+  - Layout fullscreen rotativo (carrossel automático de painéis — 30s cada)
+  - Fonte maior, cores mais vibrantes
+  - Sem interatividade — apenas exibição
+  - Destinado a TVs nas secretarias e gabinete do prefeito
+  - Auto-refresh a cada 5 minutos
+
+  Exportação:
+  - Botão "Gerar Relatório Executivo" → job BullMQ → PDF estilizado
+  - Relatório inclui todos os KPIs + gráficos + tabelas do período selecionado
+  - Capa personalizada com brasão, nome do prefeito, período
+  - Envio automático por email para lista configurável (semanal/mensal)

@@ -6,7 +6,7 @@ import {
   GalleryHorizontal, Shield, BookOpen, FileSignature, Briefcase,
   Building2, Menu, Palette, Users, Settings, ChevronLeft,
   ChevronRight, Bell, LogOut, Globe, Eye, X, ArrowLeftRight,
-  PanelLeft
+  PanelLeft, BarChart2
 } from "lucide-react";
 
 interface NavItem {
@@ -134,11 +134,17 @@ export function CmsLayout({ children, title, actions }: CmsLayoutProps) {
         <nav className="flex-1 overflow-y-auto p-2 space-y-0.5" aria-label="Navegação CMS">
           {/* Module switcher */}
           {!collapsed && (
-            <div className="mb-3 px-1">
+            <div className="mb-3 px-1 space-y-0.5">
               <button className="w-full flex items-center gap-2 text-xs text-zinc-500 hover:text-white transition-colors py-2 px-2 rounded-lg hover:bg-white/5">
                 <ArrowLeftRight className="w-3.5 h-3.5 flex-shrink-0" aria-hidden="true" />
                 <span className="flex-1 text-left">Módulo Ouvidoria</span>
               </button>
+              <Link href="/bi/cockpit">
+                <span className="w-full flex items-center gap-2 text-xs text-zinc-500 hover:text-white transition-colors py-2 px-2 rounded-lg hover:bg-white/5 cursor-pointer">
+                  <BarChart2 className="w-3.5 h-3.5 flex-shrink-0 text-violet-400" aria-hidden="true" />
+                  <span className="flex-1 text-left text-violet-400 font-semibold">Dashboard BI</span>
+                </span>
+              </Link>
             </div>
           )}
 
