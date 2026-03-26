@@ -105166,7 +105166,11 @@ router43.post("/servidor/ferias/solicitar", requireAuth, requireServidor, async 
     const b = req.body;
     if (!b.periodoAquisitivoId) return res.status(400).json({ error: "periodoAquisitivoId \xE9 obrigat\xF3rio" });
     if (!b.dataInicio) return res.status(400).json({ error: "dataInicio \xE9 obrigat\xF3rio" });
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(b.dataInicio) || isNaN(new Date(b.dataInicio).getTime())) {
+      return res.status(400).json({ error: "dataInicio inv\xE1lida \u2014 use o formato YYYY-MM-DD" });
+    }
     if (!b.qtdDias || b.qtdDias < 5) return res.status(400).json({ error: "qtdDias m\xEDnimo \xE9 5" });
+    if (b.qtdDias > 30) return res.status(400).json({ error: "qtdDias m\xE1ximo \xE9 30" });
     const [periodo] = await db.select().from(periodosAquisitivosTable).where(
       and(
         eq(periodosAquisitivosTable.id, b.periodoAquisitivoId),
@@ -105555,9 +105559,9 @@ router47.get("/rh/dashboard", requireAuth, requireRH, async (req, res) => {
     const mesHoje = (/* @__PURE__ */ new Date()).getMonth() + 1;
     const anoHoje = (/* @__PURE__ */ new Date()).getFullYear();
     const folhaDoMes = await db.select({
-      totalBruto: sql`COALESCE(sum(c.total_bruto), 0)::numeric`,
-      totalLiquido: sql`COALESCE(sum(c.total_liquido), 0)::numeric`,
-      totalDescontos: sql`COALESCE(sum(c.total_descontos), 0)::numeric`,
+      totalBruto: sql`COALESCE(sum(${contrachequeTable.totalBruto}), 0)::numeric`,
+      totalLiquido: sql`COALESCE(sum(${contrachequeTable.totalLiquido}), 0)::numeric`,
+      totalDescontos: sql`COALESCE(sum(${contrachequeTable.totalDescontos}), 0)::numeric`,
       qtdServidores: sql`count(*)::int`
     }).from(contrachequeTable).innerJoin(
       servidoresCadastroTable,
@@ -105619,6 +105623,10 @@ router47.patch("/rh/ferias/:id/aprovar", requireAuth, requireRH, async (req, res
       )
     ).limit(1);
     if (!sol) return res.status(404).json({ error: "Solicita\xE7\xE3o n\xE3o encontrada" });
+    const ESTADOS_FINAIS_FERIAS = ["aprovado", "rejeitado", "cancelado"];
+    if (ESTADOS_FINAIS_FERIAS.includes(sol.status)) {
+      return res.status(400).json({ error: `N\xE3o \xE9 poss\xEDvel aprovar uma solicita\xE7\xE3o com status '${sol.status}'.` });
+    }
     const novaTimeline = Array.isArray(sol.timeline) ? [...sol.timeline] : [];
     novaTimeline.push({
       status: "aprovado",
@@ -105651,6 +105659,10 @@ router47.patch("/rh/ferias/:id/rejeitar", requireAuth, requireRH, async (req, re
       )
     ).limit(1);
     if (!sol) return res.status(404).json({ error: "Solicita\xE7\xE3o n\xE3o encontrada" });
+    const ESTADOS_FINAIS_FERIAS = ["aprovado", "rejeitado", "cancelado"];
+    if (ESTADOS_FINAIS_FERIAS.includes(sol.status)) {
+      return res.status(400).json({ error: `N\xE3o \xE9 poss\xEDvel rejeitar uma solicita\xE7\xE3o com status '${sol.status}'.` });
+    }
     const novaTimeline = Array.isArray(sol.timeline) ? [...sol.timeline] : [];
     novaTimeline.push({
       status: "rejeitado",
@@ -105708,6 +105720,10 @@ router47.patch("/rh/requerimentos/:id/deferir", requireAuth, requireRH, async (r
       )
     ).limit(1);
     if (!req_) return res.status(404).json({ error: "Requerimento n\xE3o encontrado" });
+    const ESTADOS_FINAIS_REQ = ["deferido", "indeferido", "arquivado"];
+    if (ESTADOS_FINAIS_REQ.includes(req_.status)) {
+      return res.status(400).json({ error: `N\xE3o \xE9 poss\xEDvel deferir um requerimento com status '${req_.status}'.` });
+    }
     const novaTimeline = Array.isArray(req_.timeline) ? [...req_.timeline] : [];
     novaTimeline.push({
       status: "deferido",
@@ -105759,6 +105775,10 @@ router47.patch("/rh/requerimentos/:id/indeferir", requireAuth, requireRH, async 
       )
     ).limit(1);
     if (!req_) return res.status(404).json({ error: "Requerimento n\xE3o encontrado" });
+    const ESTADOS_FINAIS_REQ = ["deferido", "indeferido", "arquivado"];
+    if (ESTADOS_FINAIS_REQ.includes(req_.status)) {
+      return res.status(400).json({ error: `N\xE3o \xE9 poss\xEDvel indeferir um requerimento com status '${req_.status}'.` });
+    }
     const prazoRecurso = /* @__PURE__ */ new Date();
     prazoRecurso.setDate(prazoRecurso.getDate() + 15);
     const novaTimeline = Array.isArray(req_.timeline) ? [...req_.timeline] : [];
@@ -105818,9 +105838,9 @@ router47.get("/rh/folha-resumo", requireAuth, requireRH, async (req, res) => {
     const mes = req.query["mes"] ? parseInt(req.query["mes"]) : (/* @__PURE__ */ new Date()).getMonth() + 1;
     const ano = req.query["ano"] ? parseInt(req.query["ano"]) : (/* @__PURE__ */ new Date()).getFullYear();
     const resumo = await db.select({
-      totalBruto: sql`COALESCE(sum(c.total_bruto), 0)::numeric`,
-      totalLiquido: sql`COALESCE(sum(c.total_liquido), 0)::numeric`,
-      totalDescontos: sql`COALESCE(sum(c.total_descontos), 0)::numeric`,
+      totalBruto: sql`COALESCE(sum(${contrachequeTable.totalBruto}), 0)::numeric`,
+      totalLiquido: sql`COALESCE(sum(${contrachequeTable.totalLiquido}), 0)::numeric`,
+      totalDescontos: sql`COALESCE(sum(${contrachequeTable.totalDescontos}), 0)::numeric`,
       qtdServidores: sql`count(*)::int`
     }).from(contrachequeTable).innerJoin(
       servidoresCadastroTable,

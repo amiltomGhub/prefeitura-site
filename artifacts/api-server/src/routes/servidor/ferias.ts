@@ -83,7 +83,11 @@ router.post("/servidor/ferias/solicitar", requireAuth, requireServidor, async (r
 
     if (!b.periodoAquisitivoId) return res.status(400).json({ error: "periodoAquisitivoId é obrigatório" });
     if (!b.dataInicio) return res.status(400).json({ error: "dataInicio é obrigatório" });
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(b.dataInicio) || isNaN(new Date(b.dataInicio).getTime())) {
+      return res.status(400).json({ error: "dataInicio inválida — use o formato YYYY-MM-DD" });
+    }
     if (!b.qtdDias || b.qtdDias < 5) return res.status(400).json({ error: "qtdDias mínimo é 5" });
+    if (b.qtdDias > 30) return res.status(400).json({ error: "qtdDias máximo é 30" });
 
     const [periodo] = await db
       .select()

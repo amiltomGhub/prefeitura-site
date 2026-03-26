@@ -107,9 +107,9 @@ router.get("/rh/dashboard", requireAuth, requireRH, async (req: AuthRequest, res
     const anoHoje = new Date().getFullYear();
     const folhaDoMes = await db
       .select({
-        totalBruto: sql<number>`COALESCE(sum(c.total_bruto), 0)::numeric`,
-        totalLiquido: sql<number>`COALESCE(sum(c.total_liquido), 0)::numeric`,
-        totalDescontos: sql<number>`COALESCE(sum(c.total_descontos), 0)::numeric`,
+        totalBruto: sql<number>`COALESCE(sum(${contrachequeTable.totalBruto}), 0)::numeric`,
+        totalLiquido: sql<number>`COALESCE(sum(${contrachequeTable.totalLiquido}), 0)::numeric`,
+        totalDescontos: sql<number>`COALESCE(sum(${contrachequeTable.totalDescontos}), 0)::numeric`,
         qtdServidores: sql<number>`count(*)::int`,
       })
       .from(contrachequeTable)
@@ -192,6 +192,11 @@ router.patch("/rh/ferias/:id/aprovar", requireAuth, requireRH, async (req: AuthR
 
     if (!sol) return res.status(404).json({ error: "Solicitação não encontrada" });
 
+    const ESTADOS_FINAIS_FERIAS = ["aprovado", "rejeitado", "cancelado"];
+    if (ESTADOS_FINAIS_FERIAS.includes(sol.status)) {
+      return res.status(400).json({ error: `Não é possível aprovar uma solicitação com status '${sol.status}'.` });
+    }
+
     const novaTimeline = Array.isArray(sol.timeline) ? [...(sol.timeline as object[])] : [];
     novaTimeline.push({
       status: "aprovado",
@@ -237,6 +242,11 @@ router.patch("/rh/ferias/:id/rejeitar", requireAuth, requireRH, async (req: Auth
       .limit(1);
 
     if (!sol) return res.status(404).json({ error: "Solicitação não encontrada" });
+
+    const ESTADOS_FINAIS_FERIAS = ["aprovado", "rejeitado", "cancelado"];
+    if (ESTADOS_FINAIS_FERIAS.includes(sol.status)) {
+      return res.status(400).json({ error: `Não é possível rejeitar uma solicitação com status '${sol.status}'.` });
+    }
 
     const novaTimeline = Array.isArray(sol.timeline) ? [...(sol.timeline as object[])] : [];
     novaTimeline.push({
@@ -317,6 +327,11 @@ router.patch("/rh/requerimentos/:id/deferir", requireAuth, requireRH, async (req
 
     if (!req_) return res.status(404).json({ error: "Requerimento não encontrado" });
 
+    const ESTADOS_FINAIS_REQ = ["deferido", "indeferido", "arquivado"];
+    if (ESTADOS_FINAIS_REQ.includes(req_.status)) {
+      return res.status(400).json({ error: `Não é possível deferir um requerimento com status '${req_.status}'.` });
+    }
+
     const novaTimeline = Array.isArray(req_.timeline) ? [...(req_.timeline as object[])] : [];
     novaTimeline.push({
       status: "deferido",
@@ -382,6 +397,11 @@ router.patch("/rh/requerimentos/:id/indeferir", requireAuth, requireRH, async (r
       .limit(1);
 
     if (!req_) return res.status(404).json({ error: "Requerimento não encontrado" });
+
+    const ESTADOS_FINAIS_REQ = ["deferido", "indeferido", "arquivado"];
+    if (ESTADOS_FINAIS_REQ.includes(req_.status)) {
+      return res.status(400).json({ error: `Não é possível indeferir um requerimento com status '${req_.status}'.` });
+    }
 
     const prazoRecurso = new Date();
     prazoRecurso.setDate(prazoRecurso.getDate() + 15);
@@ -452,9 +472,9 @@ router.get("/rh/folha-resumo", requireAuth, requireRH, async (req: AuthRequest, 
 
     const resumo = await db
       .select({
-        totalBruto: sql<number>`COALESCE(sum(c.total_bruto), 0)::numeric`,
-        totalLiquido: sql<number>`COALESCE(sum(c.total_liquido), 0)::numeric`,
-        totalDescontos: sql<number>`COALESCE(sum(c.total_descontos), 0)::numeric`,
+        totalBruto: sql<number>`COALESCE(sum(${contrachequeTable.totalBruto}), 0)::numeric`,
+        totalLiquido: sql<number>`COALESCE(sum(${contrachequeTable.totalLiquido}), 0)::numeric`,
+        totalDescontos: sql<number>`COALESCE(sum(${contrachequeTable.totalDescontos}), 0)::numeric`,
         qtdServidores: sql<number>`count(*)::int`,
       })
       .from(contrachequeTable)
