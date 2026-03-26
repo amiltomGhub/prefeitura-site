@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 
 // Contexts
 import { AccessibilityProvider } from "@/contexts/AccessibilityContext";
+import { ServidorProvider } from "@/contexts/ServidorContext";
 
 // Public pages
 import Home from "@/pages/Home";
@@ -41,6 +42,21 @@ import CmsMenus from "@/pages/cms/CmsMenus";
 import CmsAparencia from "@/pages/cms/CmsAparencia";
 import CmsUsuarios from "@/pages/cms/CmsUsuarios";
 import CmsConfiguracoes from "@/pages/cms/CmsConfiguracoes";
+
+// Portal do Servidor
+import ContrachequeListagem from "@/pages/servidor/ContrachequeListagem";
+import ContrachequeDetalhe from "@/pages/servidor/ContrachequeDetalhe";
+import Ferias from "@/pages/servidor/Ferias";
+import FeriasSolicitar from "@/pages/servidor/FeriasSolicitar";
+import Requerimentos from "@/pages/servidor/Requerimentos";
+import RequerimentoNovo from "@/pages/servidor/RequerimentoNovo";
+import RequerimentoDetalhe from "@/pages/servidor/RequerimentoDetalhe";
+import VidaFuncional from "@/pages/servidor/VidaFuncional";
+
+// Painel RH
+import RhDashboard from "@/pages/rh/RhDashboard";
+import RhFerias from "@/pages/rh/RhFerias";
+import RhRequerimentos from "@/pages/rh/RhRequerimentos";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -86,60 +102,61 @@ function Router() {
           CMS — Painel Administrativo
           Acesso via /site-admin/*
       ───────────────────────────────────────── */}
-
-      {/* Redirect /site-admin → /site-admin/dashboard */}
       <Route path="/site-admin">
         {() => <Redirect to="/site-admin/dashboard" />}
       </Route>
-
-      {/* Dashboard */}
       <Route path="/site-admin/dashboard" component={CmsDashboard} />
-
-      {/* Notícias */}
       <Route path="/site-admin/noticias" component={CmsNoticias} />
       <Route path="/site-admin/noticias/nova" component={CmsNoticiaEditor} />
       <Route path="/site-admin/noticias/:id/editar" component={CmsNoticiaEditor} />
-
-      {/* Páginas estáticas */}
       <Route path="/site-admin/paginas" component={CmsPaginas} />
       <Route path="/site-admin/paginas/nova" component={CmsPaginas} />
       <Route path="/site-admin/paginas/:id/editar" component={CmsPaginas} />
-
-      {/* Banners / Carrossel */}
       <Route path="/site-admin/banners" component={CmsBanners} />
-
-      {/* Agenda */}
       <Route path="/site-admin/agenda" component={CmsAgenda} />
-
-      {/* Galeria */}
       <Route path="/site-admin/galeria" component={CmsGaleria} />
-
-      {/* Transparência CMS (LAI compliance) */}
       <Route path="/site-admin/transparencia" component={CmsTransparenciaCms} />
-
-      {/* Legislação CMS */}
       <Route path="/site-admin/legislacao" component={CmsLegislacaoCms} />
-
-      {/* Licitações CMS */}
       <Route path="/site-admin/licitacoes" component={CmsLicitacoesCms} />
-
-      {/* Serviços CMS */}
       <Route path="/site-admin/servicos" component={CmsServicos} />
-
-      {/* Secretarias CMS */}
       <Route path="/site-admin/secretarias" component={CmsSecretarias} />
-
-      {/* Menus */}
       <Route path="/site-admin/menus" component={CmsMenus} />
-
-      {/* Aparência */}
       <Route path="/site-admin/aparencia" component={CmsAparencia} />
-
-      {/* Usuários */}
       <Route path="/site-admin/usuarios" component={CmsUsuarios} />
-
-      {/* Configurações */}
       <Route path="/site-admin/configuracoes" component={CmsConfiguracoes} />
+
+      {/* ─────────────────────────────────────────
+          Portal do Servidor — /servidor/*
+      ───────────────────────────────────────── */}
+      <Route path="/servidor">
+        {() => <Redirect to="/servidor/contracheque" />}
+      </Route>
+
+      {/* Contracheque */}
+      <Route path="/servidor/contracheque" component={ContrachequeListagem} />
+      <Route path="/servidor/contracheque/:mes/:ano" component={ContrachequeDetalhe} />
+
+      {/* Férias */}
+      <Route path="/servidor/ferias" component={Ferias} />
+      <Route path="/servidor/ferias/solicitar" component={FeriasSolicitar} />
+
+      {/* Requerimentos */}
+      <Route path="/servidor/requerimentos" component={Requerimentos} />
+      <Route path="/servidor/requerimentos/novo" component={RequerimentoNovo} />
+      <Route path="/servidor/requerimentos/:id" component={RequerimentoDetalhe} />
+
+      {/* Vida Funcional */}
+      <Route path="/servidor/vida-funcional" component={VidaFuncional} />
+
+      {/* ─────────────────────────────────────────
+          Painel RH — /rh/*
+      ───────────────────────────────────────── */}
+      <Route path="/rh">
+        {() => <Redirect to="/rh/dashboard" />}
+      </Route>
+      <Route path="/rh/dashboard" component={RhDashboard} />
+      <Route path="/rh/ferias" component={RhFerias} />
+      <Route path="/rh/requerimentos" component={RhRequerimentos} />
 
       {/* 404 */}
       <Route component={NotFound} />
@@ -151,12 +168,14 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AccessibilityProvider>
-        <TooltipProvider>
-          <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-            <Router />
-          </WouterRouter>
-          <Toaster />
-        </TooltipProvider>
+        <ServidorProvider>
+          <TooltipProvider>
+            <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+              <Router />
+            </WouterRouter>
+            <Toaster />
+          </TooltipProvider>
+        </ServidorProvider>
       </AccessibilityProvider>
     </QueryClientProvider>
   );
