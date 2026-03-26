@@ -1,0 +1,260 @@
+PRD — MÓDULO 3: ECOSSISTEMA INTELIGENTE MUNICIPAL
+Portal do Servidor + App Mobile Cidadão + Dashboard BI Municipal
+SaaS White-Label - Multi-Tenant - Integrado aos Módulos 1 e 2
+📌 CONTEXTO: Módulo 3 do SaaS Municipal. Três sub-módulos integrados que fecham o ecossistema completo da prefeitura: 3A (Portal do Servidor), 3B (App Mobile Cidadão) e 3C (Dashboard BI do Gestor). Compartilham tenant, autenticação, banco de dados e design tokens dos módulos anteriores.
+
+🖥️ BLOCO FRONTEND — MÓDULO 3A: PORTAL DO SERVIDOR
+PROMPT FE-3A-01 — Setup, Arquitetura e Autenticação do Portal do Servidor
+text
+Você é o melhor engenheiro frontend sênior do mundo especialista em portais RH
+governamentais, UX para servidores públicos e SaaS multi-tenant.
+
+## CONTEXTO DO PROJETO
+Portal do Servidor é o sub-módulo 3A do SaaS Municipal.
+Acesso exclusivo para servidores públicos municipais (não é o admin da prefeitura).
+URL: servidor.portalmunicipal.com.br OU municipio.portalmunicipal.com.br/servidor
+Autenticação própria com CPF + senha (separado do login admin dos Módulos 1 e 2).
+O servidor vê APENAS seus próprios dados — isolamento total por matrícula.
+
+## STACK OBRIGATÓRIA
+- Next.js 14+ App Router + TypeScript strict
+- TailwindCSS + shadcn/ui (Design Token System do tenant — já existente)
+- React Query v5 (cache de dados do servidor)
+- React Hook Form + Zod (formulários de solicitações)
+- Framer Motion (animações e transições)
+- react-pdf (visualização e download de contracheques)
+- date-fns (manipulação de datas em PT-BR)
+- Workbox (PWA — funciona instalado no celular do servidor)
+
+## TAREFA DESTA ETAPA
+
+### 1. Estrutura de Pastas — Sub-módulo 3A
+src/
+├── app/
+│   ├── (servidor)/                    # Portal do Servidor (público autenticado)
+│   │   ├── layout.tsx                 # Layout com sidebar do servidor
+│   │   ├── login/page.tsx             # Login com CPF + senha
+│   │   ├── dashboard/page.tsx         # Painel inicial
+│   │   ├── contracheque/
+│   │   │   ├── page.tsx              # Listagem de contracheques
+│   │   │   └── [mes]/[ano]/page.tsx  # Visualização/download
+│   │   ├── ferias/
+│   │   │   ├── page.tsx              # Saldo e histórico
+│   │   │   └── solicitar/page.tsx    # Formulário de solicitação
+│   │   ├── requerimentos/
+│   │   │   ├── page.tsx              # Meus requerimentos
+│   │   │   ├── novo/page.tsx         # Novo requerimento
+│   │   │   └── [id]/page.tsx         # Acompanhamento
+│   │   ├── vida-funcional/
+│   │   │   ├── page.tsx              # Dados cadastrais
+│   │   │   ├── historico/page.tsx    # Histórico de cargos
+│   │   │   └── tempo-servico/page.tsx
+│   │   ├── avaliacao-desempenho/
+│   │   │   ├── page.tsx
+│   │   │   └── [id]/page.tsx
+│   │   ├── documentos/page.tsx        # Certidões e declarações
+│   │   ├── capacitacao/page.tsx       # Treinamentos e cursos
+│   │   ├── comunicados/page.tsx       # Avisos da prefeitura
+│   │   ├── ponto/page.tsx             # Espelho de ponto (se integrado)
+│   │   └── perfil/page.tsx            # Meus dados + troca de senha
+│   │
+│   └── (servidor-rh)/                # Painel RH — gestão dos servidores
+│       ├── layout.tsx
+│       ├── dashboard/page.tsx
+│       ├── servidores/
+│       ├── contracheques/
+│       ├── ferias/
+│       ├── requerimentos/
+│       ├── avaliacao/
+│       ├── relatorios/
+│       └── configuracoes/
+
+### 2. Autenticação do Servidor (separada do admin)
+  - Login: CPF (com máscara) + senha
+  - Primeiro acesso: CPF + data de nascimento → força criação de senha
+  - Recuperação de senha: CPF + email cadastrado no RH → link por email
+  - Sessão: JWT separado com payload { matricula, servidorId, tenantId, role: 'SERVIDOR' }
+  - JWT curto: 8 horas (expediente de trabalho)
+  - Bloqueio: 5 tentativas → 30 minutos de bloqueio
+  - 2FA opcional: código por email ou SMS (configurável pelo tenant)
+
+### 3. Layout do Portal do Servidor
+Header:
+  - Logo da prefeitura (TenantProvider)
+  - Nome do servidor + cargo + matrícula
+  - Badge de secretaria/lotação
+  - Notificações (badge contador — comunicados não lidos, solicitações respondidas)
+  - Avatar com iniciais (sem foto — privacidade padrão)
+  - Menu: Meu Perfil | Trocar Senha | Sair
+
+Sidebar (256px, colapsável):
+  - Dashboard | Contracheque | Férias | Requerimentos |
+    Vida Funcional | Avaliação de Desempenho | Meu Ponto |
+    Documentos | Capacitação | Comunicados
+
+Footer mínimo:
+  - Versão | Política de Privacidade | Suporte (email/telefone RH)
+  - "Seus dados são protegidos pela LGPD"
+
+### 4. Dashboard do Servidor (src/app/(servidor)/dashboard/page.tsx)
+Cards de resumo rápido (responsivos — 2 col mobile, 4 col desktop):
+  - 💰 Última remuneração líquida (mês/ano)
+  - 🏖️ Saldo de férias disponível (em dias)
+  - 📋 Requerimentos em aberto
+  - ⭐ Última avaliação de desempenho (nota)
+
+Widgets principais:
+  - Próximo contracheque: data prevista de pagamento + valor estimado
+  - Próximas férias: período programado (se houver)
+  - Comunicados não lidos (últimos 3 com badge de urgência)
+  - Aniversário de ingresso no serviço público (se for o mês)
+  - Notificações de pendências: avaliação em aberto, documentos vencidos
+
+PWA: O dashboard deve funcionar offline (dados em cache com Workbox)
+mostrando último estado sincronizado com banner "Offline — dados de DD/MM/AAAA"
+PROMPT FE-3A-02 — Contracheque, Férias e Requerimentos
+text
+Continuando o Portal do Servidor. Implemente os módulos funcionais principais.
+
+## TAREFA DESTA ETAPA
+
+### 1. Módulo Contracheque (src/app/(servidor)/contracheque/)
+
+Listagem:
+  - Grid de cards por mês/ano (últimos 24 meses)
+  - Cada card: mês, ano, competência, valor bruto, valor líquido, status (pago/pendente)
+  - Destaque visual no mês mais recente (badge "Atual")
+  - Botão download PDF em cada card
+  - Filtro por ano (select)
+
+Visualização do Contracheque (/contracheque/[mes]/[ano]):
+  - Renderização idêntica ao contracheque impresso (react-pdf viewer)
+  - Layout oficial: dados do servidor, cargo, lotação, referência
+  - Seções: Vencimentos | Descontos | Informações Complementares
+  - Totais: Bruto | Descontos | Líquido — destacados visualmente
+  - Detalhamento linha a linha com código, descrição e valor
+  - Botões: Imprimir | Download PDF | Compartilhar (link temporário 24h)
+  - Histórico de visualizações (data/hora do último acesso)
+  - Responsivo: leitura confortável em mobile (zoom + scroll horizontal)
+
+Declaração de Rendimentos (IRRF):
+  - Geração automática da declaração anual de rendimentos
+  - Formato compatível com declaração IRPF
+  - Download PDF + geração do arquivo .dec (Receita Federal)
+
+### 2. Módulo Férias (src/app/(servidor)/ferias/)
+
+Painel de Férias:
+  - Saldo atual: dias disponíveis (com cálculo de períodos aquisitivos)
+  - Período aquisitivo atual: progresso visual (barra de dias trabalhados)
+  - Prazo limite para gozar férias (alerta vermelho se ultrapassado)
+  - Histórico: todos os períodos de férias (gozado, programado, vendido)
+
+Solicitação de Férias (/ferias/solicitar):
+  Formulário multi-step:
+  STEP 1 — Período:
+    - Período aquisitivo disponível (select automático)
+    - Data de início (DatePicker — bloqueio de fins de semana e feriados)
+    - Quantidade de dias (calculado automaticamente pela data de retorno)
+    - Data de retorno (calculada automaticamente)
+    - Parcelamento: 1x | 2x | 3x (se saldo permitir)
+    - Adiantamento 13°: checkbox (se permitido pelo período)
+    - Venda de 10 dias (abono pecuniário): toggle + validação de elegibilidade
+  
+  STEP 2 — Confirmação:
+    - Resumo completo do período solicitado
+    - Previsão de pagamento do adiantamento (se solicitado)
+    - Valor estimado do abono pecuniário (se solicitado)
+    - Checkbox: confirmo que estou ciente das regras
+  
+  STEP 3 — Resultado:
+    - Protocolo da solicitação
+    - Status: Aguardando aprovação do gestor imediato
+    - Prazo esperado de aprovação
+
+Acompanhamento:
+  - Timeline: Solicitado → Em análise (chefia) → Em análise (RH) → Aprovado | Rejeitado
+  - Motivo de rejeição (se houver)
+  - Botão para nova solicitação após rejeição
+
+### 3. Módulo de Requerimentos (src/app/(servidor)/requerimentos/)
+
+Lista de Requerimentos:
+  - DataTable: número, tipo, data, status, prazo
+  - Status badge: Rascunho | Protocolado | Em Análise | Deferido | Indeferido | Arquivado
+  - Filtro por tipo e status
+
+Novo Requerimento (/requerimentos/novo):
+  Tipos disponíveis (configuráveis pelo tenant/RH):
+  - Licença para tratar de interesses particulares
+  - Licença para acompanhar cônjuge
+  - Licença-maternidade / Licença-paternidade
+  - Licença por motivo de doença em pessoa da família
+  - Licença saúde (com atestado)
+  - Averbação de tempo de serviço
+  - Certidão de tempo de serviço
+  - Revisão de enquadramento salarial
+  - Progressão funcional
+  - Remoção/Lotação
+  - Adicional de insalubridade/periculosidade
+  - Afastamento para capacitação
+  - Outros (campo livre)
+
+  Formulário dinâmico por tipo:
+  - Campos específicos carregados conforme o tipo selecionado
+  - Upload de documentos comprobatórios (atestados, certidões, etc.)
+  - Campo de justificativa obrigatório (mín 100 chars)
+  - Preview antes de protocolar
+
+Detalhe do Requerimento (/requerimentos/[id]):
+  - Dados completos do requerimento + documentos anexados
+  - Timeline completa de tramitação
+  - Parecer técnico do RH (quando disponível)
+  - Decisão final com justificativa
+  - Download do despacho em PDF
+  - Botão de recurso (se indeferido + prazo não encerrado)
+
+### 4. Módulo Vida Funcional
+
+Meus Dados Cadastrais:
+  - Cargo atual, código, nível, referência
+  - Regime: Estatutário | CLT | Comissionado | Temporário
+  - Data de ingresso, concurso de origem
+  - Lotação atual (secretaria + local de trabalho)
+  - Dados bancários (banco, agência, conta — últimos 4 dígitos)
+  - Dados pessoais (editáveis: endereço, email pessoal, telefone)
+  - Dependentes para IRRF (listagem — edição via requerimento)
+
+Histórico Funcional:
+  - Timeline de toda a vida funcional: ingresso, progressões, remoções, afastamentos
+  - Cada entrada: data, evento, despacho, portaria (link para download)
+
+Tempo de Serviço:
+  - Total de tempo de serviço (com e sem averbações)
+  - Tempo por vínculo (se múltiplos)
+  - Projeção de aposentadoria (cálculo estimativo)
+  - Detalhamento por período
+
+### 5. Painel RH — Gestão de Servidores (src/app/(servidor-rh)/)
+
+Disponível para: Admin Municipal + Gestores de RH
+
+Dashboard RH:
+  - Total de servidores ativos por secretaria (gráfico barras)
+  - Férias vencidas (urgente — lista de servidores)
+  - Requerimentos pendentes de aprovação (com prazo)
+  - Servidores aniversariando no mês
+  - Afastamentos ativos e previsão de retorno
+  - Folha de pagamento do mês: total bruto, total líquido, total encargos
+
+Aprovação de Férias (workflow):
+  - Lista de solicitações aguardando aprovação (com informações do impacto na secretaria)
+  - Calendário visual da secretaria (ver férias já aprovadas para o período)
+  - Aprovar / Rejeitar com justificativa
+  - Aprovação em lote
+
+Aprovação de Requerimentos:
+  - Fila de requerimentos por tipo e prioridade
+  - Parecer técnico com editor de texto (TipTap)
+  - Deferimento / Indeferimento / Solicitação de complementação
+  - Geração automática de despacho em PDF
