@@ -6,50 +6,14 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useServidor } from "@/contexts/ServidorContext";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Progress } from "@/components/ui/progress";
+import { useToast } from "@/hooks/use-toast";
 import {
-  User, Clock, History, Edit, Save, X, CheckCircle,
+  User, Clock, History, Edit, Save, X, AlertCircle,
   Briefcase, Calendar, Building2, CreditCard
 } from "lucide-react";
-
-const DADOS_CADASTRAIS_INICIAIS = {
-  nomeCompleto: "Ana Paula Ferreira Costa",
-  cpf: "***.***.***-00",
-  rg: "1.234.567 SSP/PA",
-  dataNascimento: "15/04/1985",
-  estadoCivil: "Casada",
-  nomeMae: "Maria Ferreira Costa",
-  email: "ana.costa@parauapebas.pa.gov.br",
-  telefone: "(94) 9 8765-4321",
-  endereco: "Rua das Palmeiras, 320 — Bairro Liberdade",
-  municipio: "Parauapebas — PA",
-  cep: "68.515-010",
-  banco: "Banco do Brasil",
-  agencia: "****-3",
-  conta: "*****8-4",
-};
-
-const DADOS_FUNCIONAIS = {
-  matricula: "0012345",
-  cargo: "Analista Administrativo",
-  classe: "C — Nível III",
-  regime: "Estatutário",
-  lotacao: "SEMAD — Secretaria Municipal de Administração",
-  vinculo: "Efetivo",
-  dataPosse: "02/01/2019",
-  dataExercicio: "03/01/2019",
-  escala: "8h/dia — Segunda a Sexta",
-  portariaAdmissao: "Portaria n° 001/2019 — SEMAD",
-};
-
-const HISTORICO_FUNCIONAL = [
-  { data: "02/01/2019", evento: "Posse e início do exercício", detalhe: "Cargo: Analista Administrativo — Portaria 001/2019", tipo: "admissao" },
-  { data: "10/03/2020", evento: "Progressão Horizontal — Classe A → B", detalhe: "Interstício de 12 meses cumprido — Portaria 047/2020", tipo: "progressao" },
-  { data: "15/06/2021", evento: "Licença para Capacitação", detalhe: "MBA em Gestão Pública — 6 meses — Portaria 112/2021", tipo: "licenca" },
-  { data: "02/01/2022", evento: "Progressão Horizontal — Classe B → C", detalhe: "Interstício de 24 meses cumprido — Portaria 002/2022", tipo: "progressao" },
-  { data: "20/07/2023", evento: "Adicional de Insalubridade concedido", detalhe: "Grau médio (20%) — Portaria 078/2023", tipo: "beneficio" },
-  { data: "15/01/2025", evento: "Avaliação de Desempenho — Ótimo", detalhe: "Pontuação: 92/100 — Ciclo 2024", tipo: "avaliacao" },
-];
+import { usePerfilServidor, useAtualizarPerfil, useHistoricoFuncional, useTempoServico } from "@/services/servidorApi";
 
 function tipoColor(t: string) {
   const map: Record<string, string> = {
@@ -70,21 +34,55 @@ function tipoLabel(t: string) {
   return map[t] ?? t;
 }
 
+function FieldSkeleton() {
+  return (
+    <div>
+      <Skeleton className="h-3 w-24 mb-1" />
+      <Skeleton className="h-4 w-40" />
+    </div>
+  );
+}
+
 export default function VidaFuncional() {
-  const { servidor } = useServidor();
   const [editMode, setEditMode] = useState(false);
-  const [dados, setDados] = useState(DADOS_CADASTRAIS_INICIAIS);
-  const [tempDados, setTempDados] = useState(DADOS_CADASTRAIS_INICIAIS);
+  const [tempDados, setTempDados] = useState<Record<string, string>>({});
+  const { toast } = useToast();
 
-  const TEMPO_ANOS = 7;
-  const TEMPO_MESES = 2;
-  const TEMPO_DIAS = 24;
-  const APOSENTADORIA_ANOS_RESTANTES = 25;
-  const PCT_CARREIRA = Math.round((TEMPO_ANOS / (TEMPO_ANOS + APOSENTADORIA_ANOS_RESTANTES)) * 100);
+  const { data: perfil, isLoading: loadingPerfil, error: errPerfil } = usePerfilServidor();
+  const { data: historico, isLoading: loadingHistorico } = useHistoricoFuncional();
+  const { data: tempoServico, isLoading: loadingTempo } = useTempoServico();
+  const { mutateAsync: atualizarPerfil, isPending: saving } = useAtualizarPerfil();
 
-  function salvarDados() {
-    setDados(tempDados);
-    setEditMode(false);
+  const DADOS_FUNCIONAIS_LABELS: Record<string, string> = {
+    matricula: "Matrícula", cargo: "Cargo", classe: "Classe/Nível",
+    regime: "Regime", lotacao: "Lotação", vinculo: "Vínculo",
+    dataPosse: "Data de Posse", dataExercicio: "Data de Exercício",
+    escala: "Escala de Trabalho", portariaAdmissao: "Portaria de Admissão",
+  };
+
+  const FUNCIONAIS_KEYS = ["matricula", "cargo", "classe", "regime", "lotacao", "vinculo", "dataPosse", "dataExercicio", "escala", "portariaAdmissao"];
+  const EDITAVEIS_KEYS = ["email", "telefone", "endereco", "municipio", "cep"];
+  const EDITAVEIS_LABELS: Record<string, string> = {
+    email: "E-mail", telefone: "Telefone", endereco: "Endereço",
+    municipio: "Município/UF", cep: "CEP",
+  };
+  const PESSOAIS_KEYS = ["nomeCompleto", "cpf", "rg", "dataNascimento", "estadoCivil", "nomeMae", "email", "telefone", "endereco", "municipio", "cep"];
+  const PESSOAIS_LABELS: Record<string, string> = {
+    nomeCompleto: "Nome Completo", cpf: "CPF", rg: "RG",
+    dataNascimento: "Data de Nascimento", estadoCivil: "Estado Civil",
+    nomeMae: "Nome da Mãe", email: "E-mail", telefone: "Telefone",
+    endereco: "Endereço", municipio: "Município/UF", cep: "CEP",
+  };
+
+  async function salvarDados() {
+    try {
+      await atualizarPerfil(tempDados);
+      setEditMode(false);
+      toast({ title: "Dados atualizados", description: "Suas informações foram salvas com sucesso." });
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Erro ao salvar.";
+      toast({ title: "Erro", description: message, variant: "destructive" });
+    }
   }
 
   return (
@@ -104,6 +102,13 @@ export default function VidaFuncional() {
 
         {/* Aba 1 — Dados Cadastrais */}
         <TabsContent value="cadastrais" className="space-y-5">
+          {errPerfil && (
+            <div className="flex items-center gap-2 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+              <AlertCircle className="h-4 w-4" />
+              Não foi possível carregar os dados do perfil.
+            </div>
+          )}
+
           {/* Funcionais (read-only) */}
           <Card>
             <CardHeader className="pb-3">
@@ -114,20 +119,15 @@ export default function VidaFuncional() {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
-                {Object.entries(DADOS_FUNCIONAIS).map(([k, v]) => {
-                  const labels: Record<string, string> = {
-                    matricula: "Matrícula", cargo: "Cargo", classe: "Classe/Nível",
-                    regime: "Regime", lotacao: "Lotação", vinculo: "Vínculo",
-                    dataPosse: "Data de Posse", dataExercicio: "Data de Exercício",
-                    escala: "Escala de Trabalho", portariaAdmissao: "Portaria de Admissão",
-                  };
-                  return (
+                {loadingPerfil
+                  ? Array.from({ length: 10 }).map((_, i) => <FieldSkeleton key={i} />)
+                  : FUNCIONAIS_KEYS.map((k) => (
                     <div key={k}>
-                      <p className="text-xs text-gray-400 mb-0.5">{labels[k] ?? k}</p>
-                      <p className="font-medium text-gray-800">{v}</p>
+                      <p className="text-xs text-gray-400 mb-0.5">{DADOS_FUNCIONAIS_LABELS[k]}</p>
+                      <p className="font-medium text-gray-800">{(perfil as Record<string, string> | undefined)?.[k] ?? "—"}</p>
                     </div>
-                  );
-                })}
+                  ))
+                }
               </div>
             </CardContent>
           </Card>
@@ -142,36 +142,45 @@ export default function VidaFuncional() {
                   <Badge className="bg-green-100 text-green-700 hover:bg-green-100 text-xs ml-1">Editável</Badge>
                 </CardTitle>
                 {!editMode ? (
-                  <Button variant="outline" size="sm" className="gap-2 text-xs" onClick={() => { setTempDados(dados); setEditMode(true); }}>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="gap-2 text-xs"
+                    onClick={() => {
+                      const init: Record<string, string> = {};
+                      EDITAVEIS_KEYS.forEach(k => { init[k] = (perfil as Record<string, string> | undefined)?.[k] ?? ""; });
+                      setTempDados(init);
+                      setEditMode(true);
+                    }}
+                    disabled={loadingPerfil}
+                  >
                     <Edit className="h-3.5 w-3.5" />Editar
                   </Button>
                 ) : (
                   <div className="flex gap-2">
-                    <Button variant="ghost" size="sm" className="gap-1.5 text-xs text-gray-500" onClick={() => setEditMode(false)}>
+                    <Button variant="ghost" size="sm" className="gap-1.5 text-xs text-gray-500" onClick={() => setEditMode(false)} disabled={saving}>
                       <X className="h-3.5 w-3.5" />Cancelar
                     </Button>
-                    <Button size="sm" className="gap-1.5 text-xs bg-blue-700 hover:bg-blue-800" onClick={salvarDados}>
-                      <Save className="h-3.5 w-3.5" />Salvar
+                    <Button size="sm" className="gap-1.5 text-xs bg-blue-700 hover:bg-blue-800" onClick={salvarDados} disabled={saving}>
+                      <Save className="h-3.5 w-3.5" />{saving ? "Salvando..." : "Salvar"}
                     </Button>
                   </div>
                 )}
               </div>
             </CardHeader>
             <CardContent>
-              {editMode ? (
+              {loadingPerfil ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {Array.from({ length: 11 }).map((_, i) => <FieldSkeleton key={i} />)}
+                </div>
+              ) : editMode ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {[
-                    { k: "email", label: "E-mail" },
-                    { k: "telefone", label: "Telefone" },
-                    { k: "endereco", label: "Endereço" },
-                    { k: "municipio", label: "Município/UF" },
-                    { k: "cep", label: "CEP" },
-                  ].map(({ k, label }) => (
+                  {EDITAVEIS_KEYS.map((k) => (
                     <div key={k}>
-                      <Label className="text-xs font-medium mb-1.5 block">{label}</Label>
+                      <Label className="text-xs font-medium mb-1.5 block">{EDITAVEIS_LABELS[k]}</Label>
                       <Input
                         className="text-sm"
-                        value={(tempDados as Record<string, string>)[k]}
+                        value={tempDados[k] ?? ""}
                         onChange={(e) => setTempDados({ ...tempDados, [k]: e.target.value })}
                       />
                     </div>
@@ -179,22 +188,10 @@ export default function VidaFuncional() {
                 </div>
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
-                  {[
-                    { k: "nomeCompleto", label: "Nome Completo" },
-                    { k: "cpf", label: "CPF" },
-                    { k: "rg", label: "RG" },
-                    { k: "dataNascimento", label: "Data de Nascimento" },
-                    { k: "estadoCivil", label: "Estado Civil" },
-                    { k: "nomeMae", label: "Nome da Mãe" },
-                    { k: "email", label: "E-mail" },
-                    { k: "telefone", label: "Telefone" },
-                    { k: "endereco", label: "Endereço" },
-                    { k: "municipio", label: "Município/UF" },
-                    { k: "cep", label: "CEP" },
-                  ].map(({ k, label }) => (
+                  {PESSOAIS_KEYS.map((k) => (
                     <div key={k}>
-                      <p className="text-xs text-gray-400 mb-0.5">{label}</p>
-                      <p className="font-medium text-gray-800">{(dados as Record<string, string>)[k]}</p>
+                      <p className="text-xs text-gray-400 mb-0.5">{PESSOAIS_LABELS[k]}</p>
+                      <p className="font-medium text-gray-800">{(perfil as Record<string, string> | undefined)?.[k] ?? "—"}</p>
                     </div>
                   ))}
                 </div>
@@ -212,20 +209,26 @@ export default function VidaFuncional() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
-                <div>
-                  <p className="text-xs text-gray-400 mb-0.5">Banco</p>
-                  <p className="font-medium text-gray-800">{dados.banco}</p>
+              {loadingPerfil ? (
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  {[1,2,3].map(i => <FieldSkeleton key={i} />)}
                 </div>
-                <div>
-                  <p className="text-xs text-gray-400 mb-0.5">Agência</p>
-                  <p className="font-medium text-gray-800">{dados.agencia}</p>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
+                  <div>
+                    <p className="text-xs text-gray-400 mb-0.5">Banco</p>
+                    <p className="font-medium text-gray-800">{perfil?.banco ?? "—"}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-400 mb-0.5">Agência</p>
+                    <p className="font-medium text-gray-800">{perfil?.agencia ?? "—"}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-400 mb-0.5">Conta</p>
+                    <p className="font-medium text-gray-800">{perfil?.conta ?? "—"}</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-xs text-gray-400 mb-0.5">Conta</p>
-                  <p className="font-medium text-gray-800">{dados.conta}</p>
-                </div>
-              </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
@@ -237,28 +240,45 @@ export default function VidaFuncional() {
               <CardTitle className="text-sm font-semibold">Histórico de Eventos Funcionais</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-6">
-                {HISTORICO_FUNCIONAL.map((ev, i) => (
-                  <div key={i} className="flex gap-4">
-                    <div className="flex flex-col items-center flex-shrink-0">
-                      <div className="w-8 h-8 bg-blue-50 rounded-full flex items-center justify-center">
-                        <Calendar className="h-4 w-4 text-blue-500" />
+              {loadingHistorico ? (
+                <div className="space-y-6">
+                  {[1,2,3].map(i => (
+                    <div key={i} className="flex gap-4">
+                      <Skeleton className="w-8 h-8 rounded-full flex-shrink-0" />
+                      <div className="flex-1 space-y-1">
+                        <Skeleton className="h-4 w-48" />
+                        <Skeleton className="h-3 w-64" />
+                        <Skeleton className="h-3 w-24" />
                       </div>
-                      {i < HISTORICO_FUNCIONAL.length - 1 && <div className="w-px flex-1 bg-gray-100 mt-2" />}
                     </div>
-                    <div className="pb-6 flex-1 min-w-0">
-                      <div className="flex items-start justify-between gap-2 flex-wrap">
-                        <p className="text-sm font-semibold text-gray-800">{ev.evento}</p>
-                        <Badge className={`${tipoColor(ev.tipo)} hover:${tipoColor(ev.tipo)} text-xs flex-shrink-0`}>
-                          {tipoLabel(ev.tipo)}
-                        </Badge>
+                  ))}
+                </div>
+              ) : historico && historico.length > 0 ? (
+                <div className="space-y-6">
+                  {historico.map((ev, i) => (
+                    <div key={i} className="flex gap-4">
+                      <div className="flex flex-col items-center flex-shrink-0">
+                        <div className="w-8 h-8 bg-blue-50 rounded-full flex items-center justify-center">
+                          <Calendar className="h-4 w-4 text-blue-500" />
+                        </div>
+                        {i < historico.length - 1 && <div className="w-px flex-1 bg-gray-100 mt-2" />}
                       </div>
-                      <p className="text-xs text-gray-500 mt-1">{ev.detalhe}</p>
-                      <p className="text-xs text-gray-400 mt-0.5">{ev.data}</p>
+                      <div className="pb-6 flex-1 min-w-0">
+                        <div className="flex items-start justify-between gap-2 flex-wrap">
+                          <p className="text-sm font-semibold text-gray-800">{ev.evento}</p>
+                          <Badge className={`${tipoColor(ev.tipo)} hover:${tipoColor(ev.tipo)} text-xs flex-shrink-0`}>
+                            {tipoLabel(ev.tipo)}
+                          </Badge>
+                        </div>
+                        <p className="text-xs text-gray-500 mt-1">{ev.detalhe}</p>
+                        <p className="text-xs text-gray-400 mt-0.5">{ev.data}</p>
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-gray-400 text-center py-8">Nenhum evento funcional encontrado.</p>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
@@ -266,12 +286,20 @@ export default function VidaFuncional() {
         {/* Aba 3 — Tempo de Serviço */}
         <TabsContent value="tempo">
           <div className="space-y-5">
-            {/* Contador */}
             <div className="grid grid-cols-3 gap-4">
-              {[
-                { valor: TEMPO_ANOS, label: "Anos" },
-                { valor: TEMPO_MESES, label: "Meses" },
-                { valor: TEMPO_DIAS, label: "Dias" },
+              {loadingTempo ? (
+                [1,2,3].map(i => (
+                  <Card key={i}>
+                    <CardContent className="pt-6 text-center">
+                      <Skeleton className="h-12 w-16 mx-auto mb-2" />
+                      <Skeleton className="h-4 w-12 mx-auto" />
+                    </CardContent>
+                  </Card>
+                ))
+              ) : [
+                { valor: tempoServico?.anos ?? 0, label: "Anos" },
+                { valor: tempoServico?.meses ?? 0, label: "Meses" },
+                { valor: tempoServico?.diasAdicionais ?? 0, label: "Dias" },
               ].map(({ valor, label }) => (
                 <Card key={label}>
                   <CardContent className="pt-6 text-center">
@@ -282,7 +310,6 @@ export default function VidaFuncional() {
               ))}
             </div>
 
-            {/* Projeção */}
             <Card>
               <CardHeader className="pb-3">
                 <CardTitle className="text-sm font-semibold flex items-center gap-2">
@@ -291,52 +318,46 @@ export default function VidaFuncional() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-                  <div>
-                    <p className="text-xs text-gray-400 mb-0.5">Regime de Aposentadoria</p>
-                    <p className="font-medium text-gray-800">RPPS — Regime Próprio</p>
+                {loadingTempo ? (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {[1,2,3,4].map(i => <FieldSkeleton key={i} />)}
                   </div>
-                  <div>
-                    <p className="text-xs text-gray-400 mb-0.5">Data de Ingresso</p>
-                    <p className="font-medium text-gray-800">02/01/2019</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-400 mb-0.5">Tempo total necessário</p>
-                    <p className="font-medium text-gray-800">25 anos (Regra de Transição)</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-400 mb-0.5">Previsão de aposentadoria</p>
-                    <p className="font-bold text-green-700">02/01/2049</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-400 mb-0.5">Tempo restante</p>
-                    <p className="font-medium text-gray-800">{APOSENTADORIA_ANOS_RESTANTES} anos, 10 meses</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-400 mb-0.5">Progressão na carreira</p>
-                    <p className="font-medium text-gray-800">{PCT_CARREIRA}% do tempo acumulado</p>
-                  </div>
-                </div>
+                ) : (
+                  <>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <p className="text-xs text-gray-400 mb-0.5">Data de Ingresso</p>
+                        <p className="font-medium text-gray-800">{tempoServico?.dataAdmissao ?? "—"}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-400 mb-0.5">Regime de Aposentadoria</p>
+                        <p className="font-medium text-gray-800">RPPS — Regime Próprio</p>
+                      </div>
+                      {tempoServico?.projecaoAposentadoria && (
+                        <div>
+                          <p className="text-xs text-gray-400 mb-0.5">Previsão de aposentadoria</p>
+                          <p className="font-bold text-green-700">{tempoServico.projecaoAposentadoria}</p>
+                        </div>
+                      )}
+                    </div>
 
-                {/* Progress bar */}
-                <div>
-                  <div className="flex justify-between text-xs text-gray-400 mb-1">
-                    <span>Ingresso (2019)</span>
-                    <span>{PCT_CARREIRA}% concluído</span>
-                    <span>Aposentadoria (2049)</span>
-                  </div>
-                  <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-gradient-to-r from-blue-500 to-blue-700 rounded-full"
-                      style={{ width: `${PCT_CARREIRA}%` }}
-                    />
-                  </div>
-                </div>
+                    {tempoServico?.percentualProgresso !== undefined && (
+                      <div>
+                        <div className="flex justify-between text-xs text-gray-400 mb-1">
+                          <span>Ingresso</span>
+                          <span>{tempoServico.percentualProgresso}% concluído</span>
+                          <span>Aposentadoria</span>
+                        </div>
+                        <Progress value={tempoServico.percentualProgresso} className="h-3" />
+                      </div>
+                    )}
 
-                <div className="bg-blue-50 border border-blue-100 rounded-lg px-4 py-3 text-xs text-blue-700">
-                  <p className="font-medium mb-1">Informações baseadas na legislação atual</p>
-                  <p>Esta projeção é estimada com base no tempo de serviço atual e pode variar conforme alterações na legislação previdenciária. Consulte o setor de RH para informações detalhadas.</p>
-                </div>
+                    <div className="bg-blue-50 border border-blue-100 rounded-lg px-4 py-3 text-xs text-blue-700">
+                      <p className="font-medium mb-1">Informações baseadas na legislação atual</p>
+                      <p>Esta projeção é estimada com base no tempo de serviço atual e pode variar conforme alterações na legislação previdenciária. Consulte o setor de RH para informações detalhadas.</p>
+                    </div>
+                  </>
+                )}
               </CardContent>
             </Card>
           </div>

@@ -7,7 +7,11 @@ import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { ArrowLeft, ArrowRight, CheckCircle, Clock, ClipboardList } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Skeleton } from "@/components/ui/skeleton";
+import { ArrowLeft, ArrowRight, CheckCircle, Clock, ClipboardList, AlertTriangle, AlertCircle } from "lucide-react";
+import { useFeriasSaldo, useSolicitarFerias } from "@/services/servidorApi";
+import { useToast } from "@/hooks/use-toast";
 
 const STEPS = ["Configuração", "Confirmação", "Protocolo"];
 
@@ -15,52 +19,113 @@ interface FormData {
   periodoAquisitivoId: string;
   dataInicio: string;
   qtdDias: number;
-  parcelas: number;
   adiantamento13: boolean;
   abonoPecuniario: boolean;
   qtdDiasAbono: number;
   confirmado: boolean;
 }
 
-const PERIODO_DISPONIVEL = {
-  id: "pa-001-2",
-  descricao: "01/01/2025 – 31/12/2025",
-  diasDisponiveis: 30,
-  vencimento: "31/01/2027",
-};
+function isWeekend(dateStr: string): boolean {
+  if (!dateStr) return false;
+  const d = new Date(dateStr + "T12:00:00");
+  return d.getDay() === 0 || d.getDay() === 6;
+}
+
+function calcDataFim(dataInicio: string, qtdDias: number): string {
+  if (!dataInicio) return "";
+  const d = new Date(dataInicio + "T12:00:00");
+  d.setDate(d.getDate() + qtdDias - 1);
+  return d.toLocaleDateString("pt-BR");
+}
 
 export default function FeriasSolicitar() {
   const [step, setStep] = useState(0);
   const [protocolo, setProtocolo] = useState("");
+  const { data: saldoData, isLoading: loadingSaldo, error: errSaldo } = useFeriasSaldo();
+  const { mutateAsync: solicitarFerias, isPending: submitting } = useSolicitarFerias();
+  const { toast } = useToast();
+
+  const periodoAtual = saldoData?.periodoAtual ?? null;
+  const hoje = new Date().toISOString().split("T")[0];
+
   const [form, setForm] = useState<FormData>({
-    periodoAquisitivoId: PERIODO_DISPONIVEL.id,
+    periodoAquisitivoId: "",
     dataInicio: "",
     qtdDias: 30,
-    parcelas: 1,
     adiantamento13: false,
     abonoPecuniario: false,
     qtdDiasAbono: 0,
     confirmado: false,
   });
 
-  const dataFim = form.dataInicio
-    ? (() => {
-        const d = new Date(form.dataInicio);
-        d.setDate(d.getDate() + form.qtdDias - 1);
-        return d.toLocaleDateString("pt-BR");
-      })()
-    : "";
+  const formWithPeriodo = {
+    ...form,
+    periodoAquisitivoId: form.periodoAquisitivoId || periodoAtual?.id || "",
+  };
+
+  const inicioIsWeekend = isWeekend(form.dataInicio);
+  const qtdDiasValido = form.qtdDias >= 5 && form.qtdDias <= (periodoAtual?.diasDisponiveis ?? 30);
+  const abonoValido = !form.abonoPecuniario || (form.qtdDiasAbono >= 5 && form.qtdDiasAbono <= 10);
 
   const canProceedStep0 =
     form.dataInicio &&
-    form.qtdDias >= 5 &&
-    form.qtdDias <= 30 &&
-    (!form.abonoPecuniario || form.qtdDiasAbono >= 5);
+    !inicioIsWeekend &&
+    qtdDiasValido &&
+    abonoValido &&
+    periodoAtual !== null;
 
-  function handleSubmit() {
-    const prot = `SOL-${new Date().getFullYear()}-${String(Math.floor(Math.random() * 9000) + 1000)}`;
-    setProtocolo(prot);
-    setStep(2);
+  const dataFim = calcDataFim(form.dataInicio, form.qtdDias);
+
+  async function handleSubmit() {
+    try {
+      const res = await solicitarFerias({
+        periodoAquisitivoId: formWithPeriodo.periodoAquisitivoId,
+        dataInicio: form.dataInicio,
+        qtdDias: form.qtdDias,
+        adiantamento13: form.adiantamento13,
+        abonoPecuniario: form.abonoPecuniario,
+      });
+      setProtocolo(res.protocolo);
+      setStep(2);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Erro ao protocolar solicitação.";
+      toast({ title: "Erro", description: message, variant: "destructive" });
+    }
+  }
+
+  if (loadingSaldo) {
+    return (
+      <ServidorLayout title="Solicitar Férias" subtitle="Formulário de solicitação de férias">
+        <div className="max-w-2xl mx-auto">
+          <Skeleton className="h-10 w-full mb-8" />
+          <Card>
+            <CardContent className="pt-6 space-y-4">
+              <Skeleton className="h-16 w-full" />
+              <Skeleton className="h-10 w-full" />
+              <Skeleton className="h-10 w-full" />
+            </CardContent>
+          </Card>
+        </div>
+      </ServidorLayout>
+    );
+  }
+
+  if (errSaldo || !periodoAtual) {
+    return (
+      <ServidorLayout title="Solicitar Férias" subtitle="Formulário de solicitação de férias">
+        <div className="max-w-2xl mx-auto">
+          <Alert className="border-red-200 bg-red-50">
+            <AlertCircle className="h-4 w-4 text-red-600" />
+            <AlertDescription className="text-red-700">
+              Não foi possível carregar os dados do período aquisitivo. Tente novamente mais tarde ou entre em contato com o RH.
+            </AlertDescription>
+          </Alert>
+          <Link href="/servidor/ferias">
+            <Button variant="outline" className="mt-4">Voltar para Férias</Button>
+          </Link>
+        </div>
+      </ServidorLayout>
+    );
   }
 
   return (
@@ -75,7 +140,10 @@ export default function FeriasSolicitar() {
                 i === step ? "bg-blue-700 text-white shadow-sm" :
                 "bg-gray-100 text-gray-400"
               }`}>
-                {i < step ? <CheckCircle className="h-3.5 w-3.5" /> : <span className="w-3.5 h-3.5 rounded-full border-2 border-current flex items-center justify-center text-[10px]">{i + 1}</span>}
+                {i < step
+                  ? <CheckCircle className="h-3.5 w-3.5" />
+                  : <span className="w-3.5 h-3.5 rounded-full border-2 border-current flex items-center justify-center text-[10px]">{i + 1}</span>
+                }
                 <span className="hidden sm:block">{label}</span>
               </div>
               {i < STEPS.length - 1 && <div className="flex-1 h-px bg-gray-200 mx-2" />}
@@ -92,9 +160,9 @@ export default function FeriasSolicitar() {
               <div>
                 <Label className="text-xs font-medium text-gray-700 mb-1.5 block">Período Aquisitivo</Label>
                 <div className="border border-blue-200 bg-blue-50 rounded-lg px-4 py-3 text-sm">
-                  <p className="font-medium text-blue-800">{PERIODO_DISPONIVEL.descricao}</p>
+                  <p className="font-medium text-blue-800">{periodoAtual.dataInicio} – {periodoAtual.dataFim}</p>
                   <p className="text-xs text-blue-600 mt-0.5">
-                    {PERIODO_DISPONIVEL.diasDisponiveis} dias disponíveis — vence em {PERIODO_DISPONIVEL.vencimento}
+                    {periodoAtual.diasDisponiveis} dias disponíveis — vence em {periodoAtual.vencimento}
                   </p>
                 </div>
               </div>
@@ -108,44 +176,42 @@ export default function FeriasSolicitar() {
                   id="dataInicio"
                   type="date"
                   value={form.dataInicio}
-                  min={new Date().toISOString().split("T")[0]}
+                  min={hoje}
                   onChange={(e) => setForm({ ...form, dataInicio: e.target.value })}
+                  className={inicioIsWeekend ? "border-red-400" : ""}
                 />
-                <p className="text-xs text-gray-400 mt-1">Fins de semana e feriados são bloqueados pelo RH.</p>
+                {inicioIsWeekend && (
+                  <Alert className="mt-2 border-red-200 bg-red-50 py-2">
+                    <AlertTriangle className="h-3.5 w-3.5 text-red-600" />
+                    <AlertDescription className="text-red-700 text-xs">
+                      A data de início não pode ser em fim de semana. Selecione uma segunda a sexta-feira.
+                    </AlertDescription>
+                  </Alert>
+                )}
+                {form.dataInicio && !inicioIsWeekend && (
+                  <p className="text-xs text-gray-400 mt-1">Retorno previsto: {dataFim}</p>
+                )}
               </div>
 
               {/* Quantidade de dias */}
               <div>
                 <Label htmlFor="qtdDias" className="text-xs font-medium text-gray-700 mb-1.5 block">
-                  Quantidade de Dias (5 a 30) <span className="text-red-500">*</span>
+                  Quantidade de Dias (5 a {periodoAtual.diasDisponiveis}) <span className="text-red-500">*</span>
                 </Label>
                 <Input
                   id="qtdDias"
                   type="number"
                   min={5}
-                  max={30}
+                  max={periodoAtual.diasDisponiveis}
                   value={form.qtdDias}
                   onChange={(e) => setForm({ ...form, qtdDias: Number(e.target.value) })}
+                  className={!qtdDiasValido ? "border-red-400" : ""}
                 />
-                {form.dataInicio && <p className="text-xs text-gray-500 mt-1">Retorno previsto: {dataFim}</p>}
-              </div>
-
-              {/* Parcelamento */}
-              <div>
-                <Label className="text-xs font-medium text-gray-700 mb-1.5 block">Parcelamento</Label>
-                <div className="flex gap-2">
-                  {[1, 2, 3].map((p) => (
-                    <button
-                      key={p}
-                      onClick={() => setForm({ ...form, parcelas: p })}
-                      className={`flex-1 py-2 rounded-lg text-sm font-medium border transition-all ${
-                        form.parcelas === p ? "border-blue-500 bg-blue-50 text-blue-700" : "border-gray-200 text-gray-600 hover:border-gray-300"
-                      }`}
-                    >
-                      {p}x
-                    </button>
-                  ))}
-                </div>
+                {!qtdDiasValido && (
+                  <p className="text-xs text-red-600 mt-1">
+                    Mínimo de 5 dias e máximo de {periodoAtual.diasDisponiveis} dias disponíveis.
+                  </p>
+                )}
               </div>
 
               {/* Extras */}
@@ -166,7 +232,7 @@ export default function FeriasSolicitar() {
                   <Checkbox
                     id="abono"
                     checked={form.abonoPecuniario}
-                    onCheckedChange={(v) => setForm({ ...form, abonoPecuniario: !!v })}
+                    onCheckedChange={(v) => setForm({ ...form, abonoPecuniario: !!v, qtdDiasAbono: 0 })}
                   />
                   <div className="flex-1">
                     <Label htmlFor="abono" className="text-sm text-gray-700 cursor-pointer">Abono pecuniário (venda de dias)</Label>
@@ -181,6 +247,9 @@ export default function FeriasSolicitar() {
                         value={form.qtdDiasAbono || ""}
                         onChange={(e) => setForm({ ...form, qtdDiasAbono: Number(e.target.value) })}
                       />
+                    )}
+                    {form.abonoPecuniario && !abonoValido && (
+                      <p className="text-xs text-red-600 mt-1">Informe entre 5 e 10 dias de abono.</p>
                     )}
                   </div>
                 </div>
@@ -205,11 +274,11 @@ export default function FeriasSolicitar() {
               <div className="bg-blue-50 border border-blue-100 rounded-xl p-5 space-y-3 text-sm">
                 <div className="flex justify-between">
                   <span className="text-gray-600">Período aquisitivo</span>
-                  <span className="font-medium">{PERIODO_DISPONIVEL.descricao}</span>
+                  <span className="font-medium">{periodoAtual.dataInicio} – {periodoAtual.dataFim}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Data de início</span>
-                  <span className="font-medium">{new Date(form.dataInicio).toLocaleDateString("pt-BR")}</span>
+                  <span className="font-medium">{new Date(form.dataInicio + "T12:00:00").toLocaleDateString("pt-BR")}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Retorno</span>
@@ -220,12 +289,10 @@ export default function FeriasSolicitar() {
                   <span className="font-medium">{form.qtdDias} dias</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Parcelamento</span>
-                  <span className="font-medium">{form.parcelas} parcela(s)</span>
-                </div>
-                <div className="flex justify-between">
                   <span className="text-gray-600">Adiantamento 13°</span>
-                  <Badge className={form.adiantamento13 ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"}>{form.adiantamento13 ? "Sim" : "Não"}</Badge>
+                  <Badge className={form.adiantamento13 ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"}>
+                    {form.adiantamento13 ? "Sim" : "Não"}
+                  </Badge>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Abono pecuniário</span>
@@ -245,15 +312,15 @@ export default function FeriasSolicitar() {
               </div>
 
               <div className="flex gap-3">
-                <Button variant="outline" className="flex-1 gap-2" onClick={() => setStep(0)}>
+                <Button variant="outline" className="flex-1 gap-2" onClick={() => setStep(0)} disabled={submitting}>
                   <ArrowLeft className="h-4 w-4" />Voltar
                 </Button>
                 <Button
                   className="flex-1 bg-blue-700 hover:bg-blue-800"
-                  disabled={!form.confirmado}
+                  disabled={!form.confirmado || submitting}
                   onClick={handleSubmit}
                 >
-                  Protocolar Solicitação
+                  {submitting ? "Protocolando..." : "Protocolar Solicitação"}
                 </Button>
               </div>
             </CardContent>
@@ -282,10 +349,9 @@ export default function FeriasSolicitar() {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-500">Período solicitado</span>
-                  <span className="font-medium">{new Date(form.dataInicio).toLocaleDateString("pt-BR")} – {dataFim}</span>
+                  <span className="font-medium">{new Date(form.dataInicio + "T12:00:00").toLocaleDateString("pt-BR")} – {dataFim}</span>
                 </div>
               </div>
-              {/* Mini-timeline */}
               <div className="max-w-xs mx-auto space-y-3 text-left">
                 <div className="flex items-center gap-3">
                   <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />

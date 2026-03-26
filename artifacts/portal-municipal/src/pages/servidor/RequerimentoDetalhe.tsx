@@ -3,64 +3,9 @@ import { ServidorLayout } from "@/components/servidor/ServidorLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, CheckCircle, XCircle, Clock, FileText, AlertTriangle } from "lucide-react";
-
-const REQUERIMENTOS: Record<string, {
-  id: string; protocolo: string; tipo: string; tipoLabel: string;
-  status: string; dataSolicitacao: string; prazo: string; despacho: string | null;
-  documentos: { nome: string; tamanho: string }[];
-  timeline: { status: string; descricao: string; data: string; responsavel?: string }[];
-  prazoRecurso?: string;
-}> = {
-  "req-001": {
-    id: "req-001",
-    protocolo: "REQ-2026-0312",
-    tipo: "declaracao_tempo_servico",
-    tipoLabel: "Declaração de Tempo de Serviço",
-    status: "deferido",
-    dataSolicitacao: "10/02/2026",
-    prazo: "10/03/2026",
-    despacho: "DESPACHO — 10 de março de 2026\n\nAnalisado e julgado procedente.\n\nDECISÃO: DEFERIDO\n\nA declaração foi emitida e está disponível para retirada na SEMAD, mediante apresentação de documento de identificação.",
-    documentos: [],
-    timeline: [
-      { status: "protocolado", descricao: "Requerimento protocolado pelo servidor", data: "10/02/2026" },
-      { status: "em_analise", descricao: "Recebido e encaminhado para análise técnica", data: "11/02/2026", responsavel: "RH / SEMAD" },
-      { status: "deferido", descricao: "Requerimento deferido pelo RH", data: "10/03/2026", responsavel: "João Silva — Gerente RH" },
-    ],
-  },
-  "req-002": {
-    id: "req-002",
-    protocolo: "REQ-2026-0198",
-    tipo: "licenca_medica",
-    tipoLabel: "Licença Médica",
-    status: "em_analise",
-    dataSolicitacao: "15/03/2026",
-    prazo: "15/04/2026",
-    despacho: null,
-    documentos: [{ nome: "laudo_medico.pdf", tamanho: "234 KB" }],
-    timeline: [
-      { status: "protocolado", descricao: "Requerimento protocolado", data: "15/03/2026" },
-      { status: "em_analise", descricao: "Encaminhado para análise", data: "16/03/2026", responsavel: "RH / SEMAD" },
-    ],
-  },
-  "req-003": {
-    id: "req-003",
-    protocolo: "REQ-2025-0821",
-    tipo: "progressao_horizontal",
-    tipoLabel: "Progressão Horizontal",
-    status: "indeferido",
-    dataSolicitacao: "20/10/2025",
-    prazo: "20/11/2025",
-    despacho: "DESPACHO — 20 de novembro de 2025\n\nDECISÃO: INDEFERIDO\n\nMOTIVO: O servidor não atende os requisitos mínimos de interstício no cargo conforme Art. 42, §1° do PCCR — são necessários 24 meses na classe atual e o servidor possui apenas 18 meses.\n\nPRAZO PARA RECURSO: 15 dias a partir desta data.",
-    documentos: [{ nome: "comprovante_cargo.pdf", tamanho: "128 KB" }],
-    timeline: [
-      { status: "protocolado", descricao: "Requerimento protocolado", data: "20/10/2025" },
-      { status: "em_analise", descricao: "Em análise", data: "21/10/2025", responsavel: "RH / SEMAD" },
-      { status: "indeferido", descricao: "Requerimento indeferido — interstício insuficiente", data: "20/11/2025", responsavel: "João Silva — Gerente RH" },
-    ],
-    prazoRecurso: "05/12/2025",
-  },
-};
+import { Skeleton } from "@/components/ui/skeleton";
+import { ArrowLeft, CheckCircle, XCircle, Clock, FileText, AlertTriangle, AlertCircle } from "lucide-react";
+import { useRequerimentoDetalhe } from "@/services/servidorApi";
 
 function statusConfig(s: string) {
   const map: Record<string, { label: string; color: string; icon: React.ReactNode }> = {
@@ -68,6 +13,7 @@ function statusConfig(s: string) {
     indeferido: { label: "Indeferido", color: "bg-red-100 text-red-700", icon: <XCircle className="h-4 w-4 text-red-600" /> },
     em_analise: { label: "Em análise", color: "bg-amber-100 text-amber-700", icon: <Clock className="h-4 w-4 text-amber-500" /> },
     protocolado: { label: "Protocolado", color: "bg-blue-100 text-blue-700", icon: <FileText className="h-4 w-4 text-blue-600" /> },
+    arquivado: { label: "Arquivado", color: "bg-gray-100 text-gray-600", icon: <FileText className="h-4 w-4" /> },
   };
   return map[s] ?? { label: s, color: "bg-gray-100 text-gray-600", icon: <Clock className="h-4 w-4" /> };
 }
@@ -81,15 +27,43 @@ function timelineIcon(s: string) {
 
 export default function RequerimentoDetalhe() {
   const params = useParams<{ id: string }>();
-  const req = REQUERIMENTOS[params.id ?? ""];
+  const { data: req, isLoading, error } = useRequerimentoDetalhe(params.id ?? "");
 
-  if (!req) {
+  if (isLoading) {
+    return (
+      <ServidorLayout title="Requerimento" subtitle="Carregando...">
+        <div className="max-w-3xl mx-auto space-y-6">
+          <Skeleton className="h-8 w-32" />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <Card className="lg:col-span-2">
+              <CardContent className="pt-6 space-y-4">
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-3/4" />
+                <Skeleton className="h-4 w-1/2" />
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="pt-6 space-y-4">
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-3/4" />
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </ServidorLayout>
+    );
+  }
+
+  if (error || !req) {
     return (
       <ServidorLayout title="Requerimento não encontrado">
-        <div className="text-center py-20">
-          <p className="text-gray-500">Requerimento não encontrado.</p>
+        <div className="max-w-3xl mx-auto">
+          <div className="flex items-center gap-2 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm mb-4">
+            <AlertCircle className="h-4 w-4" />
+            {error ? "Não foi possível carregar o requerimento." : "Requerimento não encontrado."}
+          </div>
           <Link href="/servidor/requerimentos">
-            <Button variant="outline" className="mt-4">Voltar</Button>
+            <Button variant="outline">Voltar</Button>
           </Link>
         </div>
       </ServidorLayout>
@@ -97,9 +71,6 @@ export default function RequerimentoDetalhe() {
   }
 
   const sc = statusConfig(req.status);
-  const hoje = new Date();
-  const prazoRecurso = req.prazoRecurso ? new Date(req.prazoRecurso.split("/").reverse().join("-")) : null;
-  const dentroPrazo = prazoRecurso ? hoje <= prazoRecurso : false;
 
   return (
     <ServidorLayout
@@ -119,21 +90,17 @@ export default function RequerimentoDetalhe() {
           </Badge>
         </div>
 
-        {/* Status alert */}
-        {req.status === "indeferido" && req.prazoRecurso && (
-          <div className={`flex items-start gap-3 p-4 rounded-lg border ${dentroPrazo ? "border-amber-200 bg-amber-50" : "border-gray-200 bg-gray-50"}`}>
-            <AlertTriangle className={`h-5 w-5 flex-shrink-0 mt-0.5 ${dentroPrazo ? "text-amber-600" : "text-gray-400"}`} />
+        {/* Status alert for indeferido */}
+        {req.status === "indeferido" && (
+          <div className="flex items-start gap-3 p-4 rounded-lg border border-amber-200 bg-amber-50">
+            <AlertTriangle className="h-5 w-5 flex-shrink-0 mt-0.5 text-amber-600" />
             <div>
-              <p className={`text-sm font-medium ${dentroPrazo ? "text-amber-700" : "text-gray-600"}`}>
-                {dentroPrazo
-                  ? `Você pode recorrer desta decisão até ${req.prazoRecurso}.`
-                  : `Prazo de recurso encerrado em ${req.prazoRecurso}.`}
+              <p className="text-sm font-medium text-amber-700">
+                Este requerimento foi indeferido. Você pode apresentar recurso dentro do prazo previsto.
               </p>
-              {dentroPrazo && (
-                <Button size="sm" variant="outline" className="mt-2 border-amber-300 text-amber-700 hover:bg-amber-100 text-xs">
-                  Protocolar Recurso
-                </Button>
-              )}
+              <Button size="sm" variant="outline" className="mt-2 border-amber-300 text-amber-700 hover:bg-amber-100 text-xs">
+                Protocolar Recurso
+              </Button>
             </div>
           </div>
         )}
@@ -165,7 +132,7 @@ export default function RequerimentoDetalhe() {
               </div>
 
               {/* Documentos */}
-              {req.documentos.length > 0 && (
+              {req.documentos && req.documentos.length > 0 && (
                 <div className="border-t border-gray-100 pt-3">
                   <p className="text-xs text-gray-400 mb-2">Documentos anexados</p>
                   <div className="space-y-2">
@@ -198,21 +165,24 @@ export default function RequerimentoDetalhe() {
               <CardTitle className="text-sm font-semibold">Tramitação</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                {req.timeline.map((t, i) => (
-                  <div key={i} className="flex gap-3">
-                    <div className="flex flex-col items-center">
-                      <div className="flex-shrink-0">{timelineIcon(t.status)}</div>
-                      {i < req.timeline.length - 1 && <div className="w-px flex-1 bg-gray-200 mt-2" />}
+              {req.timeline && req.timeline.length > 0 ? (
+                <div className="space-y-4">
+                  {req.timeline.map((t, i) => (
+                    <div key={i} className="flex gap-3">
+                      <div className="flex flex-col items-center">
+                        <div className="flex-shrink-0">{timelineIcon(t.status)}</div>
+                        {i < req.timeline.length - 1 && <div className="w-px flex-1 bg-gray-200 mt-2" />}
+                      </div>
+                      <div className="pb-4 min-w-0">
+                        <p className="text-xs font-medium text-gray-700">{t.descricao}</p>
+                        <p className="text-xs text-gray-400 mt-0.5">{t.data}</p>
+                      </div>
                     </div>
-                    <div className="pb-4 min-w-0">
-                      <p className="text-xs font-medium text-gray-700">{t.descricao}</p>
-                      {t.responsavel && <p className="text-xs text-gray-500 mt-0.5">{t.responsavel}</p>}
-                      <p className="text-xs text-gray-400 mt-0.5">{t.data}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-xs text-gray-400">Nenhuma tramitação registrada.</p>
+              )}
             </CardContent>
           </Card>
         </div>
