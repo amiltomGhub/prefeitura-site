@@ -1,0 +1,146 @@
+Contracheque, Férias e Requerimentos
+text
+Continuando o Portal do Servidor. Implemente os módulos funcionais principais.
+
+## TAREFA DESTA ETAPA
+
+### 1. Módulo Contracheque (src/app/(servidor)/contracheque/)
+
+Listagem:
+  - Grid de cards por mês/ano (últimos 24 meses)
+  - Cada card: mês, ano, competência, valor bruto, valor líquido, status (pago/pendente)
+  - Destaque visual no mês mais recente (badge "Atual")
+  - Botão download PDF em cada card
+  - Filtro por ano (select)
+
+Visualização do Contracheque (/contracheque/[mes]/[ano]):
+  - Renderização idêntica ao contracheque impresso (react-pdf viewer)
+  - Layout oficial: dados do servidor, cargo, lotação, referência
+  - Seções: Vencimentos | Descontos | Informações Complementares
+  - Totais: Bruto | Descontos | Líquido — destacados visualmente
+  - Detalhamento linha a linha com código, descrição e valor
+  - Botões: Imprimir | Download PDF | Compartilhar (link temporário 24h)
+  - Histórico de visualizações (data/hora do último acesso)
+  - Responsivo: leitura confortável em mobile (zoom + scroll horizontal)
+
+Declaração de Rendimentos (IRRF):
+  - Geração automática da declaração anual de rendimentos
+  - Formato compatível com declaração IRPF
+  - Download PDF + geração do arquivo .dec (Receita Federal)
+
+### 2. Módulo Férias (src/app/(servidor)/ferias/)
+
+Painel de Férias:
+  - Saldo atual: dias disponíveis (com cálculo de períodos aquisitivos)
+  - Período aquisitivo atual: progresso visual (barra de dias trabalhados)
+  - Prazo limite para gozar férias (alerta vermelho se ultrapassado)
+  - Histórico: todos os períodos de férias (gozado, programado, vendido)
+
+Solicitação de Férias (/ferias/solicitar):
+  Formulário multi-step:
+  STEP 1 — Período:
+    - Período aquisitivo disponível (select automático)
+    - Data de início (DatePicker — bloqueio de fins de semana e feriados)
+    - Quantidade de dias (calculado automaticamente pela data de retorno)
+    - Data de retorno (calculada automaticamente)
+    - Parcelamento: 1x | 2x | 3x (se saldo permitir)
+    - Adiantamento 13°: checkbox (se permitido pelo período)
+    - Venda de 10 dias (abono pecuniário): toggle + validação de elegibilidade
+  
+  STEP 2 — Confirmação:
+    - Resumo completo do período solicitado
+    - Previsão de pagamento do adiantamento (se solicitado)
+    - Valor estimado do abono pecuniário (se solicitado)
+    - Checkbox: confirmo que estou ciente das regras
+  
+  STEP 3 — Resultado:
+    - Protocolo da solicitação
+    - Status: Aguardando aprovação do gestor imediato
+    - Prazo esperado de aprovação
+
+Acompanhamento:
+  - Timeline: Solicitado → Em análise (chefia) → Em análise (RH) → Aprovado | Rejeitado
+  - Motivo de rejeição (se houver)
+  - Botão para nova solicitação após rejeição
+
+### 3. Módulo de Requerimentos (src/app/(servidor)/requerimentos/)
+
+Lista de Requerimentos:
+  - DataTable: número, tipo, data, status, prazo
+  - Status badge: Rascunho | Protocolado | Em Análise | Deferido | Indeferido | Arquivado
+  - Filtro por tipo e status
+
+Novo Requerimento (/requerimentos/novo):
+  Tipos disponíveis (configuráveis pelo tenant/RH):
+  - Licença para tratar de interesses particulares
+  - Licença para acompanhar cônjuge
+  - Licença-maternidade / Licença-paternidade
+  - Licença por motivo de doença em pessoa da família
+  - Licença saúde (com atestado)
+  - Averbação de tempo de serviço
+  - Certidão de tempo de serviço
+  - Revisão de enquadramento salarial
+  - Progressão funcional
+  - Remoção/Lotação
+  - Adicional de insalubridade/periculosidade
+  - Afastamento para capacitação
+  - Outros (campo livre)
+
+  Formulário dinâmico por tipo:
+  - Campos específicos carregados conforme o tipo selecionado
+  - Upload de documentos comprobatórios (atestados, certidões, etc.)
+  - Campo de justificativa obrigatório (mín 100 chars)
+  - Preview antes de protocolar
+
+Detalhe do Requerimento (/requerimentos/[id]):
+  - Dados completos do requerimento + documentos anexados
+  - Timeline completa de tramitação
+  - Parecer técnico do RH (quando disponível)
+  - Decisão final com justificativa
+  - Download do despacho em PDF
+  - Botão de recurso (se indeferido + prazo não encerrado)
+
+### 4. Módulo Vida Funcional
+
+Meus Dados Cadastrais:
+  - Cargo atual, código, nível, referência
+  - Regime: Estatutário | CLT | Comissionado | Temporário
+  - Data de ingresso, concurso de origem
+  - Lotação atual (secretaria + local de trabalho)
+  - Dados bancários (banco, agência, conta — últimos 4 dígitos)
+  - Dados pessoais (editáveis: endereço, email pessoal, telefone)
+  - Dependentes para IRRF (listagem — edição via requerimento)
+
+Histórico Funcional:
+  - Timeline de toda a vida funcional: ingresso, progressões, remoções, afastamentos
+  - Cada entrada: data, evento, despacho, portaria (link para download)
+
+Tempo de Serviço:
+  - Total de tempo de serviço (com e sem averbações)
+  - Tempo por vínculo (se múltiplos)
+  - Projeção de aposentadoria (cálculo estimativo)
+  - Detalhamento por período
+
+### 5. Painel RH — Gestão de Servidores (src/app/(servidor-rh)/)
+
+Disponível para: Admin Municipal + Gestores de RH
+
+Dashboard RH:
+  - Total de servidores ativos por secretaria (gráfico barras)
+  - Férias vencidas (urgente — lista de servidores)
+  - Requerimentos pendentes de aprovação (com prazo)
+  - Servidores aniversariando no mês
+  - Afastamentos ativos e previsão de retorno
+  - Folha de pagamento do mês: total bruto, total líquido, total encargos
+
+Aprovação de Férias (workflow):
+  - Lista de solicitações aguardando aprovação (com informações do impacto na secretaria)
+  - Calendário visual da secretaria (ver férias já aprovadas para o período)
+  - Aprovar / Rejeitar com justificativa
+  - Aprovação em lote
+
+Aprovação de Requerimentos:
+  - Fila de requerimentos por tipo e prioridade
+  - Parecer técnico com editor de texto (TipTap)
+  - Deferimento / Indeferimento / Solicitação de complementação
+  - Geração automática de despacho em PDF

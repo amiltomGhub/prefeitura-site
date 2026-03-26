@@ -54006,15 +54006,154 @@ var init_site = __esm({
   }
 });
 
+// ../../lib/db/src/schema/auth.ts
+var usuariosTable, refreshTokensTable;
+var init_auth = __esm({
+  "../../lib/db/src/schema/auth.ts"() {
+    "use strict";
+    init_pg_core();
+    init_tenant();
+    usuariosTable = pgTable("usuarios", {
+      id: text("id").primaryKey(),
+      tenantId: text("tenant_id").notNull().references(() => tenantsTable.id, { onDelete: "cascade" }),
+      nome: text("nome").notNull(),
+      email: text("email").notNull().unique(),
+      senhaHash: text("senha_hash").notNull(),
+      cargo: text("cargo"),
+      avatar: text("avatar"),
+      modulosPermitidos: text("modulos_permitidos").array().notNull().default(["site"]),
+      permissoes: jsonb("permissoes").$type().notNull().default({}),
+      isAdmin: boolean("is_admin").notNull().default(false),
+      isAtivo: boolean("is_ativo").notNull().default(true),
+      ultimoAcesso: timestamp("ultimo_acesso"),
+      createdAt: timestamp("created_at").notNull().defaultNow(),
+      updatedAt: timestamp("updated_at").notNull().defaultNow()
+    });
+    refreshTokensTable = pgTable("refresh_tokens", {
+      id: text("id").primaryKey(),
+      usuarioId: text("usuario_id").notNull().references(() => usuariosTable.id, { onDelete: "cascade" }),
+      token: text("token").notNull().unique(),
+      expiresAt: timestamp("expires_at").notNull(),
+      createdAt: timestamp("created_at").notNull().defaultNow()
+    });
+  }
+});
+
+// ../../lib/db/src/schema/ouvidoria.ts
+var manifestacoesTable, sicPedidosTable, ouvidoriaEstatisticasTable;
+var init_ouvidoria = __esm({
+  "../../lib/db/src/schema/ouvidoria.ts"() {
+    "use strict";
+    init_pg_core();
+    init_tenant();
+    init_secretarias();
+    manifestacoesTable = pgTable("manifestacoes", {
+      id: text("id").primaryKey(),
+      tenantId: text("tenant_id").notNull().references(() => tenantsTable.id, { onDelete: "cascade" }),
+      protocolo: text("protocolo").notNull().unique(),
+      tipo: text("tipo").notNull().default("reclamacao"),
+      status: text("status").notNull().default("aberta"),
+      prioridade: text("prioridade").notNull().default("normal"),
+      nomeCidadao: text("nome_cidadao"),
+      emailCidadao: text("email_cidadao"),
+      telefoneCidadao: text("telefone_cidadao"),
+      cpfCidadao: text("cpf_cidadao"),
+      isAnonimo: boolean("is_anonimo").notNull().default(false),
+      assunto: text("assunto").notNull(),
+      descricao: text("descricao").notNull(),
+      secretariaId: text("secretaria_id").references(() => secretariasTable.id),
+      categoriaId: text("categoria_id"),
+      prazo: timestamp("prazo"),
+      resolvidaEm: timestamp("resolvida_em"),
+      atribuidaAEm: timestamp("atribuida_a_em"),
+      lgpdConsent: boolean("lgpd_consent").notNull().default(false),
+      origem: text("origem").notNull().default("portal"),
+      noticiasRelacionadas: text("noticias_relacionadas").array().default([]),
+      createdAt: timestamp("created_at").notNull().defaultNow(),
+      updatedAt: timestamp("updated_at").notNull().defaultNow()
+    });
+    sicPedidosTable = pgTable("sic_pedidos", {
+      id: text("id").primaryKey(),
+      tenantId: text("tenant_id").notNull().references(() => tenantsTable.id, { onDelete: "cascade" }),
+      protocolo: text("protocolo").notNull().unique(),
+      nome: text("nome").notNull(),
+      cpf: text("cpf").notNull(),
+      email: text("email").notNull(),
+      telefone: text("telefone"),
+      tipoSolicitacao: text("tipo_solicitacao").notNull(),
+      orgao: text("orgao").notNull(),
+      descricao: text("descricao").notNull(),
+      formataResposta: text("formata_resposta").notNull().default("email"),
+      status: text("status").notNull().default("aberto"),
+      resposta: text("resposta"),
+      prazo: timestamp("prazo").notNull(),
+      respondidoEm: timestamp("respondido_em"),
+      lgpdConsent: boolean("lgpd_consent").notNull().default(true),
+      createdAt: timestamp("created_at").notNull().defaultNow(),
+      updatedAt: timestamp("updated_at").notNull().defaultNow()
+    });
+    ouvidoriaEstatisticasTable = pgTable("ouvidoria_estatisticas", {
+      id: text("id").primaryKey(),
+      tenantId: text("tenant_id").notNull().references(() => tenantsTable.id, { onDelete: "cascade" }),
+      periodo: text("periodo").notNull(),
+      totalManifestacoes: integer("total_manifestacoes").notNull().default(0),
+      resolvidas: integer("resolvidas").notNull().default(0),
+      emAndamento: integer("em_andamento").notNull().default(0),
+      noPrazo: integer("no_prazo").notNull().default(0),
+      foraPrazo: integer("fora_prazo").notNull().default(0),
+      porTipo: jsonb("por_tipo").$type().default({}),
+      createdAt: timestamp("created_at").notNull().defaultNow()
+    });
+  }
+});
+
+// ../../lib/db/src/schema/faleconosco.ts
+var faleConoscoConfigTable, chatSessionsTable;
+var init_faleconosco = __esm({
+  "../../lib/db/src/schema/faleconosco.ts"() {
+    "use strict";
+    init_pg_core();
+    init_tenant();
+    faleConoscoConfigTable = pgTable("fale_conosco_config", {
+      id: text("id").primaryKey(),
+      tenantId: text("tenant_id").notNull().references(() => tenantsTable.id, { onDelete: "cascade" }).unique(),
+      habilitado: boolean("habilitado").notNull().default(true),
+      nomeAssistente: text("nome_assistente").notNull().default("Assistente Municipal"),
+      saudacao: text("saudacao").notNull().default("Ol\xE1! Como posso ajudar voc\xEA hoje?"),
+      systemPrompt: text("system_prompt").notNull().default("Voc\xEA \xE9 um assistente virtual da Prefeitura Municipal. Responda de forma objetiva, cordial e em portugu\xEAs brasileiro. Ajude os cidad\xE3os com informa\xE7\xF5es sobre servi\xE7os, transpar\xEAncia, ouvidoria e demais assuntos municipais. N\xE3o forne\xE7a informa\xE7\xF5es que n\xE3o sejam de sua compet\xEAncia."),
+      modeloIA: text("modelo_ia").notNull().default("gpt-4o-mini"),
+      temperatura: text("temperatura").notNull().default("0.7"),
+      maxTokens: integer("max_tokens").notNull().default(500),
+      avatarUrl: text("avatar_url"),
+      corBotao: text("cor_botao").notNull().default("#1351B4"),
+      temaWidget: text("tema_widget").notNull().default("light"),
+      canaisAtivos: jsonb("canais_ativos").$type().notNull().default({ ouvidoria: true, sic: true }),
+      topicosProibidos: text("topicos_proibidos").array().notNull().default(["pol\xEDtica partid\xE1ria", "candidatos", "elei\xE7\xF5es"]),
+      mensagemOffline: text("mensagem_offline").notNull().default("Nosso atendimento est\xE1 temporariamente indispon\xEDvel. Por favor, tente novamente mais tarde."),
+      updatedAt: timestamp("updated_at").notNull().defaultNow()
+    });
+    chatSessionsTable = pgTable("chat_sessions", {
+      id: text("id").primaryKey(),
+      tenantId: text("tenant_id").notNull().references(() => tenantsTable.id, { onDelete: "cascade" }),
+      sessionToken: text("session_token").notNull().unique(),
+      totalMensagens: integer("total_mensagens").notNull().default(0),
+      createdAt: timestamp("created_at").notNull().defaultNow(),
+      lastActivityAt: timestamp("last_activity_at").notNull().defaultNow()
+    });
+  }
+});
+
 // ../../lib/db/src/schema/index.ts
 var schema_exports = {};
 __export(schema_exports, {
   agendaTable: () => agendaTable,
   bannersTable: () => bannersTable,
   bidEventsTable: () => bidEventsTable,
+  chatSessionsTable: () => chatSessionsTable,
   concursosTable: () => concursosTable,
   contractsTable: () => contractsTable,
   despesasTable: () => despesasTable,
+  faleConoscoConfigTable: () => faleConoscoConfigTable,
   galeriaTable: () => galeriaTable,
   galleryAlbumsTable: () => galleryAlbumsTable,
   galleryItemsTable: () => galleryItemsTable,
@@ -54048,21 +54187,26 @@ __export(schema_exports, {
   insertTransparencyDocSchema: () => insertTransparencyDocSchema,
   legislacaoTable: () => legislacaoTable,
   licitacoesTable: () => licitacoesTable,
+  manifestacoesTable: () => manifestacoesTable,
   menuItemsTable: () => menuItemsTable,
   municipioInfoTable: () => municipioInfoTable,
   newsCategoriesTable: () => newsCategoriesTable,
   newsVersionsTable: () => newsVersionsTable,
   noticiasTable: () => noticiasTable,
   orcamentosTable: () => orcamentosTable,
+  ouvidoriaEstatisticasTable: () => ouvidoriaEstatisticasTable,
   pageBlocksTable: () => pageBlocksTable,
   pagesTable: () => pagesTable,
   receitasTable: () => receitasTable,
+  refreshTokensTable: () => refreshTokensTable,
   secretariasTable: () => secretariasTable,
   servicosTable: () => servicosTable,
   servidoresTable: () => servidoresTable,
+  sicPedidosTable: () => sicPedidosTable,
   siteConfigTable: () => siteConfigTable,
   tenantsTable: () => tenantsTable,
-  transparencyDocsTable: () => transparencyDocsTable
+  transparencyDocsTable: () => transparencyDocsTable,
+  usuariosTable: () => usuariosTable
 });
 var init_schema2 = __esm({
   "../../lib/db/src/schema/index.ts"() {
@@ -54078,6 +54222,9 @@ var init_schema2 = __esm({
     init_galeria();
     init_concursos();
     init_site();
+    init_auth();
+    init_ouvidoria();
+    init_faleconosco();
   }
 });
 
