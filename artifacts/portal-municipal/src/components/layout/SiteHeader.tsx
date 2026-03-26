@@ -81,19 +81,15 @@ export function SiteHeader() {
                     className="flex items-center gap-4 group focus:outline-none focus:ring-4 focus:ring-primary/20 rounded-2xl p-1 -ml-1 flex-shrink-0"
                     aria-label={`Ir para a página inicial — ${tenant?.nome ?? "Prefeitura Municipal"}`}
                   >
-                    {/* Brasão — maior, com sombra e borda gov.br */}
-                    <div className="relative flex-shrink-0">
-                      <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary/5 to-primary/10 border-2 border-primary/15 flex items-center justify-center overflow-hidden shadow-sm group-hover:shadow-md group-hover:border-primary/30 transition-all duration-200">
-                        <img
-                          src={tenant?.brasao ?? `${import.meta.env.BASE_URL}images/brasao.png`}
-                          alt={`Brasão de ${tenant?.nome ?? "Município"}`}
-                          className="w-full h-full object-contain p-1.5"
-                          width={80}
-                          height={80}
-                        />
-                      </div>
-                      {/* Faixa verde decorativa na borda (padrão gov.br) */}
-                      <span className="absolute -bottom-0.5 left-0 right-0 h-1 bg-secondary rounded-b-2xl" aria-hidden="true" />
+                    {/* Brasão — sem borda, funde com o fundo */}
+                    <div className="flex-shrink-0">
+                      <img
+                        src={tenant?.brasao ?? `${import.meta.env.BASE_URL}images/brasao.png`}
+                        alt={`Brasão de ${tenant?.nome ?? "Município"}`}
+                        className="w-24 h-24 object-contain drop-shadow-sm group-hover:drop-shadow-md transition-all duration-200"
+                        width={96}
+                        height={96}
+                      />
                     </div>
 
                     {/* Texto identificador */}
@@ -101,12 +97,8 @@ export function SiteHeader() {
                       <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.18em]">
                         Prefeitura Municipal de
                       </span>
-                      <span className="text-[22px] sm:text-2xl font-black text-foreground group-hover:text-primary transition-colors leading-none mt-0.5">
+                      <span className="text-[26px] sm:text-[28px] font-black text-foreground group-hover:text-primary transition-colors leading-none mt-0.5 tracking-tight">
                         {(tenant?.nome ?? "Parauapebas").replace("Prefeitura Municipal de ", "")}
-                      </span>
-                      <span className="text-[11px] text-muted-foreground font-medium mt-1 flex items-center gap-1">
-                        <span className="w-1.5 h-1.5 rounded-full bg-secondary inline-block" aria-hidden="true" />
-                        {tenant?.estado ?? "Pará"} · Gestão 2025–2028
                       </span>
                     </div>
                   </Link>
