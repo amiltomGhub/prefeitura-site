@@ -1,0 +1,125 @@
+Continuando o backend SaaS Municipal. Implemente todos os endpoints do Site Institucional.
+
+## TAREFA DESTA ETAPA
+
+### 1. Rotas Públicas (sem autenticação, com cache Redis 60s)
+
+GET /api/site/config?tenant=slug
+  → Configurações visuais + menus + redes sociais do tenant
+
+GET /api/site/banners?tenant=slug
+  → Banners ativos ordenados por sortOrder, filtrando por período ativo
+
+GET /api/site/news?tenant=slug&page=1&limit=10&category=&featured=false&search=
+  → Lista de notícias publicadas com paginação cursor-based
+  → Cache Redis: 60s
+  → Inclui: id, title, slug, excerpt, coverImageUrl, coverImageAlt, 
+             category, publishedAt, viewCount
+
+GET /api/site/news/[slug]?tenant=slug
+  → Notícia completa + incrementa viewCount (via job BullMQ — não bloqueia response)
+  → Inclui: conteúdo HTML sanitizado, author.name, secretaria.name, tags
+  → Notícias relacionadas (mesma categoria, últimas 3)
+
+GET /api/site/agenda?tenant=slug&month=3&year=2026
+  → Eventos do mês filtrado (ou próximos eventos se não especificado)
+
+GET /api/site/gallery?tenant=slug&albumId=&page=1
+  → Álbuns públicos ou itens de um álbum específico
+
+GET /api/site/legislation?tenant=slug&type=&year=&search=&page=1
+  → Atos normativos publicados com filtros
+
+GET /api/site/bids?tenant=slug&status=&modalidade=&search=&page=1
+  → Licitações com filtros completos
+
+GET /api/site/bids/[id]?tenant=slug
+  → Detalhe da licitação + eventos + contrato vinculado
+
+GET /api/site/transparency/[category]?tenant=slug&year=&period=
+  → Documentos da transparência por categoria
+  → Categorias: orcamento | receitas | despesas | servidores | convenios | atas | dados-abertos
+
+GET /api/site/secretarias?tenant=slug
+  → Lista de secretarias ativas com: nome, responsável, telefone, email, horário
+
+GET /api/site/search?tenant=slug&q=termo&page=1
+  → Busca fulltext em: notícias, legislação, licitações, serviços, páginas
+  → Retorna resultados agrupados por tipo com highlight do termo
+
+GET /api/site/pages/[slug]?tenant=slug
+  → Página estática com blocos de conteúdo
+
+### 2. Rotas Admin CMS (autenticação obrigatória)
+
+Notícias:
+  GET    /api/site-admin/news?status=&search=&page=
+  POST   /api/site-admin/news                        → criar rascunho
+  GET    /api/site-admin/news/[id]
+  PUT    /api/site-admin/news/[id]                   → salvar (auto-save a cada 30s)
+  PATCH  /api/site-admin/news/[id]/publish           → publicar
+  PATCH  /api/site-admin/news/[id]/schedule          → agendar { scheduledAt }
+  PATCH  /api/site-admin/news/[id]/archive
+  DELETE /api/site-admin/news/[id]                   → soft delete
+  GET    /api/site-admin/news/[id]/versions          → histórico de versões
+
+Banners:
+  GET    /api/site-admin/banners
+  POST   /api/site-admin/banners
+  PUT    /api/site-admin/banners/[id]
+  PATCH  /api/site-admin/banners/reorder  { orderedIds: string[] }
+  DELETE /api/site-admin/banners/[id]
+
+Transparência:
+  GET    /api/site-admin/transparency                 → lista de documentos + status de conformidade
+  POST   /api/site-admin/transparency                 → upload de documento
+  DELETE /api/site-admin/transparency/[id]
+  GET    /api/site-admin/transparency/compliance      → relatório de conformidade LAI
+
+Licitações:
+  GET    /api/site-admin/bids
+  POST   /api/site-admin/bids
+  PUT    /api/site-admin/bids/[id]
+  POST   /api/site-admin/bids/[id]/events             → adicionar evento à licitação
+  POST   /api/site-admin/bids/[id]/contracts          → vincular contrato
+
+Agenda:
+  GET    /api/site-admin/agenda?month=&year=
+  POST   /api/site-admin/agenda
+  PUT    /api/site-admin/agenda/[id]
+  DELETE /api/site-admin/agenda/[id]
+
+Configurações do Site:
+  GET    /api/site-admin/config
+  PUT    /api/site-admin/config                       → salva configurações gerais
+  PUT    /api/site-admin/config/menus                 → salva estrutura de menus
+
+### 3. Jobs BullMQ específicos do Site
+
+Fila: site-queue
+  - PUBLISH_SCHEDULED_NEWS: cron a cada 5 minutos — publica notícias agendadas
+  - INCREMENT_VIEW_COUNT: job assíncrono — incrementa views sem bloquear response
+  - CHECK_TRANSPARENCY_COMPLIANCE: cron diário 07:00 — verifica documentos vencidos
+    * Se documento obrigatório não publicado ou desatualizado → alerta email para Admin
+  - GENERATE_SITEMAP: cron diário 02:00 — regenera sitemap.xml
+  - SYNC_PNCP: cron diário 06:00 — sincroniza licitações com Portal Nacional de Compras Públicos (API PNCP)
+
+### 4. Busca Fulltext (PostgreSQL)
+  Implementar índice GIN para busca fulltext em PT-BR:
+  
+  -- Executar no provisionamento do tenant
+  CREATE INDEX idx_news_search ON {schema}.news
+    USING GIN (to_tsvector('portuguese', title || ' ' || COALESCE(excerpt, '') || ' ' || content));
+  
+  CREATE INDEX idx_legislation_search ON {schema}.legislation
+    USING GIN (to_tsvector('portuguese', number::text || ' ' || summary));
+  
+  CREATE INDEX idx_bids_search ON {schema}.bids
+    USING GIN (to_tsvector('portuguese', number || ' ' || object));
+
+  Query de busca com ranking:
+  SELECT *, ts_rank(search_vector, query) AS rank
+  FROM news, plainto_tsquery('portuguese', $1) AS query
+  WHERE search_vector @@ query
+  ORDER BY rank DESC, published_at DESC
+  LIMIT 10;

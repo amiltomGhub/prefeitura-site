@@ -7,6 +7,48 @@ Portal público principal do município, integrado ao Módulo 1 (Ouvidoria) via 
 
 ## Implementação — Status Atual
 
+### ✅ Parte VII — Endpoints Site Institucional + BullMQ + Busca Fulltext (COMPLETO)
+
+**Rotas Públicas `/api/site/*` (11 endpoints, cache 60s em memória):**
+- `GET /api/site/config` — configurações visuais + menus + redes sociais
+- `GET /api/site/banners` — banners ativos com filtro de período
+- `GET /api/site/news` + `GET /api/site/news/:slug` — notícias publicadas com paginação + relacionadas
+- `GET /api/site/agenda` — eventos por mês/ano
+- `GET /api/site/gallery` — álbuns ou itens de álbum específico
+- `GET /api/site/legislation` — atos normativos com FTS
+- `GET /api/site/bids` + `GET /api/site/bids/:id` — licitações + eventos + contratos
+- `GET /api/site/transparency/:category` — docs LAI + dados estruturados (despesas/receitas/servidores/orçamento)
+- `GET /api/site/secretarias` — secretarias ativas
+- `GET /api/site/search` — busca fulltext PostgreSQL (FTS) em notícias/legislação/licitações/páginas
+- `GET /api/site/pages/:slug` — páginas estáticas com blocos de conteúdo
+
+**Rotas Admin `/api/site-admin/*` (26+ endpoints):**
+- News: CRUD + publish/schedule/archive/soft-delete + histórico de versões
+- Banners: CRUD + reorder por array de IDs
+- Transparency: CRUD + `GET /compliance` (relatório LAI com % de conformidade)
+- Bids: CRUD + eventos + contratos vinculados
+- Agenda: CRUD filtrado por mês/ano
+- Config: GET + PUT geral + PUT menus por slot
+
+**BullMQ + Fila site-queue:**
+- `PUBLISH_SCHEDULED_NEWS` — cron 5min (publica notícias agendadas)
+- `INCREMENT_VIEW_COUNT` — fire-and-forget (não bloqueia response)
+- `CHECK_TRANSPARENCY_COMPLIANCE` — diário 07:00 (verifica docs LAI vencidos)
+- `GENERATE_SITEMAP` — diário 02:00
+- `SYNC_PNCP` — diário 06:00
+- Fallback automático para schedulers em memória quando REDIS_URL não está disponível
+
+**Índices GIN para Fulltext (PostgreSQL PT-BR):**
+- `idx_noticias_fts` — título + resumo + conteúdo
+- `idx_legislacao_fts` — número + ementa
+- `idx_licitacoes_fts` — número + objeto
+- `idx_pages_fts` — título + meta_description
+
+**Infraestrutura:**
+- `lib/cache.ts` — in-memory TTL cache com limpeza automática
+- `lib/queue.ts` — BullMQ factory com fallback in-memory
+- `workers/site-worker.ts` — worker unificado
+
 ### ✅ Parte VI — Backend Schema Site Institucional (COMPLETO)
 - **Schemas expandidos** — `noticias.ts` (+status/SEO/agendamento/deletadoEm/categoriaId/secretariaId) + `news_categories` + `news_versions`
 - **`licitacoes.ts`** expandido (+vencedor/pncpId/downloadCount/editalUrl/resultUrl/secretariaId) + novas tabelas `bid_events` + `contracts`
