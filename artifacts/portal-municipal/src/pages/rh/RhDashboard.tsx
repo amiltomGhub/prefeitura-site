@@ -245,7 +245,35 @@ export default function RhDashboard() {
             </div>
           ) : (
             <div className="divide-y divide-gray-100">
-              {(data?.requerimentosPendentesList ?? []).length === 0 && (
+              {(data?.feriasPendentesLista ?? []).slice(0, 3).map((f) => (
+                <div key={f.id} className="flex items-center justify-between py-3 gap-3 flex-wrap">
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium text-gray-800">{f.nome}</p>
+                    <p className="text-xs text-gray-500">Mat. {f.matricula} — {f.secretaria}</p>
+                    <p className="text-xs text-gray-400">
+                      {f.qtdDias} dias a partir de {f.dataInicio} | Solicitado em {f.protocolado}
+                    </p>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="text-xs h-7 text-red-600 border-red-200 hover:bg-red-50"
+                      onClick={() => toast({ title: "Use a fila completa para rejeitar.", variant: "destructive" })}
+                    >
+                      Rejeitar
+                    </Button>
+                    <Button
+                      size="sm"
+                      className="text-xs h-7 bg-green-600 hover:bg-green-700 gap-1"
+                      onClick={() => handleAprovarFerias(f.id)}
+                    >
+                      <CheckCircle className="h-3.5 w-3.5" />Aprovar
+                    </Button>
+                  </div>
+                </div>
+              ))}
+              {(data?.feriasPendentesLista ?? []).length === 0 && (
                 <p className="text-sm text-gray-400 text-center py-4">Nenhuma solicitação de férias pendente.</p>
               )}
             </div>

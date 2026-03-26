@@ -90,20 +90,34 @@ export default function RequerimentoDetalhe() {
           </Badge>
         </div>
 
-        {/* Status alert for indeferido */}
-        {req.status === "indeferido" && (
-          <div className="flex items-start gap-3 p-4 rounded-lg border border-amber-200 bg-amber-50">
-            <AlertTriangle className="h-5 w-5 flex-shrink-0 mt-0.5 text-amber-600" />
-            <div>
-              <p className="text-sm font-medium text-amber-700">
-                Este requerimento foi indeferido. Você pode apresentar recurso dentro do prazo previsto.
-              </p>
-              <Button size="sm" variant="outline" className="mt-2 border-amber-300 text-amber-700 hover:bg-amber-100 text-xs">
-                Protocolar Recurso
-              </Button>
+        {/* Status alert for indeferido — shows recurso only if within deadline */}
+        {req.status === "indeferido" && (() => {
+          const prazoRecurso = req.prazoRecurso
+            ? new Date(req.prazoRecurso.split("/").reverse().join("-"))
+            : null;
+          const hoje = new Date();
+          const dentroPrazo = prazoRecurso ? hoje <= prazoRecurso : false;
+          const prazoStr = prazoRecurso ? prazoRecurso.toLocaleDateString("pt-BR") : null;
+          return (
+            <div className={`flex items-start gap-3 p-4 rounded-lg border ${dentroPrazo ? "border-amber-200 bg-amber-50" : "border-gray-200 bg-gray-50"}`}>
+              <AlertTriangle className={`h-5 w-5 flex-shrink-0 mt-0.5 ${dentroPrazo ? "text-amber-600" : "text-gray-400"}`} />
+              <div>
+                <p className={`text-sm font-medium ${dentroPrazo ? "text-amber-700" : "text-gray-600"}`}>
+                  {dentroPrazo && prazoStr
+                    ? `Este requerimento foi indeferido. Você pode apresentar recurso até ${prazoStr}.`
+                    : prazoStr
+                      ? `Prazo de recurso encerrado em ${prazoStr}.`
+                      : "Este requerimento foi indeferido."}
+                </p>
+                {dentroPrazo && (
+                  <Button size="sm" variant="outline" className="mt-2 border-amber-300 text-amber-700 hover:bg-amber-100 text-xs">
+                    Protocolar Recurso
+                  </Button>
+                )}
+              </div>
             </div>
-          </div>
-        )}
+          );
+        })()}
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Dados */}

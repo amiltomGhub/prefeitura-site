@@ -324,6 +324,7 @@ export interface RequerimentoDetalhe extends RequerimentoListItem {
   justificativa: string;
   documentos: Array<{ nome: string; tamanho: string }>;
   timeline: Array<{ status: string; descricao: string; data: string }>;
+  prazoRecurso?: string | null;
 }
 
 export interface CriarRequerimentoInput {
@@ -385,6 +386,7 @@ export interface RhDashboardData {
   servidoresPorSecretaria: Array<{ secretaria: string; total: number }>;
   feriasVencidasLista: Array<{ nome: string; matricula: string; secretaria: string; periodo: string; venceu: string }>;
   requerimentosPendentesList: Array<{ id: string; nome: string; matricula: string; tipo: string; protocolado: string; prazo: string }>;
+  feriasPendentesLista: Array<{ id: string; nome: string; matricula: string; secretaria: string; qtdDias: number; dataInicio: string; protocolado: string }>;
 }
 
 export interface RhFeriasPendenteItem {

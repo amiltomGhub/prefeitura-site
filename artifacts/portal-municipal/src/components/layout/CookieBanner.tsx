@@ -70,12 +70,11 @@ export function CookieBanner() {
   useEffect(() => {
     const saved = getCookiePrefs();
     if (!saved) {
-      // Show after a short delay for better UX
       const t = setTimeout(() => setIsVisible(true), 800);
       return () => clearTimeout(t);
-    } else {
-      setPrefs(saved);
     }
+    setPrefs(saved);
+    return undefined;
   }, []);
 
   // Trap focus inside banner when config is open

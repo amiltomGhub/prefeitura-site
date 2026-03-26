@@ -8,7 +8,9 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Upload, X, FileText, CheckCircle } from "lucide-react";
+import { ArrowLeft, Upload, X, FileText, CheckCircle, AlertCircle } from "lucide-react";
+import { useCriarRequerimento } from "@/services/servidorApi";
+import { useToast } from "@/hooks/use-toast";
 
 const TIPOS = [
   { value: "declaracao_tempo_servico", label: "Declaração de Tempo de Serviço", campos: [] },
@@ -53,11 +55,11 @@ const TIPOS = [
 interface Arquivo {
   nome: string;
   tamanho: string;
-  url: string;
 }
 
 export default function RequerimentoNovo() {
   const [, navigate] = useLocation();
+  const { toast } = useToast();
   const [tipo, setTipo] = useState("");
   const [campos, setCampos] = useState<Record<string, string>>({});
   const [justificativa, setJustificativa] = useState("");
@@ -65,7 +67,10 @@ export default function RequerimentoNovo() {
   const [preview, setPreview] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [protocolo, setProtocolo] = useState("");
+  const [novoReqId, setNovoReqId] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
+
+  const { mutateAsync: criarRequerimento, isPending, error: apiError } = useCriarRequerimento();
 
   const tipoSelecionado = TIPOS.find((t) => t.value === tipo);
   const camposValidos = tipoSelecionado?.campos.every(
@@ -79,15 +84,33 @@ export default function RequerimentoNovo() {
     Array.from(files).forEach((f) => {
       setArquivos((prev) => [
         ...prev,
-        { nome: f.name, tamanho: (f.size / 1024).toFixed(0) + " KB", url: URL.createObjectURL(f) },
+        { nome: f.name, tamanho: (f.size / 1024).toFixed(0) + " KB" },
       ]);
     });
+    e.target.value = "";
   }
 
-  function handleSubmit() {
-    const prot = `REQ-${new Date().getFullYear()}-${String(Math.floor(Math.random() * 9000) + 1000)}`;
-    setProtocolo(prot);
-    setSubmitted(true);
+  async function handleSubmit() {
+    const justificativaCompleta = justificativa + (Object.keys(campos).length > 0
+      ? "\n\n" + Object.entries(campos).map(([k, v]) => {
+          const campo = tipoSelecionado?.campos.find(c => c.id === k);
+          return `${campo?.label ?? k}: ${v}`;
+        }).join("; ")
+      : "");
+
+    try {
+      const resultado = await criarRequerimento({
+        tipo,
+        justificativa: justificativaCompleta,
+        documentos: arquivos.map(a => a.nome),
+      });
+      setProtocolo(resultado.protocolo);
+      setNovoReqId(resultado.id);
+      setSubmitted(true);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Erro ao protocolar requerimento.";
+      toast({ title: "Erro ao protocolar", description: msg, variant: "destructive" });
+    }
   }
 
   if (submitted) {
@@ -116,9 +139,14 @@ export default function RequerimentoNovo() {
             </div>
           </div>
           <div className="flex gap-3 justify-center">
-            <Link href="/servidor/requerimentos">
-              <Button variant="outline">Ver Requerimentos</Button>
-            </Link>
+            {novoReqId && (
+              <Button className="bg-blue-700 hover:bg-blue-800" onClick={() => navigate(`/servidor/requerimentos/${novoReqId}`)}>
+                Ver Detalhes
+              </Button>
+            )}
+            <Button variant="outline" onClick={() => navigate("/servidor/requerimentos")}>
+              Ver Requerimentos
+            </Button>
           </div>
         </div>
       </ServidorLayout>
@@ -135,6 +163,13 @@ export default function RequerimentoNovo() {
             </Button>
           </Link>
         </div>
+
+        {apiError && (
+          <div className="flex items-center gap-2 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm mb-4">
+            <AlertCircle className="h-4 w-4" />
+            {apiError instanceof Error ? apiError.message : "Erro ao protocolar requerimento."}
+          </div>
+        )}
 
         {!preview ? (
           <Card>
@@ -271,11 +306,15 @@ export default function RequerimentoNovo() {
                 </div>
               </div>
               <div className="flex gap-3">
-                <Button variant="outline" className="flex-1" onClick={() => setPreview(false)}>
+                <Button variant="outline" className="flex-1" onClick={() => setPreview(false)} disabled={isPending}>
                   Editar
                 </Button>
-                <Button className="flex-1 bg-blue-700 hover:bg-blue-800" onClick={handleSubmit}>
-                  Confirmar e Protocolar
+                <Button
+                  className="flex-1 bg-blue-700 hover:bg-blue-800"
+                  onClick={handleSubmit}
+                  disabled={isPending}
+                >
+                  {isPending ? "Protocolando..." : "Confirmar e Protocolar"}
                 </Button>
               </div>
             </CardContent>
