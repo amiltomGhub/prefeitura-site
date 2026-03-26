@@ -1,0 +1,183 @@
+BLOCO FRONTEND — MÓDULO 3B: APP MOBILE CIDADÃO
+PROMPT FE-3B-01 — App Mobile: Setup, Arquitetura e Módulos Principais
+text
+Você é o melhor engenheiro mobile do mundo, especialista em React Native,
+Expo, UX mobile-first e apps para governo digital brasileiro.
+
+## CONTEXTO DO PROJETO
+App Mobile do SaaS Municipal — disponível para todos os cidadãos.
+Um único app serve todas as prefeituras (multi-tenant por login/seleção de município).
+Disponível na App Store (iOS) e Google Play (Android).
+O app deve funcionar em áreas com baixa conectividade (offline-first).
+
+## STACK OBRIGATÓRIA
+- React Native + Expo SDK 52+ (managed workflow)
+- TypeScript strict
+- Expo Router v3 (file-based routing — igual ao Next.js)
+- NativeWind (TailwindCSS para React Native)
+- TanStack Query v5 (cache e sincronização)
+- Zustand (estado global)
+- Legend State (offline-first — sincronização automática)
+- Expo Notifications (push notifications — FCM + APNs)
+- Expo Location (geolocalização para denúncias e mapa)
+- Expo Camera + ImagePicker (fotos para ouvidoria)
+- Expo FileSystem + Sharing (download de documentos)
+- React Native Maps (mapa de serviços e ocorrências)
+- react-native-pdf (visualização de documentos PDF)
+- Lottie React Native (animações ricas)
+
+## TAREFA DESTA ETAPA
+
+### 1. Estrutura do App (Expo Router)
+app/
+├── (public)/                      # Sem login
+│   ├── index.tsx                  # Splash / Seleção de município
+│   ├── selecionar-municipio.tsx   # Busca e seleção do tenant
+│   ├── login.tsx
+│   ├── cadastro.tsx
+│   └── recuperar-senha.tsx
+│
+├── (tabs)/                        # Autenticado — Bottom Tab Navigator
+│   ├── _layout.tsx                # Tab bar: Início | Serviços | Ouvidoria | Notícias | Perfil
+│   ├── index.tsx                  # Início (Home)
+│   ├── servicos.tsx               # Serviços municipais
+│   ├── ouvidoria/
+│   │   ├── index.tsx              # Hub da ouvidoria
+│   │   ├── nova.tsx               # Nova manifestação
+│   │   └── acompanhar.tsx         # Acompanhar protocolo
+│   ├── noticias/
+│   │   ├── index.tsx
+│   │   └── [slug].tsx
+│   └── perfil.tsx
+│
+├── mapa.tsx                       # Mapa de ocorrências e serviços
+├── agenda.tsx                     # Agenda do município
+├── transparencia/
+│   ├── index.tsx
+│   └── [categoria].tsx
+├── notificacoes.tsx               # Central de notificações
+└── _layout.tsx                    # Root layout com providers
+
+### 2. Onboarding e Seleção de Município
+Tela de Splash (index.tsx):
+  - Logo da plataforma + animação Lottie (2s)
+  - Verificar: município já salvo? → redirecionar direto
+  - Senão → Tela de Seleção de Município
+
+Seleção de Município (selecionar-municipio.tsx):
+  - Campo de busca (nome do município ou UF)
+  - Lista de municípios ativos na plataforma (dados offline cacheados)
+  - Geolocalização: "Detectar meu município" (botão) → busca pelo GPS
+  - Card de cada município: brasão, nome, estado
+  - Após seleção: carrega tema do tenant (cores, logo) dinamicamente
+  - Botão "Trocar município" sempre disponível no perfil
+
+### 3. Autenticação Mobile
+  - Login: CPF + senha OR login social (Google — opcional por tenant)
+  - Biometria: Face ID / TouchID após primeiro login (Expo LocalAuthentication)
+  - Cadastro: CPF, nome, email, telefone, senha → verificação por SMS ou email
+  - Sessão persistida com token seguro (Expo SecureStore — não AsyncStorage)
+  - Auto-login com biometria ao abrir o app
+  - Modo visitante: acesso limitado sem login (notícias, agenda, serviços básicos)
+
+### 4. Home Tab (app/(tabs)/index.tsx)
+  - Header: "Olá, [Nome]!" + logo da prefeitura
+  - Banner carrossel (máx 3 banners — reduzido vs web)
+  - Grid de acesso rápido (2x3): Ouvidoria | SIC | IPTU | Notícias | Agenda | Mapa
+  - Card "Minha última manifestação" (protocolo + status atual)
+  - Notícias recentes (lista horizontal com scroll)
+  - Próximos eventos (próximos 3 da agenda)
+  - Pull-to-refresh em toda a página
+  - Skeleton loading (Animated.View pulsando)
+
+### 5. Módulo Ouvidoria (app/(tabs)/ouvidoria/)
+
+Hub da Ouvidoria:
+  - Botão principal: "+ Nova Manifestação" (destaque visual)
+  - Minhas manifestações: lista com protocolo, tipo, status, data
+  - Status com badge colorido e ícone
+  - Toque no item → detalhe completo com timeline
+
+Nova Manifestação (nova.tsx) — OFFLINE-FIRST:
+  Multi-step com progresso visual:
+
+  STEP 1 — Tipo e Categoria:
+  - Cards visuais grandes (touch-friendly, min 60x60px)
+  - Tipo: Reclamação | Denúncia | Sugestão | Elogio | Solicitação
+  - Categoria (lista com ícones grandes)
+  
+  STEP 2 — Detalhes:
+  - Título (obrigatório)
+  - Descrição (textarea com contador de chars)
+  - Localização: 
+    * Botão "Usar minha localização" (GPS automático)
+    * Mapa interativo para marcar o ponto exato
+    * Campo de endereço alternativo
+  - Anexos (câmera + galeria + gravação de áudio):
+    * Foto: Expo Camera → preview imediato
+    * Galeria: múltipla seleção (máx 5)
+    * Áudio: gravação de 60s (Expo AV) — transcrito por IA
+    * Vídeo: gravação de 30s (compressão automática)
+  - Urgência: Normal | Urgente | Emergência
+
+  STEP 3 — Identificação:
+  - Pré-preenchido com dados do perfil logado
+  - Opção de anonimato
+  - Aceite LGPD
+
+  STEP 4 — Sucesso:
+  - Protocolo com animação Lottie (confetes)
+  - Botão copiar protocolo
+  - Compartilhar protocolo (WhatsApp, email)
+  - QR Code do acompanhamento
+
+  OFFLINE BEHAVIOR:
+  - Manifestação salva localmente (Legend State) se sem internet
+  - Banner: "Manifestação salva. Será enviada quando voltar online."
+  - Sincronização automática ao reconectar
+  - Indicador de sync pendente no ícone do tab
+
+### 6. Módulo Serviços (app/(tabs)/servicos.tsx)
+  - Grid de categorias de serviços municipais
+  - Cada serviço: descrição, documentos necessários, prazo, local de atendimento
+  - Botão de agendamento online (se disponível)
+  - Busca de serviços (fulltext local)
+  - Serviços favoritos (salvo offline)
+  - Filtro por secretaria
+
+### 7. Mapa Inteligente (app/mapa.tsx)
+  - React Native Maps com clusters de marcadores
+  - Camadas alternáveis:
+    * 🔴 Ocorrências abertas (manifestações públicas — anônimas)
+    * 🟡 Obras em andamento
+    * 🔵 Serviços e equipamentos públicos (UBS, escolas, CRAS, etc.)
+    * 🟢 Pontos de coleta e serviços ambientais
+  - Toque no marcador → card com detalhes + link para ouvidoria
+  - Botão "Registrar ocorrência aqui" (abre ouvidoria com localização pré-preenchida)
+  - Modo offline: mapa cacheado da região do usuário (Mapbox offline tiles)
+  - Geofencing: alerta quando usuário está próximo de obra/serviço relevante
+
+### 8. Push Notifications (FCM + APNs)
+  Tipos de notificação configuráveis pelo usuário:
+  - ✅ Atualização de manifestação (sempre ativa)
+  - ✅ Resposta da prefeitura recebida
+  - 🔔 Novas notícias (configurável)
+  - 🔔 Eventos e agenda (configurável)
+  - 🔔 Alertas emergenciais (sempre ativa — não configurável)
+  - 🔔 Vencimento de IPTU e tributos (configurável)
+
+  Notificação emergencial:
+  - Push com prioridade máxima (FCM data message)
+  - Aparece mesmo com app fechado e telefone em silencioso
+  - Usada para: enchentes, interdições, emergências de saúde pública
+  - Segmentação: por bairro (geolocalização do usuário)
+
+### 9. Perfil e Personalização (app/(tabs)/perfil.tsx)
+  - Dados pessoais editáveis
+  - Município selecionado (trocar município)
+  - Configurações de notificações (granular por tipo)
+  - Tema: claro | escuro | automático
+  - Tamanho de fonte (acessibilidade)
+  - Histórico de manifestações e documentos baixados
+  - Termos de uso e política de privacidade
+  - Sair da conta / Excluir conta (LGPD)

@@ -1,4 +1,4 @@
-# Portal Municipal Inteligente — Módulo 2
+# Portal Municipal Inteligente — Módulos 1–3B
 
 ## Overview
 
