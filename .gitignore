@@ -6,3 +6,5 @@ __pycache__/
 *.pyc
 schema.sql
 schema.sql
+
+node_modules_old/
