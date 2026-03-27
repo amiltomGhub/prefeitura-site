@@ -1,0 +1,49 @@
+VERDICT: APPROVED_WITH_COMMENTS
+The diff substantially delivers the requested Portal do Servidor frontend scope (routes, layouts, module pages, RH pages, API hooks, and responsive UI patterns), with no blocking functional regressions found.
+
+CriticalVERDICT: APPROVED_WITH_COMMENTS
+ findings / analysis:
+- Core routing and structure are implemented in `App.tsx`: `/servidor/*` and `/rh/*The diff substantially delivers the requested Portal do Servidor frontend scope (routes, layouts, module pages, RH pages, API hooks, and responsive UI patterns), with no blocking functional regressions found.
+` routes are registered, `/servidor` and `/rh` redirec
+ts are present, and the new `ServidorProCritical findings / analysis:
+vider` is wired at app root.
+- The five target modules are present with strong feature coverage:
+  - Contracheque: 24-month list UX, year filter, status badges, detail page with print/download and structured sections.
+  - Férias: saldo/progress panel, multi-step request flow (3 steps), timeline/status handling.
+  - Requerimentos: filtered list, dynamic form by type, attachments UI, detail with timeline and recurso visibility logic.
+  - Vida Funcional: tabbed view, editable personal fields, historical timeline, service-time projection.
+  - RH panel: separate RH layout, dashboard with Recharts bars, férias/requerimentos approval queues, TipTap parecer editor, batch férias approval.
+- API integration layer (`servidorApi.ts`) is coherent and typed; query/mutation invalidations are mostly appropriate.
+- Typecheck passes for the modified frontend package.
+
+Comments (non-blocking but important):
+1) RH usability with current mock context: default `MOCK_SERVIDOR` is non-RH/non-admin, so `/rh/*` always redirects away in normal runtime. Access-control behavior is correct, but there is no built-in role toggle/login mock to exercise RH screens without code edits. This is a testability gap.
+2) Minor requirement fidelity gap: Férias “histórico de períodos (gozado/programado/vendido)” is represented as solicitation history/timeline rather than an explicit periods table. Functionally close, but not exact to spec wording.
+
+Security:
+- None observed at serious level in this frontend diff. (Client-side role checks exist; no obvious injection/secret exposure issues introduced.)
+
+Next actions:
+1) Add a simple mock role switch (Servidor vs RH/Admin) in `ServidorContext` or via query param/env for QA/demo access to `/rh/*`.
+2) Align Férias history UI with explicit período categories (gozado/programado/vendido) if strict acceptance requires it.
+3) Optionally add lightweight e2e checks for route guards and key flows (`/servidor/ferias/solicitar`, `/rh/requerimentos`).- Core routing and structure are implemented in `App.tsx`: `/servidor/*` and `/rh/*` routes are registered, `/servidor` and `/rh` redirects are present, and the new `ServidorProvider` is wired at app root.
+- The five target modules are present with strong feature coverage:
+  - Contracheque: 24-month list UX, year filter, status badges, detail page with print/download and structured sections.
+  - Férias: saldo/progress panel, multi-step request flow (3 steps), timeline/status handling.
+  - Requerimentos: filtered list, dynamic form by type, attachments UI, detail with timeline and recurso visibility logic.
+  - Vida Funcional: tabbed view, editable personal fields, historical timeline, service-time projection.
+  - RH panel: separate RH layout, dashboard with Recharts bars, férias/requerimentos approval queues, TipTap parecer editor, batch férias approval.
+- API integration layer (`servidorApi.ts`) is coherent and typed; query/mutation invalidations are mostly appropriate.
+- Typecheck passes for the modified frontend package.
+
+Comments (non-blocking but important):
+1) RH usability with current mock context: default `MOCK_SERVIDOR` is non-RH/non-admin, so `/rh/*` always redirects away in normal runtime. Access-control behavior is correct, but there is no built-in role toggle/login mock to exercise RH screens without code edits. This is a testability gap.
+2) Minor requirement fidelity gap: Férias “histórico de períodos (gozado/programado/vendido)” is represented as solicitation history/timeline rather than an explicit periods table. Functionally close, but not exact to spec wording.
+
+Security:
+- None observed at serious level in this frontend diff. (Client-side role checks exist; no obvious injection/secret exposure issues introduced.)
+
+Next actions:
+1) Add a simple mock role switch (Servidor vs RH/Admin) in `ServidorContext` or via query param/env for QA/demo access to `/rh/*`.
+2) Align Férias history UI with explicit período categories (gozado/programado/vendido) if strict acceptance requires it.
+3) Optionally add lightweight e2e checks for route guards and key flows (`/servidor/ferias/solicitar`, `/rh/requerimentos`).

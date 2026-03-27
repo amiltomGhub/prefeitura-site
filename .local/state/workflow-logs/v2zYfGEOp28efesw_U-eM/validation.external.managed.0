@@ -1,0 +1,33 @@
+VERDICT: REJECTED
+
+The diff delivers a large portion of the requested UI surface, but it misses core functional requirements that are explicitly part of the task definition, so it should not be approved as complete.
+
+Critical findings:
+- **Core reqVERDICT: REJECTED
+uirement not met: API consumption is absent.** The task states all m
+odules should consume previously created APIs. The implemented pagesThe diff delivers a large portion of the requested UI surface, but it misses core functional requirements that are explicitly part of the task definition, so it should not be approved as complete.
+ are entirely driven by hardcoded arrays/random generators an
+d local state (`CONTRACHEQUES`, `HISTORICO`, `REQSCritical findings:
+_RH`, etc.) with no React Query/data client integration. This is a blocking gap versus scope.
+- **RH access control missing (blocking).** `/rh/*` routes are directly registered with no role guard and no check against `servidor.isRH/isAdmin`. Requirement says RH panel must be accessible only for admin/RH role.
+- **Férias solicitação step 1 requirement only partially met.** It uses `input type="date"` and only displays a note about blocked weekends/holidays; there is no actual date blocking logic or robust eligibility validation flow per field as required.
+- **RH férias queue missing “calendário visual da secretaria.”** The approval queue exists and batch approval exists, but the calendar visualization requirement is not implemented.
+
+Security:
+- **Serious issue observed:** broken access control risk on RH routes (`/rh/*`) due to missing authorization gating.
+
+Next actions:
+1. Integrate each module with the existing backend APIs (React Query hooks/services), replacing static datasets and random data generation.
+2. Add route/page guards for `/rh/*` enforcing `isRH || isAdmin` and redirect unauthorized users.
+3. Complete missing functional specs: real weekend-blocking date picker + eligibility validations in férias request, and calendar-based RH vacation visualization.- **Core requirement not met: API consumption is absent.** The task states all modules should consume previously created APIs. The implemented pages are entirely driven by hardcoded arrays/random generators and local state (`CONTRACHEQUES`, `HISTORICO`, `REQS_RH`, etc.) with no React Query/data client integration. This is a blocking gap versus scope.
+- **RH access control missing (blocking).** `/rh/*` routes are directly registered with no role guard and no check against `servidor.isRH/isAdmin`. Requirement says RH panel must be accessible only for admin/RH role.
+- **Férias solicitação step 1 requirement only partially met.** It uses `input type="date"` and only displays a note about blocked weekends/holidays; there is no actual date blocking logic or robust eligibility validation flow per field as required.
+- **RH férias queue missing “calendário visual da secretaria.”** The approval queue exists and batch approval exists, but the calendar visualization requirement is not implemented.
+
+Security:
+- **Serious issue observed:** broken access control risk on RH routes (`/rh/*`) due to missing authorization gating.
+
+Next actions:
+1. Integrate each module with the existing backend APIs (React Query hooks/services), replacing static datasets and random data generation.
+2. Add route/page guards for `/rh/*` enforcing `isRH || isAdmin` and redirect unauthorized users.
+3. Complete missing functional specs: real weekend-blocking date picker + eligibility validations in férias request, and calendar-based RH vacation visualization.

@@ -1,0 +1,27 @@
+feat(portal-municipal): Module 3C — Dashboard BI "Sala de Situação do Gestor"
+
+Complete BI analytics module with 7 routes registered in App.tsx:
+
+Shared foundations:
+- src/data/bi-mock.ts — realistic mock datasets for all 6 panels
+- src/contexts/BiContext.tsx — global period selector + TV mode state (BiProvider)
+- src/components/bi/BiLayout.tsx — dark sidebar, period tabs, TV mode toggle, export
+- src/components/bi/BiCard.tsx — BiCard, BiSection, BiProgressGauge
+- src/components/bi/BiSparkline.tsx — sparkline via recharts
+- src/components/bi/BiGauge.tsx — SVG arc gauge with threshold colors
+- src/components/bi/BiChoropleth.tsx — SVG neighborhood demand map
+
+Pages:
+- BiCockpit — 8 KPIs (LRF, SLA, NPS, servidores), SVG choropleth, alerts panel
+- BiOuvidoria — volume/trend area chart, NPS gauge, SLA ring, channels, rankings
+- BiFinanceiro — LOA execution, LRF gauges, receitas vs despesas, contracts funnel
+- BiPessoal — workforce composition, férias vencidas, folha evolution, absenteismo
+- BiObras — Gantt timeline, status cards, delay alerts with progress bars
+- BiSocial — health indicators + vaccine coverage gauges + education metrics
+- BiTv — fullscreen carousel with 30s auto-rotate, countdown ring timer, 4 panels
+
+App.tsx:
+- BiProvider wraps entire app
+- 7 BI routes: /bi → /bi/cockpit, /bi/ouvidoria, /bi/financeiro, /bi/pessoal,
+  /bi/obras, /bi/social, /bi/tv
+- CMS sidebar gains "Dashboard BI" shortcut link in violet

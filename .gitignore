@@ -5,3 +5,4 @@ replit.nix
 __pycache__/
 *.pyc
 schema.sql
+schema.sql

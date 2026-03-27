@@ -18,6 +18,17 @@ const DEFAULT_JSON_ACCEPT = "application/json, application/problem+json";
 let _baseUrl: string | null = null;
 let _authTokenGetter: AuthTokenGetter | null = null;
 
+// Default tenant slug for all public API calls (multi-tenant SaaS)
+// Can be overridden via VITE_TENANT env var or setDefaultTenant()
+let _defaultTenant: string =
+  (typeof import.meta !== "undefined" && (import.meta as Record<string, unknown>).env
+    ? ((import.meta as Record<string, Record<string, string>>).env["VITE_TENANT"] ?? "parauapebas")
+    : "parauapebas");
+
+export function setDefaultTenant(slug: string): void {
+  _defaultTenant = slug;
+}
+
 /**
  * Set a base URL that is prepended to every relative request URL
  * (i.e. paths that start with `/`).
@@ -58,12 +69,39 @@ function isUrl(input: RequestInfo | URL): input is URL {
 }
 
 function applyBaseUrl(input: RequestInfo | URL): RequestInfo | URL {
-  if (!_baseUrl) return input;
   const url = resolveUrl(input);
-  // Only prepend to relative paths (starting with /)
-  if (!url.startsWith("/")) return input;
 
-  const absolute = `${_baseUrl}${url}`;
+  // Inject default tenant into /api/* calls (multi-tenant SaaS)
+  let resolvedUrl = url;
+  if (_defaultTenant && url.includes("/api/") || url.startsWith("/api/")) {
+    try {
+      // Build an absolute URL to manipulate query params safely
+      const base = typeof window !== "undefined" ? window.location.origin : "http://localhost";
+      const urlObj = new URL(url.startsWith("http") ? url : `${base}${url}`);
+      if (!urlObj.searchParams.has("tenant")) {
+        urlObj.searchParams.set("tenant", _defaultTenant);
+        resolvedUrl = url.startsWith("http") ? urlObj.toString() : `${urlObj.pathname}${urlObj.search}`;
+      }
+    } catch {
+      // Fallback: append manually
+      if (!url.includes("tenant=")) {
+        resolvedUrl = url.includes("?") ? `${url}&tenant=${_defaultTenant}` : `${url}?tenant=${_defaultTenant}`;
+      }
+    }
+  }
+
+  if (!_baseUrl) {
+    if (resolvedUrl === url) return input;
+    return typeof input === "string" ? resolvedUrl : isUrl(input) ? new URL(resolvedUrl) : new Request(resolvedUrl, input as Request);
+  }
+
+  // Prepend base URL only to relative paths (starting with /)
+  if (!resolvedUrl.startsWith("/")) {
+    if (resolvedUrl === url) return input;
+    return typeof input === "string" ? resolvedUrl : isUrl(input) ? new URL(resolvedUrl) : new Request(resolvedUrl, input as Request);
+  }
+
+  const absolute = `${_baseUrl}${resolvedUrl}`;
   if (typeof input === "string") return absolute;
   if (isUrl(input)) return new URL(absolute);
   return new Request(absolute, input as Request);

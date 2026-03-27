@@ -1,0 +1,29 @@
+VERDICT: REJECTED
+
+The diff delivers a large portion of the requested frontend surface (routes, layouts, pages, responsive UI, RH screens), but it misses core functional requirements tied to task completion.
+
+Critical findings:
+- **Requerimento creation is not integrVERDICT: REJECTED
+ated with API (blocking):** `RequerimentoNovo.tsx` is fully local-
+state driven and generates a fake protocol client-side (`REQThe diff delivers a large portion of the requested frontend surface (routes, layouts, pages, responsive UI, RH screens), but it misses core functional requirements tied to task completion.
+-...`) instead of calling `useCriarRequerimento` 
+/ backend endpoints from `servidorApi.ts`. ThisCritical findings:
+ conflicts directly with “todos os módulos consomem as APIs criadas na tarefa anterior” and breaks real workflow continuity (new requerimento won’t exist in list/detail backend state).
+- **RH dashboard férias queue section is functionally incomplete:** In `RhDashboard.tsx`, the “Férias Aguardando Aprovação” card does not render vacation pending items and incorrectly references `requerimentosPendentesList` for empty-state logic. The section is effectively a shell, not an implemented queue preview.
+- **Requirement mismatch on recurso condition:** `RequerimentoDetalhe.tsx` shows “Protocolar Recurso” whenever status is `indeferido`, but task requires showing this only “se indeferido e no prazo.” No deadline check is implemented.
+
+Security: none observed (no serious authz/injection/secrets issues introduced beyond expected mock-auth frontend assumptions).
+
+Next actions:
+1. **Wire `RequerimentoNovo` to backend** using `useCriarRequerimento` (including payload assembly for dynamic fields/docs metadata) and navigate to list/detail after success using returned protocol/id.
+2. **Fix RH dashboard férias preview** to consume/render the correct férias pending dataset (or remove preview and route clearly to `/rh/ferias` if intentional), eliminating incorrect `requerimentosPendentesList` coupling.
+3. **Implement recurso prazo rule** in `RequerimentoDetalhe` (UI gate and action eligibility based on backend-provided deadline/window flag).- **Requerimento creation is not integrated with API (blocking):** `RequerimentoNovo.tsx` is fully local-state driven and generates a fake protocol client-side (`REQ-...`) instead of calling `useCriarRequerimento` / backend endpoints from `servidorApi.ts`. This conflicts directly with “todos os módulos consomem as APIs criadas na tarefa anterior” and breaks real workflow continuity (new requerimento won’t exist in list/detail backend state).
+- **RH dashboard férias queue section is functionally incomplete:** In `RhDashboard.tsx`, the “Férias Aguardando Aprovação” card does not render vacation pending items and incorrectly references `requerimentosPendentesList` for empty-state logic. The section is effectively a shell, not an implemented queue preview.
+- **Requirement mismatch on recurso condition:** `RequerimentoDetalhe.tsx` shows “Protocolar Recurso” whenever status is `indeferido`, but task requires showing this only “se indeferido e no prazo.” No deadline check is implemented.
+
+Security: none observed (no serious authz/injection/secrets issues introduced beyond expected mock-auth frontend assumptions).
+
+Next actions:
+1. **Wire `RequerimentoNovo` to backend** using `useCriarRequerimento` (including payload assembly for dynamic fields/docs metadata) and navigate to list/detail after success using returned protocol/id.
+2. **Fix RH dashboard férias preview** to consume/render the correct férias pending dataset (or remove preview and route clearly to `/rh/ferias` if intentional), eliminating incorrect `requerimentosPendentesList` coupling.
+3. **Implement recurso prazo rule** in `RequerimentoDetalhe` (UI gate and action eligibility based on backend-provided deadline/window flag).
